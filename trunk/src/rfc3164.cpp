@@ -48,7 +48,8 @@ void rfc3164::listen()
 	
 	while(1)
 	{
-		ret = recvfrom(sock, buf, RFC3164_PACKET_LENGTH, MSG_TRUNC, (struct sockaddr*)host, (socklen_t*)&len);
+		/* I *think* it's safe to no longer use MSG_TRUNC here. The Linux documentation only says "sometimes the remander of the message will be truncated if you don't grab it all. The Microsoft Winsock2 documentation (I know, but whatever, they actually know how to properly document their stuff) states that for UDP sockets, if you do not get it all, the rest shall be discarded. I'm hazarding a guess that this is a consistent behavior. */
+		ret = recvfrom(sock, buf, RFC3164_PACKET_LENGTH, 0, (struct sockaddr*)host, (socklen_t*)&len);
 		if( -1 == ret )
 		{
 			//an error occured, so we are just going to start over
@@ -64,17 +65,7 @@ void rfc3164::listen()
 		m = parse_message(buf);
 		free(buf);
 		free(host);
-		if( ret > RFC3164_PACKET_LENGTH )
-		{
-			buf = (char*)malloc(ret - RFC3164_PACKET_LENGTH);
-			host = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
-			recvfrom(sock, buf, ret - RFC3164_PACKET_LENGTH, 0, (struct sockaddr*)host, (socklen_t*)&len);
-			#ifdef DEBUG
-			cerr << "Dumping an extra " << ret - RFC3164_PACKET_LENGTH << " bytes.\nContents of which are:\n" << buf << endl;
-			#endif
-			free(buf);
-			free(host);
-		}
+		/* see above note about MSG_TRUNC for an explanation of this code deletage */
 		
 		c->add(m);
 		free(m);
