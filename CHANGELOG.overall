@@ -1,4 +1,29 @@
 ------------------------------------------------------------------------
+r64 | peter | 2004-05-18 19:07:46 -0500 (Tue, 18 May 2004) | 6 lines
+
+Updated and fixed some documentation
+Fixed the database files so they actually work
+Wrote usecases
+Added Tod to AUTHORS
+Fixed the plugins Makefile so it installs plugins properly
+
+------------------------------------------------------------------------
+r63 | peter | 2004-05-15 18:15:52 -0500 (Sat, 15 May 2004) | 2 lines
+
+annnnnnnd, I forgot to add dryerr.h
+
+------------------------------------------------------------------------
+r62 | peter | 2004-05-15 18:15:02 -0500 (Sat, 15 May 2004) | 4 lines
+
+Makefile.*: Added dryerr stuff in
+dryad.kdev*: Added dryerr in
+dryerr.[h|cpp]: Split the implementation from the definition, added a namespace
+
+------------------------------------------------------------------------
+r61 | tod | 2004-05-15 18:01:34 -0500 (Sat, 15 May 2004) | 1 line
+
+
+------------------------------------------------------------------------
 r60 | peter | 2004-05-15 15:49:02 -0500 (Sat, 15 May 2004) | 3 lines
 
 Added another regression test.
