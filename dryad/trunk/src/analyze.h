@@ -20,13 +20,13 @@
 #ifndef ANALYZE_H
 #define ANALYZE_H
 
-
 #include "conf.h"
 #include "syslog.h"
 #include "darray.h"
 #include "drarray.h"
 #include "database.h"
 #include "cache.h"
+#include "dryerr.h"
 
 #include <ltdl.h>
 #include <iostream>
@@ -43,6 +43,7 @@ using DDatabase::database;
 using DRArray::drarray;
 using DString::dstring;
 using Syslog::syslog_message;
+using DError::dryerr;
 
 //! This struct gets used by analyze to track it's default settings.
 struct severity {

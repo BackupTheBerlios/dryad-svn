@@ -19,11 +19,15 @@
  ***************************************************************************/
 #ifndef LRSP_SERVER_H
 #define LRSP_SERVER_H
-#include <lrsp.h>
-#include <iostream>
+
 #include "cache.h"
 #include "dstring.h"
 #include "syslog.h"
+#include "dryerr.h"
+#include "functions.h"
+
+#include <lrsp.h>
+#include <iostream>
 
 #define RFC3164_PACKET_LENGTH 1024
 #define RFC3164_DATE_LEN 15
@@ -35,6 +39,8 @@ using std::endl;
 using DCache::cache;
 using Syslog::syslog_message;
 using DString::dstring;
+using DError::dryerr;
+using DFunctions::itoa;
 
 class lrsp {
 public:

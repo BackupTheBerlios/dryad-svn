@@ -1,4 +1,4 @@
-AC_INIT([dryad], [0.0.1], [dryad-bugs@rtlad.org])
+AC_INIT([dryad], [M2], [dryad-bugs@rtlad.org])
 
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)

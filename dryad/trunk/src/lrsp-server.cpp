@@ -53,7 +53,10 @@ void lrsp::listen()
 
 void lrsp::error_callback(int err)
 {
-	dryerr(1,strcat(strcat(strcat("lrsp-server recieved error from liblrsp (",err),"):\n"),lrsp_server_error_message(err)));
+	char *t;
+	t = itoa(err);
+	dryerr(1, 4, "lrsp-server recieved error from liblrsp (", t, "):\n", lrsp_server_error_message(err));
+	free(t);
 }
 
 void lrsp::message_callback(char *msg)
@@ -166,7 +169,7 @@ struct syslog_message *lrsp::parse_message(char *message)
 		return NULL;
 	}
 	#ifdef DEBUG
-	dryerr(1,strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat("Returning a parsed message:\nfacility: ",m->facility),"\nseverity: "),m->severity),"\ndate: "),m->date->ascii()),"\nhost: "),m->host->ascii()),"\nmessage: "),m->message->ascii()),endl));
+	cerr << "Returning a parsed message:\nfacility: " << m->facility << "\nseverity: " << m->severity << "\ndate: " << m->date->ascii() << "\nhost: " << m->host->ascii() << "\nmessage: " << m->message->ascii() << endl;
 	#endif
 	return m;
 }

@@ -31,75 +31,11 @@ database::database()
 
 database::database( dstring *path )
 {
-	dfilestream *fs;
-	dstring *tmp, *currDaemon;
-	pcre *re;
-	const char *error;
-	int eoffset;
-	struct stat *buf;
-	
-	currDaemon = new dstring("NULL");
 	curr_pos = 0;
 	max_pos = 0;
 	curr = NULL;
 	mList = NULL;
-	
-	buf = (struct stat*)malloc( sizeof(struct stat) );
-	if( -1 == stat( path->ascii(), buf ) )
-	{
-		dryerr(1,strcat(strcat("In database::database( dstring *path, int level) -- Unable to stat path (",path->ascii()),")! Aborting.\n"));
-		exit(1);
-	}
-	free(buf);
-	buf = NULL;
-	
-	fs = new dfilestream( path, "r" );
-	
-	while( tmp = fs->readline() )
-	{
-		if( ! strncmp( "BEGIN ", tmp->ascii(), 6 ) ) // strncmp is bassackwards, needs !
-		{
-			currDaemon = tmp->remove( "BEGIN " );
-			if( "" == currDaemon->ascii() )
-				*currDaemon = "NULL";
-		}
-		else if( !strncmp( "END", tmp->ascii(), 3 ) || !strncmp( "#", tmp->ascii(), 1 ) ) //again with the !s
-		{
-			//do nothing!
-		}
-		else
-		{
-			re = pcre_compile( tmp->ascii(), 0, &error, &eoffset, NULL );
-			if( ! re )
-			{
-				dryerr(1,strcat(strcat(strcat(strcat(strcat("Unable to compile the regex \"",tmp->ascii()),"\"!\nFailure at offset "),eoffset),":"),error),endl));
-			}
-			else
-			{
-				if( ! mList )
-				{
-					mList = (struct list*)malloc( sizeof( struct list ) );
-					curr = mList;
-					curr->prev = NULL;
-					curr->next = NULL;
-				}
-				else
-				{
-					curr->next = (struct list*) malloc( sizeof( struct list ) );
-					curr->next->prev = curr;
-					curr = curr->next;
-					curr->next = NULL;
-				}
-				curr->rs = pcre_study(re, 0, &error);
-				curr->str = tmp;
-				curr->re = re;
-				curr->daemon = currDaemon;
-				curr->next = NULL;
-				max_pos++;
-			}
-		}
-	}
-	curr = mList;
+	this->load(path);
 }
 
 int database::load( dstring *path )
@@ -110,6 +46,10 @@ int database::load( dstring *path )
 	const char *error;
 	int eoffset;
 	struct stat *buf;
+	char *t;
+	
+	if( path == NULL )
+		return false;
 	
 	currDaemon = new dstring("NULL");
 	curr_pos = 0;
@@ -118,7 +58,7 @@ int database::load( dstring *path )
 	buf = (struct stat*)malloc( sizeof(struct stat) );
 	if( -1 == stat( path->ascii(), buf ) )
 	{
-		dryerr(1,strcat(strcat("In database::database( dstring *path, int level) -- Unable to stat path (",path->ascii()),")! Aborting.\n"));
+		dryerr(1, 3, "In database::database( dstring *path, int level) -- Unable to stat path (", path->ascii(), ")! Aborting.\n");
 		exit(1);
 	}
 	free(buf);
@@ -143,7 +83,7 @@ int database::load( dstring *path )
 			re = pcre_compile( tmp->ascii(), 0, &error, &eoffset, NULL );
 			if( ! re )
 			{
-				dryerr(1,strcat(strcat(strcat(strcat(strcat("Unable to compile the regex \"",tmp->ascii()),"\"!\nFailure at offset "),eoffset),":"),error),endl));
+				dryerr(1, 7, "Unable to compile the regex \"", tmp->ascii() ,"\"!\nFailure at offset ", eoffset, ":", error, "\n");
 			}
 			else
 			{
@@ -271,8 +211,8 @@ void database::dump()
 	temp = mList;
 	for( int c = 0; c < max_pos; c++ )
 	{
-		dryerr(1,strcat(strcat(strcat(strcat(strcat(strcat(strcat(temp->str->ascii(),"("),temp->str),")")," - "),temp->daemon->ascii()),endl));
-		dryerr(1,strcat(strcat(strcat(temp->re," - "),temp->rs)endl));
+		cerr << temp->str->ascii() << "(" << temp->str << ")" << " - " << temp->daemon->ascii() << endl;
+		cerr << temp->re << " - " << temp->rs << endl;
 		temp = temp->next;
 	}
 }

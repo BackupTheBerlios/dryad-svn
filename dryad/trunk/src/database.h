@@ -22,6 +22,8 @@
 
 #include "dstring.h"
 #include "dfilestream.h"
+#include "dryerr.h"
+#include "functions.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -37,6 +39,8 @@ using std::cerr;
 using std::endl;
 using DFileStream::dfilestream;
 using DString::dstring;
+using DError::dryerr;
+using DFunctions::itoa;
 
 struct list {
 	pcre *re;

@@ -3,7 +3,7 @@
   <general>
     <author>Peter Snoblin</author>
     <email>pas@truman.edu</email>
-    <version>0.1</version>
+    <version>M2</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>

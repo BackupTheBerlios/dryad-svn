@@ -81,12 +81,12 @@ int cache::add(struct syslog_message *m)
 	if( (count+msg_size) <=  size )
 	{
 		pthread_mutex_lock(tail_lock);
+		pthread_mutex_lock(head_lock);
 		if( head == NULL )
 		{
 			#ifdef DEBUG
-			dryerr(1,"Creating a new head pointer in the cache.\n");
+			cerr << "Creating a new head pointer in the cache.\n";
 			#endif
-			pthread_mutex_lock(head_lock);
 			head = (struct dstrlist*)malloc(sizeof(struct dstrlist));
 			head->prev = NULL;
 			head->next = NULL;
@@ -103,7 +103,7 @@ int cache::add(struct syslog_message *m)
 		else
 		{
 			#ifdef DEBUG
-			dryerr(1,"Apending a new tail node in the cache.\n");
+			cerr << "Apending a new tail node in the cache.\n";
 			#endif
 			tail->next = (struct dstrlist*)malloc(sizeof(struct dstrlist));
 			tail->next->prev = tail;
@@ -118,14 +118,15 @@ int cache::add(struct syslog_message *m)
 		}
 		count += msg_size;
 		#ifdef DEBUG
-		dryerr(1,strcat(strcat(strcat(strcat("Current size of cache is ",count)," of "),size), endl));
+		cerr << "Current size of cache is " << count << " of " << size << endl;
 		#endif
 		pthread_mutex_unlock(tail_lock);
+		pthread_mutex_unlock(head_lock);
 	}
 	else
 	{
 		#ifdef DEBUG
-		dryerr(1,"Outputting to a file, cache full.\n");
+		cerr << "Outputting to a file, cache full.\n";
 		#endif
 		pthread_mutex_lock(file_lock);
 		writer = new dfilestream( cache_file, "a" );

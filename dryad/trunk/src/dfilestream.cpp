@@ -52,8 +52,9 @@ dfilestream::~dfilestream()
 int dfilestream::open( dstring *path, char *mode )
 {
 	if( path == NULL )
-		return false;
-	return this->open(path->ascii(), mode);
+		return this->open((char*)NULL, mode);
+	else
+		return this->open(path->ascii(), mode);
 }
 
 int dfilestream::open( const char *path, char *mode )
@@ -61,8 +62,6 @@ int dfilestream::open( const char *path, char *mode )
 	dstring *tmpname;
 	int f;
 	
-	if(path == NULL )
-		return false;
 	if( fh != NULL )
 	{
 		fclose(fh);
@@ -83,7 +82,7 @@ int dfilestream::open( const char *path, char *mode )
 		free(buf);
 	}
 	
-	if( strcmp(mode, "r") || strcmp(mode, "a") )
+	if( (0 != strcmp(mode, "r")) && (0 != strcmp(mode, "a")) )
 	{
 		mode = "r";
 	}
@@ -93,16 +92,16 @@ int dfilestream::open( const char *path, char *mode )
 		return false;
 	}
 	filemode = mode;
-	if( !strcmp(filemode, "a") && path == NULL )
+	if( (0 == strcmp(filemode, "a")) && path == NULL )
 	{
 		tmpname = new dstring("/tmp/dryad-cache-XXXXXX");
 		if( -1 == (f = mkstemp((char*)tmpname->ascii())) )
 		{
-			dryerr(1,"Failed to create temporary file!\nAborting!\n");
+			dryerr(1, 1, "Failed to create temporary file!\nAborting!\n");
 			exit(1);
 		}
 		#ifdef DEBUG
-		dryerr(1,strcat(strcat("Temporary file created: ",tmpname->ascii()),endl));
+		cerr << "Temporary file created: " << tmpname->ascii() << endl;
 		#endif
 		fh = fdopen(f, "a");
 		filename = new dstring(tmpname);
@@ -183,12 +182,12 @@ void dfilestream::writeline(dstring *line)
 	
 	if( EOF == fputs(line->ascii(), fh) )
 	{
-		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
+		dryerr(1, 1, "ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	if( EOF == fputc('\n', fh) )
 	{
-		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
+		dryerr(1, 1, "ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 }
@@ -202,12 +201,12 @@ void dfilestream::writeline(int line)
 	a = itoa(line);
 	if( EOF == fputs(a, fh) )
 	{
-		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
+		dryerr(1, 1, "ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	if( EOF == fputc('\n', fh) )
 	{
-		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
+		dryerr(1, 1, "ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	free(a);

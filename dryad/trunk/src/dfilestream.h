@@ -23,6 +23,7 @@
 
 #include "dstring.h"
 #include "functions.h"
+#include "dryerr.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,6 +37,7 @@ using std::cerr;
 using std::endl;
 using DFunctions::itoa;
 using DString::dstring;
+using DError::dryerr;
 
 
 //! A very basic file stream class

@@ -24,6 +24,7 @@
 #include "dfilestream.h"
 #include "drarray.h"
 #include "database.h"
+#include "dryerr.h"
 
 #include <iostream>
 #include <stdlib.h>
@@ -35,6 +36,7 @@ using std::cerr;
 using DFileStream::dfilestream;
 using DRArray::drarray;
 using DString::dstring;
+using DError::dryerr;
 
 //! A simple struct for semi assoicatative arrays.
 struct variable {

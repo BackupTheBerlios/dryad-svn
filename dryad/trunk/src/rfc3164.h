@@ -26,6 +26,8 @@
 
 #include "cache.h"
 #include "syslog.h"
+#include "dryerr.h"
+#include "functions.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -41,6 +43,8 @@ using std::endl;
 using DCache::cache;
 using Syslog::syslog_message;
 using DString::dstring;
+using DError::dryerr;
+using DFunctions::itoa;
 
 //! This class provides an RFC3164 compliant interface.
 /*!

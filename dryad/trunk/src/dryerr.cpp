@@ -33,18 +33,30 @@
 namespace DError
 {
 
-int dryerr(int errnum, char *errstring)
+int dryerr(int errnum, int num_params, ...)
 {
+	va_list ap;
+	char *t;
 
 	int diderr = 0;  // Used to determine if an error is processed
 	
+	va_start(ap, num_params);
+	
 	switch (errnum){
 	case 1:
-		cerr << "ERROR: " << *errstring;
+		cerr << "ERROR: ";
+		for( int c = 0; c < num_params; c++ )
+		{
+			cerr << va_arg(ap, char*);
+		}
 		diderr = 1;
 		break;
 	case 2:
-		cerr << "ERROR: " << *errstring;
+		cerr << "ERROR: ";
+		for( int c = 0; c < num_params; c++ )
+		{
+			cerr << va_arg(ap, char*);
+		}
 		diderr = 1;
 		break;
 	case 3:
@@ -102,7 +114,7 @@ int dryerr(int errnum, char *errstring)
 	default:
 		cout << "UNKNOWN ERROR\n";
 	}
-
+	va_end(ap);
 	return diderr;
 }
 

@@ -22,6 +22,7 @@
 #define _DRYERR_H
 
 #include <iostream>
+#include <stdarg.h>
 
 /*  This file is the error handler for Dryad.
 //  The idea is that you call this function and pass it an
@@ -56,7 +57,7 @@ using std::endl;
 	\return Document me
 	Include any other notes here
 */
-int dryerr(int errnum, char *errstring);
+int dryerr(int errnum, int num_params, ...);
 
 }
 
