@@ -275,6 +275,15 @@ void dstring::cat(const char *c)
 	str = n;
 }
 
+void dstring::cat(const char c)
+{
+	char *t;
+	t = (char*)malloc(sizeof(char)*2);
+	t[0] = c;
+	t[1] = '\0';
+	this->cat(t);
+}
+
 const dstring & dstring::operator = ( const dstring & s )
 {
 	pthread_mutex_lock(l);

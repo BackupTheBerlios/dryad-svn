@@ -95,6 +95,19 @@
 					</para>
 				</sect5>
 			</sect4>
+			<sect4>
+			<title>libfile</title>
+				<sect5>
+				<title>path</title>
+					<para>Description: The path to the file to write to.</para>
+					<para>Notes: This outputs the log message much like how most system loggers do, that is: Date Message. If the file already exists, the new log messages will simply be appeneded to it.</para>
+					<para>Example:
+						<programlisting>
+							path /var/log/dryad.log
+						</programlisting>
+					</para>
+				</sect5>
+			</sect4>
 		</sect3>
 		<sect3>
 		<title>Daemon blocks</title>

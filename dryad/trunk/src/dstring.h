@@ -137,6 +137,13 @@ public:
 	*/
 	void cat(const char *c);
 	
+	//! Append a character to the string
+	/*!
+		\param c The character to append
+		This will tack the character c to the end of the string
+	*/
+	void cat(const char c);
+	
 	const dstring & operator = ( const dstring & s );
 	const dstring & operator = ( const dstring * s );
 	const dstring & operator = ( const char * s );

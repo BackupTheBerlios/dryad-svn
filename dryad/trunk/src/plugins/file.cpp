@@ -74,6 +74,7 @@ extern "C"
 			delete m->at(c)->message;
 			free(m->at(c));
 		}
+		delete m;
 		return true;
 	}
 

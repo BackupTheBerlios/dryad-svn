@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	tmp = new dstring("/home/peter/tmp/config.test");
+	tmp = new dstring("config.test");
 	c = new conf(tmp);
 	
 	test = (struct syslog_message*)malloc(sizeof(struct syslog_message));

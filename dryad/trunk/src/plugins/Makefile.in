@@ -98,9 +98,11 @@ noinst_HEADERS = plugin.h
 libemail_la_SOURCES = email.cpp
 libnull_la_LDFLAGS = -module 
 libnull_la_SOURCES = null.cpp
-pkglib_LTLIBRARIES = libfile.la libemail.la libnull.la
+pkglib_LTLIBRARIES = libfile.la libemail.la libnull.la libexternal.la
 libfile_la_SOURCES = file.cpp
 libfile_la_LDFLAGS = -module
+libexternal_la_LDFLAGS = -module 
+libexternal_la_SOURCES = external.cpp
 subdir = src/plugins
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -110,6 +112,9 @@ LTLIBRARIES = $(pkglib_LTLIBRARIES)
 libemail_la_LIBADD =
 am_libemail_la_OBJECTS = email.lo
 libemail_la_OBJECTS = $(am_libemail_la_OBJECTS)
+libexternal_la_LIBADD =
+am_libexternal_la_OBJECTS = external.lo
+libexternal_la_OBJECTS = $(am_libexternal_la_OBJECTS)
 libfile_la_LIBADD =
 am_libfile_la_OBJECTS = file.lo
 libfile_la_OBJECTS = $(am_libfile_la_OBJECTS)
@@ -124,8 +129,8 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/email.Plo ./$(DEPDIR)/file.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/null.Plo
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/email.Plo ./$(DEPDIR)/external.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/file.Plo ./$(DEPDIR)/null.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -135,12 +140,12 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(libemail_la_SOURCES) $(libfile_la_SOURCES) \
-	$(libnull_la_SOURCES)
+DIST_SOURCES = $(libemail_la_SOURCES) $(libexternal_la_SOURCES) \
+	$(libfile_la_SOURCES) $(libnull_la_SOURCES)
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
-SOURCES = $(libemail_la_SOURCES) $(libfile_la_SOURCES) $(libnull_la_SOURCES)
+SOURCES = $(libemail_la_SOURCES) $(libexternal_la_SOURCES) $(libfile_la_SOURCES) $(libnull_la_SOURCES)
 
 all: all-am
 
@@ -181,6 +186,8 @@ clean-pkglibLTLIBRARIES:
 	done
 libemail.la: $(libemail_la_OBJECTS) $(libemail_la_DEPENDENCIES) 
 	$(CXXLINK) -rpath $(pkglibdir) $(libemail_la_LDFLAGS) $(libemail_la_OBJECTS) $(libemail_la_LIBADD) $(LIBS)
+libexternal.la: $(libexternal_la_OBJECTS) $(libexternal_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libexternal_la_LDFLAGS) $(libexternal_la_OBJECTS) $(libexternal_la_LIBADD) $(LIBS)
 libfile.la: $(libfile_la_OBJECTS) $(libfile_la_DEPENDENCIES) 
 	$(CXXLINK) -rpath $(pkglibdir) $(libfile_la_LDFLAGS) $(libfile_la_OBJECTS) $(libfile_la_LIBADD) $(LIBS)
 libnull.la: $(libnull_la_OBJECTS) $(libnull_la_DEPENDENCIES) 
@@ -193,6 +200,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/email.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/external.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/null.Plo@am__quote@
 

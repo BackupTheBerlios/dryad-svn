@@ -1,4 +1,8 @@
+m4trace:aclocal.m4:33: -1- AC_PREREQ([2.52])
+m4trace:aclocal.m4:124: -1- AC_PREREQ([2.52])
 m4trace:aclocal.m4:128: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS$])
+m4trace:aclocal.m4:433: -1- AC_PREREQ([2.50])
+m4trace:aclocal.m4:814: -1- AC_PREREQ([2.52])
 m4trace:configure.in:1: -1- AC_INIT([dryad], [M2], [dryad-bugs@rtlad.org])
 m4trace:configure.in:1: -1- m4_pattern_forbid([^_?A[CHUM]_])
 m4trace:configure.in:1: -1- m4_pattern_forbid([_AC_])
@@ -111,6 +115,7 @@ m4trace:configure.in:9: -1- AC_SUBST([AMDEP_FALSE])
 m4trace:configure.in:9: -1- AC_SUBST([AMDEPBACKSLASH])
 m4trace:configure.in:9: -1- AC_SUBST([CXXDEPMODE], [depmode=$am_cv_CXX_dependencies_compiler_type])
 m4trace:configure.in:10: -1- AC_PROG_LIBTOOL
+m4trace:configure.in:10: -1- AC_PREREQ([2.50])
 m4trace:configure.in:10: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
 You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
 autoconf/general.m4:1303: AC_ARG_ENABLE is expanded from...
@@ -447,32 +452,93 @@ aclocal.m4:884: AC_PROG_LIBTOOL is expanded from...
 aclocal.m4:6747: AM_PROG_LIBTOOL is expanded from...
 configure.in:10: the top level])
 m4trace:configure.in:10: -1- AC_SUBST([LIBTOOL])
-m4trace:configure.in:19: -1- AC_CHECK_LIB([pcre], [pcre_exec], [], [AC_MSG_FAILURE([Dryad requires libpcre!])])
-m4trace:configure.in:19: -1- AH_OUTPUT([HAVE_LIBPCRE], [/* Define to 1 if you have the `pcre\' library (-lpcre). */
+m4trace:configure.in:11: -1- AC_PROG_RANLIB
+m4trace:configure.in:11: -1- AC_SUBST([RANLIB])
+m4trace:configure.in:11: -1- AC_SUBST([ac_ct_RANLIB])
+m4trace:configure.in:12: -1- AC_C_CONST
+m4trace:configure.in:12: -1- AC_DEFINE_TRACE_LITERAL([const])
+m4trace:configure.in:12: -1- AH_OUTPUT([const], [/* Define to empty if `const\' does not conform to ANSI C. */
+#undef const])
+m4trace:configure.in:14: -1- AC_FUNC_MALLOC
+m4trace:configure.in:14: -1- AC_CHECK_HEADERS([stdlib.h])
+m4trace:configure.in:14: -1- AH_OUTPUT([HAVE_STDLIB_H], [/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H])
+m4trace:configure.in:14: -1- AC_DEFINE_TRACE_LITERAL([HAVE_MALLOC])
+m4trace:configure.in:14: -1- AH_OUTPUT([HAVE_MALLOC], [/* Define to 1 if your system has a GNU libc compatible `malloc\' function, and
+   to 0 otherwise. */
+#undef HAVE_MALLOC])
+m4trace:configure.in:14: -1- AC_DEFINE_TRACE_LITERAL([HAVE_MALLOC])
+m4trace:configure.in:14: -1- AC_LIBSOURCE([malloc.c])
+m4trace:configure.in:14: -1- AC_SUBST([LIB@&t@OBJS])
+m4trace:configure.in:14: -1- AC_DEFINE_TRACE_LITERAL([malloc])
+m4trace:configure.in:14: -1- AH_OUTPUT([malloc], [/* Define to rpl_malloc if the replacement function should be used. */
+#undef malloc])
+m4trace:configure.in:15: -1- AC_FUNC_STAT
+m4trace:configure.in:15: -1- AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
+m4trace:configure.in:15: -1- AC_DEFINE_TRACE_LITERAL([LSTAT_FOLLOWS_SLASHED_SYMLINK])
+m4trace:configure.in:15: -1- AH_OUTPUT([LSTAT_FOLLOWS_SLASHED_SYMLINK], [/* Define to 1 if `lstat\' dereferences a symlink specified with a trailing
+   slash. */
+#undef LSTAT_FOLLOWS_SLASHED_SYMLINK])
+m4trace:configure.in:15: -1- AC_LIBSOURCE([lstat.c])
+m4trace:configure.in:15: -1- AC_SUBST([LIB@&t@OBJS])
+m4trace:configure.in:15: -1- AC_LIBSOURCE([stat.c])
+m4trace:configure.in:15: -1- AC_SUBST([LIB@&t@OBJS])
+m4trace:configure.in:15: -1- AC_DEFINE_TRACE_LITERAL([HAVE_STAT_EMPTY_STRING_BUG])
+m4trace:configure.in:15: -1- AH_OUTPUT([HAVE_STAT_EMPTY_STRING_BUG], [/* Define to 1 if `stat\' has the bug that it succeeds when given the
+   zero-length file name argument. */
+#undef HAVE_STAT_EMPTY_STRING_BUG])
+m4trace:configure.in:16: -1- AC_HEADER_STDBOOL
+m4trace:configure.in:16: -1- AC_CHECK_TYPES([_Bool])
+m4trace:configure.in:16: -1- AC_DEFINE_TRACE_LITERAL([HAVE__BOOL])
+m4trace:configure.in:16: -1- AH_OUTPUT([HAVE__BOOL], [/* Define to 1 if the system has the type `_Bool\'. */
+#undef HAVE__BOOL])
+m4trace:configure.in:16: -1- AC_DEFINE_TRACE_LITERAL([HAVE_STDBOOL_H])
+m4trace:configure.in:16: -1- AH_OUTPUT([HAVE_STDBOOL_H], [/* Define to 1 if stdbool.h conforms to C99. */
+#undef HAVE_STDBOOL_H])
+m4trace:configure.in:18: -1- AC_CHECK_FUNCS([memset])
+m4trace:configure.in:18: -1- AH_OUTPUT([HAVE_MEMSET], [/* Define to 1 if you have the `memset\' function. */
+#undef HAVE_MEMSET])
+m4trace:configure.in:19: -1- AC_CHECK_FUNCS([socket])
+m4trace:configure.in:19: -1- AH_OUTPUT([HAVE_SOCKET], [/* Define to 1 if you have the `socket\' function. */
+#undef HAVE_SOCKET])
+m4trace:configure.in:20: -1- AC_CHECK_HEADERS([arpa/inet.h])
+m4trace:configure.in:20: -1- AH_OUTPUT([HAVE_ARPA_INET_H], [/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H])
+m4trace:configure.in:21: -1- AC_CHECK_HEADERS([netdb.h])
+m4trace:configure.in:21: -1- AH_OUTPUT([HAVE_NETDB_H], [/* Define to 1 if you have the <netdb.h> header file. */
+#undef HAVE_NETDB_H])
+m4trace:configure.in:22: -1- AC_CHECK_HEADERS([netinet/in.h])
+m4trace:configure.in:22: -1- AH_OUTPUT([HAVE_NETINET_IN_H], [/* Define to 1 if you have the <netinet/in.h> header file. */
+#undef HAVE_NETINET_IN_H])
+m4trace:configure.in:23: -1- AC_CHECK_HEADERS([sys/socket.h])
+m4trace:configure.in:23: -1- AH_OUTPUT([HAVE_SYS_SOCKET_H], [/* Define to 1 if you have the <sys/socket.h> header file. */
+#undef HAVE_SYS_SOCKET_H])
+m4trace:configure.in:33: -1- AC_CHECK_LIB([pcre], [pcre_exec], [], [AC_MSG_FAILURE([Dryad requires libpcre!])])
+m4trace:configure.in:33: -1- AH_OUTPUT([HAVE_LIBPCRE], [/* Define to 1 if you have the `pcre\' library (-lpcre). */
 #undef HAVE_LIBPCRE])
-m4trace:configure.in:19: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPCRE])
-m4trace:configure.in:20: -1- AC_CHECK_LIB([pthread], [pthread_mutex_lock], [], [AC_MSG_FAILURE([Dryad requires pthreads!])])
-m4trace:configure.in:20: -1- AH_OUTPUT([HAVE_LIBPTHREAD], [/* Define to 1 if you have the `pthread\' library (-lpthread). */
+m4trace:configure.in:33: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPCRE])
+m4trace:configure.in:34: -1- AC_CHECK_LIB([pthread], [pthread_mutex_lock], [], [AC_MSG_FAILURE([Dryad requires pthreads!])])
+m4trace:configure.in:34: -1- AH_OUTPUT([HAVE_LIBPTHREAD], [/* Define to 1 if you have the `pthread\' library (-lpthread). */
 #undef HAVE_LIBPTHREAD])
-m4trace:configure.in:20: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPTHREAD])
-m4trace:configure.in:21: -1- AC_CHECK_LIB([ltdl], [lt_dlopen], [], [AC_MSG_FAILURE([Dryad requires Libtool's libtld!])])
-m4trace:configure.in:21: -1- AH_OUTPUT([HAVE_LIBLTDL], [/* Define to 1 if you have the `ltdl\' library (-lltdl). */
+m4trace:configure.in:34: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPTHREAD])
+m4trace:configure.in:35: -1- AC_CHECK_LIB([ltdl], [lt_dlopen], [], [AC_MSG_FAILURE([Dryad requires Libtool's libtld!])])
+m4trace:configure.in:35: -1- AH_OUTPUT([HAVE_LIBLTDL], [/* Define to 1 if you have the `ltdl\' library (-lltdl). */
 #undef HAVE_LIBLTDL])
-m4trace:configure.in:21: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLTDL])
-m4trace:configure.in:22: -1- AC_CHECK_LIB([esmtp], [smtp_errno], [], [AC_MSG_FAILURE([Dryad requires libesmtp!])])
-m4trace:configure.in:22: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
+m4trace:configure.in:35: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLTDL])
+m4trace:configure.in:36: -1- AC_CHECK_LIB([esmtp], [smtp_errno], [], [AC_MSG_FAILURE([Dryad requires libesmtp!])])
+m4trace:configure.in:36: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
 #undef HAVE_LIBESMTP])
-m4trace:configure.in:22: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBESMTP])
-m4trace:configure.in:23: -1- AC_CHECK_LIB([lrsp], [lrsp_client_free], [], [AC_MSG_FAILURE([Dryad requires liblrsp!])])
-m4trace:configure.in:23: -1- AH_OUTPUT([HAVE_LIBLRSP], [/* Define to 1 if you have the `lrsp\' library (-llrsp). */
+m4trace:configure.in:36: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBESMTP])
+m4trace:configure.in:37: -1- AC_CHECK_LIB([lrsp], [lrsp_client_free], [], [AC_MSG_FAILURE([Dryad requires liblrsp!])])
+m4trace:configure.in:37: -1- AH_OUTPUT([HAVE_LIBLRSP], [/* Define to 1 if you have the `lrsp\' library (-llrsp). */
 #undef HAVE_LIBLRSP])
-m4trace:configure.in:23: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLRSP])
-m4trace:configure.in:25: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
-m4trace:configure.in:25: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:37: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLRSP])
+m4trace:configure.in:39: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
+m4trace:configure.in:39: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:25: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:25: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:25: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:39: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:39: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:39: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:25: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:39: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
