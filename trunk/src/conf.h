@@ -79,14 +79,6 @@ public:
 	*/
 	struct daemon *get_daemon(char *name) const;
 	
-	//! Unlocks the given daemon
-	/*!
-		\param name The daemon to unlock.
-		NOTE: This function MUST be called when you are done with the daemon you got from get_daemon()
-		\sa get_daemon()
-	*/
-	void unlock(char *name);
-	
 	//! The number of databases defined
 	/*!
 		\return the number of databases defined
@@ -126,11 +118,15 @@ private:
 	int clear_on_error;
 	struct daemon **daemons;
 	int num_daemons;
+	//! The file that the config came from
 	dstring *file;
 	int num_db;
+	//the array of paths to dbs
 	dstring **dbs;
+	//the array specifying what level the dbs are
 	int *db_levels;
-	pthread_mutex_t **daemon_lock;
+	//marks that the config is reloading
+	int reloading;
 };
 
 #endif

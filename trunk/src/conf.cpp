@@ -21,6 +21,7 @@
 
 conf::conf(dstring *c)
 {
+	reloading = false;
 	num_daemons = 0;
 	num_db = 0;
 	dfilestream *f;
@@ -36,6 +37,8 @@ conf::conf(dstring *c)
 
 int conf::reload()
 {
+	int rval;
+	reloading = true;
 	num_daemons = 0;
 	num_db = 0;
 	free(daemons);
@@ -43,10 +46,13 @@ int conf::reload()
 	f = new dfilestream;
 	if(f->open(file))
 	{
-		return loadconfig(f);
+		rval = loadconfig(f);
+		reloading = false;
+		return rval;
 	}
 	else
 	{
+		reloading = false;
 		return false;
 	}
 }
@@ -59,7 +65,6 @@ int conf::loadconfig(dfilestream *f)
 	struct daemon **n;
 	dstring **nd;
 	int *i;
-	pthread_mutex_t **nm;
 	
 	cur_mod = NULL;
 	
@@ -100,16 +105,6 @@ int conf::loadconfig(dfilestream *f)
 			n[num_daemons-1] = d;
 			free(daemons);
 			daemons = n;
-			// grow the array of mutexes
-			nm = (pthread_mutex_t**)malloc(sizeof(pthread_mutex_t*)*num_daemons);
-			for( int c = 0; c < (num_daemons-1); c++ )
-			{
-				nm[c] = daemon_lock[c];
-			}
-			free(daemon_lock);
-			daemon_lock = nm;
-			daemon_lock[num_daemons-1] = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
-			pthread_mutex_init(daemon_lock[num_daemons-1], NULL);
 			continue;
 		}
 		if( !strncmp( tmp->ascii(), "END", 3) )
@@ -228,6 +223,9 @@ int conf::checkconfig()
 
 struct daemon *conf::get_daemon(char *name) const
 {
+	// block until we're done
+	while(reloading);
+
 	struct daemon *d; //only used if they want default settings.
 	if( name == NULL )
 	{
@@ -243,7 +241,6 @@ struct daemon *conf::get_daemon(char *name) const
 	{
 		if( ! strcmp( name, daemons[c]->name->ascii() ) )
 		{
-			pthread_mutex_lock(daemon_lock[c]);
 			return daemons[c];
 		}
 	}
@@ -252,6 +249,9 @@ struct daemon *conf::get_daemon(char *name) const
 
 struct daemon *conf::get_daemon(dstring *name) const
 {
+	// block until we're done
+	while(reloading);
+	
 	struct daemon *d; //only used if they want default settings.
 	if( name == NULL )
 	{
@@ -267,7 +267,6 @@ struct daemon *conf::get_daemon(dstring *name) const
 	{
 		if( ! strcmp( name->ascii(), daemons[c]->name->ascii() ) )
 		{
-			pthread_mutex_lock(daemon_lock[c]);
 			return daemons[c];
 		}
 	}
@@ -276,11 +275,13 @@ struct daemon *conf::get_daemon(dstring *name) const
 
 int conf::num_dbs() const
 {
+	while(reloading);
 	return num_db;
 }
 
 dstring *conf::db(int k) const
 {
+	while(reloading);
 	if( k < 0 || k > num_db )
 		return NULL;
 	return dbs[k];
@@ -288,20 +289,10 @@ dstring *conf::db(int k) const
 
 int conf::db_level(int k) const
 {
+	while(reloading);
 	if( k < 0 || k > num_db )
 		return 0;
 	return db_levels[k];
-}
-
-void conf::unlock(char *name)
-{
-	for( int c = 0; c < num_daemons; c++ )
-	{
-		if( ! strcmp( name, daemons[c]->name->ascii() ) )
-		{
-			pthread_mutex_unlock(daemon_lock[c]);
-		}
-	}
 }
 
 #ifdef DEBUG
