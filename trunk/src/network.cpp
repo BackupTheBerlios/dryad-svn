@@ -94,7 +94,10 @@ void network_helper::do_your_thing()
 		sock = f->dequeue();
 		// I don't think sleep is thread safe, this should get changed at some point, but for the time being it works
 		if( sock == NULL )
+		{
 			sleep(1);
+			continue;
+		}
 		//do the actualy syslog() protocol stuff here that I am far to lazy to write.
 	}
 }
