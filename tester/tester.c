@@ -7,33 +7,43 @@
 int main( int argc, char *argv[] )
 {
 	int dport, sock, ret, msglen;
-	char *msg;
+	char *msg, *ipaddr;
 	struct sockaddr_in mine, his;
 	
-	if( argc != 2 )
+	if( argc != 3 )
 	{
-		fprintf(stderr, "%s port\n", argv[0]);
+		fprintf(stderr, "%s ipaddress port\n", argv[0]);
 		exit(1);
 	}
-	dport = atoi(argv[1]);
+	dport = atoi(argv[2]);
 	if( dport < 1 )
 	{
-		fprintf(stderr, "%s port\n", argv[0]);
+		fprintf(stderr, "%s ipaddress port\n", argv[0]);
 		exit(1);
 	}
+	ipaddr = argv[1];
 
-	sock = socket(AF_INET, SOCK_DGRAM, 0);
+	if( -1 == (sock = socket(AF_INET, SOCK_DGRAM, 0)) )
+	{
+		fprintf( stderr, "Failed to create socket!\n" );
+		perror(NULL);
+		exit(1);
+	}
 
 	mine.sin_family = AF_INET;
 	mine.sin_port = htons(0);
-	mine.sin_addr.s_addr = inet_addr("127.0.0.1");
+	mine.sin_addr.s_addr = htonl(INADDR_ANY);
 	memset(&(mine.sin_zero), '\0', 8);
-	bind(sock, (struct sockaddr*)&mine, sizeof(struct sockaddr));
+	if( -1 == bind(sock, (struct sockaddr*)&mine, sizeof(struct sockaddr)) )
+	{
+		fprintf( stderr, "Failed to bind socket!\n" );
+		perror(NULL);
+		exit(1);
+	}
 
 	his.sin_family = AF_INET;
-	fprintf( stderr, "Using port %d.\n", dport );
 	his.sin_port = htons(dport);
-	his.sin_addr.s_addr = inet_addr("127.0.0.1");
+	his.sin_addr.s_addr = inet_addr(ipaddr);
 	memset(&(his.sin_zero), '\0', 8);
 
 	msg = (char*)malloc(sizeof(char) * 78);
@@ -41,7 +51,7 @@ int main( int argc, char *argv[] )
 	msglen = 77;
 	
 	ret = sendto(sock, msg, msglen, 0, (struct sockaddr*)&his, sizeof(struct sockaddr));
-	printf( "Sent %d bytes.\n", ret );
+	printf( "Sent %d bytes to %s:%d.\n", ret, ipaddr, dport );
 	perror(NULL);
 	return EXIT_SUCCESS;
 }
