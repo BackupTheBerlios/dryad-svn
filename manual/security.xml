@@ -1,0 +1,24 @@
+<chapter>
+<title>Security and Dryad</title>
+
+<sect1>
+<title>Rational</title>
+	<para>Dryad does not in and off itself include any sort of access control or other security enhancments. If it recieves a connection, it will process it. The reason it works this way is simply because that is it's job. The developers of Dryad believe that an application should do a single task, and do it damn well. We can enforce the first half of that by not reimplementing ACL features, and we can only hope we are doing the second half. In addition to this minimalist philosophy, we recognize that every sysadmin has his own way of dealing with security, and that to force our idea of a good model on him would be the epitome of rudeness.</para>
+</sect1>
+
+<sect1>
+<title>Limiting access to Dryad</title>
+	<para>There are several possible ways to limit access to Dryad, all of which are fundamentally similar. It is possible to use the tcpd wrapper, or a firewall to deny incoming connections that are from hosts without autorization to log to the particular Dryad instance. In addition, the RTLAD team has plans of offering an ignore proxy at a later date that will allow messages to be blocked based on content.</para>
+</sect1>
+
+<sect1>
+<title>Other security measures</title>
+	<para>While we strive to ensure that Dryad is as bug and exploit free as possible, we are only human, and issues will slip past us. To help minimize the impact of this, we recommend several best practice ideas. First, the <command>./configure</command> script for Dryad attempts to determine if your version of <command>gcc</command> has ProPolice built in, and if it does it will enable it. If you do not have such a version of <command>gcc</command> we suggest you update your compiler and rebuild Dryad. In addition to ProPolice, many operating systems feature some sort of kernel side stack protection features<footnote><para>In particular, OpenBSD ships with such measures. Linux users have several options, including the excellent GRSecurity patch set as well as the complex, powerful beast that is Security Enhanced Linux.</para></footnote>. Finally, some processors have better support for enforcing non executable memory pages, in particular it is my understanding that AMD's Opteron and Sun's UltraSparc are the two most notable processors in this class. If you do use such a processor, ensure that your operating system has support for those extensions.</para>
+</sect1>
+
+<sect1>
+<title>Final notes</title>
+	<para>Of course, these suggestions are just the tip of the iceburg. One must always have a carefuly designed, implemented, and carried out set of plans, procedures, and best practices. However, such things are far beyond the scope of this manual.</para>
+</sect1>
+
+</chapter>

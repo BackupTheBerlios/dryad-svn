@@ -1,0 +1,47 @@
+<chapter>
+<title>Installing Dryad</title>
+
+<sect1>
+<title>Obtaining a package</title>
+<para>At this time, only source packages are available. They are available from <ulink url="http://www.rtlad.org">www.rtlad.org</ulink>.</para>
+</sect1>
+
+<sect1>
+<title>Dependencies</title>
+<para>Dryad uses a small number of external libraries to facilitate more complex functionality. In particular, it is reliant on:
+<itemizedlist mark="bullet">
+	<listitem><para><ulink url="http://www.pcre.org/">PCRE</ulink> -- The Perl compatible regular expression library.</para></listitem>
+	<listitem><para><ulink url="http://www.stafford.uklinux.net/libesmtp/">libESMTP</ulink> -- A library providing SMTP client functionality. (This is required to build the email response module.)</para></listitem>
+	<listitem><para>libPThread -- This should simply be a part of your operating system. Linux users: it is strongly recommended that you upgrade to a version of glibc that supports NPTL threads, rather than the old, inefficient, LinuxThreads.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+
+<sect1>
+<title>Building Dryad</title>
+	<para>Dryad uses the standard GNU auto tools, so it is a fairly standard install process:
+	<programlisting>
+	./configure
+	make
+	su -c 'make install'
+	</programlisting></para>
+</sect1>
+
+<sect1>
+<title>Operating system specific build notes</title>
+<sect2>
+	<title>OpenBSD</title>
+	<para>If you are using the gcc-2.95 compiler that ships with OpenBSD, you will need to specify <option>--disable-isoc</option> option to <command>./configure</command> when building libESMTP, as it is not in the ports tree as of OpenBSD 3.5</para>
+	<para>When running <command>./configure</command> for Dryad, be sure that <varname>/usr/loca/libs</varname> is specified in the search path of the linker. Also, be sure that <varname>/usr/local/include</varname> and <varname>/usr/local/share/libtool/libltdl</varname> are in the search path for includes.</para>
+</sect2>
+<sect2>
+	<title>Win32</title>
+	<para>Because Windows provides a very different set of <acronym>API</acronym>s, it is required that some sort of <acronym>UNIX</acronym> compatibility layer be provided. As of this writing, Dryad has only been tested with <ulink url="http://www.cygwin.com/">Cygwin</ulink>, however it should build with <ulink url="http://www.microsoft.com/">MicroSoft's</ulink> <ulink url="http://www.microsoft.com/windows/sfu/">Services For Unix</ulink>. Regardless of which environment is chosen, at least some of the requisite libraries will need to be built from sources. If you are using Cygwin, when building libESMTP, you will need to specify <option>--enable-emulate-getadrinfo</option> to <command>./configure</command>.</para>
+</sect2>
+<sect2>
+	<title>Other platforms</title>
+	<para>Dryad should build on any platform that supports its dependencies, however, we have not yet had the oppertunity to test any others. It is our belief that the Dryad codebase is both 32 and 64 bit safe, as it is developed and tested on both types of platform. Should you require Dryad ported to another platform, feel free to contact the development team about sponsoring such an effort.</para>
+</sect2>
+</sect1>
+
+</chapter>

@@ -1,0 +1,19 @@
+<chapter>
+<title>Introduction</title>
+
+<sect1>
+<title>Acknowledgements</title>
+<para>There are many people who have helped out with this project, in ways ranging from words of encouragement to listening to me rant when I had errors that resulted from typos to contributions of code. To name any subset of these people would do a diservice to those whom I left out, and as I really don't remember who has helped (aside from 'everyone') and what role they played, I am not going to name any people here. Instead, I will simply say "Many thanks to everyone who has helped. You guys rock."</para>
+</sect1>
+
+<sect1>
+<title>About Dryad</title>
+<para>UNIX machines document everything. Everytime something happens, a log message is created. This is both the worst nightmare and greatest asset to a good network administrator. Important events, from hardware failure to attacks on systems, are noted by the system and recorded. However, there is a two fold problem with this default setup. First, the messages need to get off of the generating device; it doesn't do much good to have notification of hardware failure on a broken harddrive, or information about the comprimising of a system in the hands of the attacker. Secondly, the valuable information needs to be sorted from the noise of regular workings. Dryad aims to provide this by being both a remote log server, and a real time processor of log information.</para>
+</sect1>
+
+<sect1>
+<title>Intended Audience</title>
+<para>This document is aimed at implementors of Dryad installations. While it may be interesting to other people, its primary purpose is to explain how to work with Dryad as a user.</para>
+</sect1>
+
+</chapter>
