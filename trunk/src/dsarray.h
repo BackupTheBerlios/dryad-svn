@@ -97,6 +97,10 @@ public:
 		\return the new value at that position, or FALSE if i is out of bounds
 	*/
 	int increment(int i);
+	
+	#ifdef DEBUG
+	void dump();
+	#endif
 
 private:
 	struct dsastruct **a;

@@ -24,7 +24,7 @@ analyze::analyze()
 	points = 0;
 	num_db = 0;
 	db_vec = NULL;
-	a = new dsarray();
+	seen = new dsarray();
 }
 
 analyze::analyze( database *db_list[] )
@@ -39,7 +39,7 @@ analyze::analyze( database *db_list[] )
 	}
 	points = 0;
 	num_db = 0;
-	a = new dsarray();
+	seen = new dsarray();
 }
 
 analyze::~analyze()
@@ -97,21 +97,25 @@ int analyze::process( dstring *str )
 			if( rr != PCRE_ERROR_NOMATCH )
 			{
 				this->reg( str, (db_vec[c])->level() );
+				return (db_vec[c])->level();
 			}
 		} while( (db_vec[c])->next() );
 	}
+	return false;
 }
 
 int analyze::reg( dstring *str, int level )
 {
 	int i;
-	if( (i = a->exists(str)) != -1 )
+	dstring *n;
+	if( (i = seen->exists(str)) != -1 )
 	{
-		a->increment(i);
+		seen->increment(i);
 	}
 	else
 	{
-		a->pushback(str);
+		n = new dstring(str);
+		seen->pushback(n);
 	}
 	points = points + level;
 	this->report();
@@ -121,3 +125,14 @@ int analyze::report()
 {
 	
 }
+
+#ifdef DEBUG
+void analyze::dump()
+{
+	for( int c = 0; c < num_db; c++ )
+	{
+		db_vec[c]->dump();
+	}
+	seen->dump();
+}
+#endif

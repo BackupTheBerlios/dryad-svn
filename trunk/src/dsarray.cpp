@@ -83,6 +83,7 @@ void dsarray::pushback( dstring *s )
 	free(a);
 	n[num_items] = q;
 	num_items++;
+	a = n;
 }
 
 dstring *dsarray::sat(int i)
@@ -131,3 +132,16 @@ int dsarray::increment(int i)
 		return a[i]->count;
 	}
 }
+
+#ifdef DEBUG
+void dsarray::dump()
+{
+	for( int c = 0; c < num_items; c++ )
+	{
+		cerr << a[c]->str;
+		cerr << " # ";
+		cerr << a[c]->count;
+		cerr << endl;
+	}
+}
+#endif

@@ -60,9 +60,16 @@ public:
 		\param str The string to process
 		\return The level of severity of the string, 0 if not found. -1 if not databases are load()ed
 		This function also increments the warning level, if needed, and performs other appropriate actions
+		
+		
+		Please Note: IF process decides that str must be registered in the database, it will make a copy of str. Thus, it is safe to free() str once process returns.
 		\sa register()
 	*/
 	int process( dstring *str );
+	
+	#ifdef DEBUG
+	void dump();
+	#endif
 
 private:
 	//! Registers a log string in the database of already seen ones
@@ -97,7 +104,7 @@ private:
 	//! The current count of points
 	int points;
 	//! the register of already seen log strings
-	dsarray *a;
+	dsarray *seen;
 	
 };
 
