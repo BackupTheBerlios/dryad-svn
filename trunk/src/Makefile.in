@@ -92,14 +92,14 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp dsarray.cpp conf.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp dsarray.cpp conf.cpp network.cpp
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
 
 # the library search path.
 dryad_LDFLAGS = $(all_libraries) 
-noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h dsarray.h conf.h
+noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h dsarray.h conf.h network.h
 dryad_LDADD = -lpcre
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -110,7 +110,7 @@ PROGRAMS = $(bin_PROGRAMS)
 
 am_dryad_OBJECTS = dryad.$(OBJEXT) database.$(OBJEXT) analyze.$(OBJEXT) \
 	dstring.$(OBJEXT) dfilestream.$(OBJEXT) dsarray.$(OBJEXT) \
-	conf.$(OBJEXT)
+	conf.$(OBJEXT) network.$(OBJEXT)
 dryad_OBJECTS = $(am_dryad_OBJECTS)
 dryad_DEPENDENCIES =
 
@@ -124,7 +124,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/analyze.Po ./$(DEPDIR)/conf.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/database.Po ./$(DEPDIR)/dfilestream.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dsarray.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dstring.Po
+@AMDEP_TRUE@	./$(DEPDIR)/dstring.Po ./$(DEPDIR)/network.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -195,6 +195,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dryad.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dsarray.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstring.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/network.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)

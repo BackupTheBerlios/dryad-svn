@@ -17,48 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef NETWORK_H
+#define NETWORK_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include "database.h"
-#include "analyze.h"
 #include "dstring.h"
-#include "conf.h"
-#include <pthread.h>
 
+#include <sys/types.h>
+#include <sys/socket.h>
 
-#include <iostream>
-#include <cstdlib>
+typedef struct {
+	int *fd;
+} squeue;
 
-using namespace std;
-
-int main(int argc, char *argv[])
-{
-	conf *cnf;
-	dstring *cfile;
-	analyze *core;
-	database *loader;
+class network {
+public:
+	//! Constructor
+	/*!
+		\param port The port to bind to.\
+		\param queue The queue to use to pass messages
+	*/
+	network(int port, dstring **queue);
+	~network();
 	
-	if( argc > 1 )
-	{
-		//for now all we get from the command line is the config file, this may change
-		cfile = new dstring(argv[1]);
-	}
-	else
-	{
-		cfile = new dstring("/home/peter/tmp/config.test");
-	}
-	cnf = new conf(cfile);
-	
-	core = new analyze(cnf);
-	for( int c = 0; c < cnf->num_dbs(); c++ )
-	{
-		loader = new database(cnf->db(c), cnf->db_level(c));
-		core->load(loader);
-		loader = NULL;
-	}
-	
-  return EXIT_SUCCESS;
-}
+	//! Start listening
+	/*!
+		Starts listening for connections, passing the connection off to a thread as needed. This method does not return.
+	*/
+	void start_listening();
+
+private:
+	squeue **sockets;
+};
+
+#endif

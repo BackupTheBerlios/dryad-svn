@@ -25,6 +25,7 @@ database::database()
 	mList = NULL;
 	curr_pos = 0;
 	max_pos = 0;
+	curr = NULL;
 }
 
 database::database( dstring *path, int level )
@@ -40,6 +41,8 @@ database::database( dstring *path, int level )
 	mlevel = level;
 	curr_pos = 0;
 	max_pos = 0;
+	curr = NULL;
+	mList = NULL;
 	
 	buf = (struct stat*)malloc( sizeof(struct stat) );
 	if( -1 == stat( path->ascii(), buf ) )
@@ -54,6 +57,7 @@ database::database( dstring *path, int level )
 	
 	while( tmp = fs->readline() )
 	{
+		
 		if( ! strncmp( "BEGIN ", tmp->ascii(), 6 ) ) // strncmp is bassackwards, needs !
 		{
 			currDaemon = tmp->remove( "BEGIN " );
@@ -78,12 +82,14 @@ database::database( dstring *path, int level )
 					mList = (struct list*)malloc( sizeof( struct list ) );
 					curr = mList;
 					curr->prev = NULL;
+					curr->next = NULL;
 				}
 				else
 				{
 					curr->next = (struct list*) malloc( sizeof( struct list ) );
 					curr->next->prev = curr;
 					curr = curr->next;
+					curr->next = NULL;
 				}
 				curr->rs = pcre_study(re, 0, &error);
 				curr->str = tmp;
