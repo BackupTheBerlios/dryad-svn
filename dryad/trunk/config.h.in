@@ -9,6 +9,9 @@
 /* Define to 1 if you have the `esmtp' library (-lesmtp). */
 #undef HAVE_LIBESMTP
 
+/* Define to 1 if you have the `lrsp' library (-llrsp). */
+#undef HAVE_LIBLRSP
+
 /* Define to 1 if you have the `ltdl' library (-lltdl). */
 #undef HAVE_LIBLTDL
 

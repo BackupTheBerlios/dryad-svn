@@ -17,32 +17,55 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef LRSP_SERVER_H
+#define LRSP_SERVER_H
+#include <lrsp.h>
+#include <iostream>
+#include "cache.h"
+#include "dstring.h"
+#include "syslog.h"
 
-#include "../drarray.h"
-#include "../dstring.h"
-#include "../functions.h"
-#include "../conf.h"
+#define RFC3164_PACKET_LENGTH 1024
+#define RFC3164_DATE_LEN 15
 
-namespace plugin
+namespace DLRSP
 {
-using DRArray::drarray;
-using DString::dstring;
 using std::cerr;
-using std::cout;
 using std::endl;
-using DFunctions::itoa;
-using DConf::conf;
+using DCache::cache;
+using Syslog::syslog_message;
+using DString::dstring;
 
-//! This is how it comes at ya.
-struct syslog_message {
-	int facility;
-	int severity;
-	dstring *date;
-	dstring *host;
-	dstring *message;
-	dstring *daemon;
+class lrsp {
+public:
+	lrsp(cache *s);
+	lrsp(int port, cache *s);
+	~lrsp();
+	
+	void listen();
+	
+	void error_callback(int err);
+	void message_callback(char *msg);
+private:
+	//! Used to parse the message.
+	struct syslog_message *parse_message(char *message);
+	cache *c;
+
 };
+
+struct lrsp_args {
+	lrsp *obj;
+};
+
+struct lrsp_args *lrsp_setup(int port, cache *c);
+
+void err_cb(int err);
+
+void msg_cb(char *msg);
+
+void *lrsp_launch_thread(void *arg);
+
+
 }
+
 #endif

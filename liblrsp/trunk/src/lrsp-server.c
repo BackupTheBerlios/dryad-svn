@@ -54,12 +54,16 @@ int lrsp_server_inited;
 int lrsp_server_go();
 char lrsp_server_get_mode(int asock);
 void lrsp_server_send_status(int asock, int code);
-char *lrsp_server_get_message(int asock);
+char *lrsp_server_get_message(int asock, char m);
 void lrsp_server_read_messages(int *a);
+int lrsp_server_ensure_init();
 
 int lrsp_server_init(int port)
 {
 	struct sockaddr_in me;
+	
+	if( lrsp_server_inited == 42 )
+		return 0;
 	
 	#ifdef HAVE_PTHREADS
 	lrsp_server_thread = malloc(sizeof(pthread_t));
@@ -70,6 +74,13 @@ int lrsp_server_init(int port)
 	#endif
 	if( -1 == (lrsp_server_sock = socket(AF_INET, SOCK_STREAM, 0)) )
 	{
+		#ifdef HAVE_PTHREADS
+		free(lrsp_server_thread);
+		free(lrsp_server_callback_thread);
+		free(lrsp_server_persistent_thread);
+		pthread_mutex_destroy(lrsp_server_stop);
+		free(lrsp_server_stop);
+		#endif
 		return -1;
 	}
 	if( port == 0 )
@@ -93,14 +104,14 @@ int lrsp_server_init(int port)
 	}
 	lrsp_server_cb = NULL;
 	lrsp_server_err_cb = NULL;
-	return 1;
 	lrsp_server_inited = 42;
+	return 1;
 }
 
 int lrsp_server_free()
 {
-	if( lrsp_server_inited != 42 )
-		return -0;
+	if( ! lrsp_server_ensure_init() )
+		return 0;
 	#ifdef HAVE_PTHREADS
 	if( lrsp_server_started == 42 )
 	{
@@ -126,6 +137,8 @@ void lrsp_server_register_callback(lrsp_server_callback c, lrsp_server_error_cal
 
 int lrsp_server_listen()
 {
+	if( ! lrsp_server_ensure_init() )
+		return -4;
 	#ifdef HAVE_PTHREADS
 	return pthread_create(lrsp_server_thread, NULL, (void*)lrsp_server_go, NULL);
 	#else
@@ -180,9 +193,9 @@ int lrsp_server_go()
 		{
 			if( lrsp_server_cb != NULL )
 			#ifdef HAVE_PTHREADS
-				pthread_create(lrsp_server_callback_thread, NULL, (void*)(*lrsp_server_cb), (void*)lrsp_server_get_message(asock));
+				pthread_create(lrsp_server_callback_thread, NULL, (void*)(*lrsp_server_cb), (void*)lrsp_server_get_message(asock, t));
 			#else
-				(*lrsp_server_cb)(lrsp_server_get_message(asock));
+				(*lrsp_server_cb)(lrsp_server_get_message(asock, t));
 			#endif
 			else
 			{
@@ -190,8 +203,6 @@ int lrsp_server_go()
 				close(asock);
 				continue;
 			}
-			lrsp_server_send_status(asock, LRSP_OK);
-			close(asock);
 		}
 		else
 		{
@@ -225,11 +236,11 @@ void lrsp_server_read_messages(int *a)
 	
 	while(1)
 	{
-		ret = lrsp_server_get_message(asock);
+		ret = lrsp_server_get_message(asock, LRSP_PERSISTANT);
 		if( ret[0] == '\0' )
 		{
 			free(ret);
-			lrsp_server_send_status(asock, LRSP_OK);
+			//lrsp_server_send_status(asock, LRSP_OK);
 			close(asock);
 			break;
 		}
@@ -242,13 +253,18 @@ void lrsp_server_read_messages(int *a)
 	}
 }
 
-char *lrsp_server_get_message(int asock)
+char *lrsp_server_get_message(int asock, char m)
 {
 	char *buf, *b;
 	int len, c;
 	
 	buf = malloc(sizeof(char)*1025); /*so we have room for the \0 if they send it*/
 	if( -1 == (len = recv(asock, buf, sizeof(char)*1025, 0)) )
+	{
+		free(buf);
+		return NULL;
+	}
+	if( len == 0 )
 	{
 		free(buf);
 		return NULL;
@@ -262,6 +278,11 @@ char *lrsp_server_get_message(int asock)
 	}
 	b[len-1] = '\0';
 	free(buf);
+	if( m == LRSP_SINGLE )
+	{
+		lrsp_server_send_status(asock, LRSP_OK);
+		close(asock);
+	}
 	return b;
 }
 
@@ -297,9 +318,15 @@ void lrsp_server_send_status(int asock, int code)
 char lrsp_server_get_mode(int asock)
 {
 	char *buf, ret;
+	int r;
 	
 	buf = malloc(sizeof(char));
-	recv(asock, buf, sizeof(char), 0);
+	r = recv(asock, buf, sizeof(char), 0);
+	if( r == 0 || r == -1 )
+	{
+		free(buf);
+		return 0;
+	}
 	ret = buf[0];
 	free(buf);
 	return ret;
@@ -318,13 +345,23 @@ char *lrsp_server_error_message(int err)
 		case -3:
 			return "Unable to start listening in lrsp_server_go.\n";
 			break;
+		case -4:
+			return "You must call lrsp_server_init first.\n";
+			break;
 	}
 	return NULL;
 }
 
 void lrsp_server_join()
 {
+	if( ! lrsp_server_ensure_init() )
+		return;
 	#ifdef HAVE_PTHREADS
 	pthread_join(*lrsp_server_thread, NULL);
 	#endif
+}
+
+int lrsp_server_ensure_init()
+{
+	return (lrsp_server_inited == 42);
 }

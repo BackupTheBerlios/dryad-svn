@@ -29,6 +29,7 @@
 #include "dqueue.h"
 #include "rfc3164.h"
 #include "cache.h"
+#include "lrsp-server.h"
 
 #include <pthread.h>
 #include <iostream>
@@ -43,6 +44,7 @@ struct cmdlineargs
 	dstring *conffile;
 	int tcp;
 	int udp;
+	int sekret;
 };
 
 struct cmdlineargs *parse_commandline(int argc, char *argv[]);
@@ -93,7 +95,8 @@ int main(int argc, char *argv[])
 	}
 	if( args->tcp > -1 )
 	{
-		//do stuff
+		tcp_t = (pthread_t*)malloc(sizeof(pthread_t));
+		pthread_create(tcp_t, NULL, DLRSP::lrsp_launch_thread, DLRSP::lrsp_setup(args->tcp, cash) );
 	}
 	if( args->tcp == -1 && args->udp == -1 )
 	{
@@ -102,10 +105,18 @@ int main(int argc, char *argv[])
 	}
 	core = (pthread_t*)malloc(sizeof(pthread_t));
 	pthread_create(core, NULL, DAnalyze::analyze_launch_thread, DAnalyze::analyze_build_args(cnf, cash));
+	if( args->sekret == 1 )
+	{
+		// I am well aware that there is a race condition here, if there are invalid config options or whatnot. But whatevar. Enough of the error will more than likely get outputted to bork the tests, and if it doesn't, it'll get caught in the next stage when we don't use the sekret flag
+		cerr << "tcp: " << args->tcp << "--udp: " << args->udp << endl;
+		exit(0);
+	}
 	if( udp_t != NULL )
 		pthread_join( *udp_t, NULL );
 	if( tcp_t != NULL )
 		pthread_join( *tcp_t, NULL );
+	
+	pthread_join( *core, NULL );
 	
   return EXIT_SUCCESS;
 }
@@ -118,6 +129,7 @@ struct cmdlineargs *parse_commandline(int argc, char *argv[])
 	ret->conffile = NULL;
 	ret->tcp = -1;
 	ret->udp = -1;
+	ret->sekret = 0;
 	if( argc == 1 )
 	{
 		return ret;
@@ -153,6 +165,10 @@ struct cmdlineargs *parse_commandline(int argc, char *argv[])
 		{
 			usage(argv);
 			exit(0);
+		}
+		if( ! strcmp(argv[c], "-s") ) // s for sekret! :p
+		{
+			ret->sekret = 1;
 		}
 	}
 	return ret;

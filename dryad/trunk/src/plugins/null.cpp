@@ -17,32 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#include "plugin.h"
 
-#include "../drarray.h"
-#include "../dstring.h"
-#include "../functions.h"
-#include "../conf.h"
+namespace null_plugin {
+using namespace plugin;
+extern "C" {
 
-namespace plugin
-{
-using DRArray::drarray;
-using DString::dstring;
-using std::cerr;
-using std::cout;
-using std::endl;
-using DFunctions::itoa;
-using DConf::conf;
+	int dryad_config( conf *c )
+	{
+		
+	}
+	
+	int dryad_once(struct syslog_message *m)
+	{
+		cout << m->daemon->ascii() << "--" << m->date->ascii() << "--" << m->facility << "--" << m->host->ascii() << "--" << m->message->ascii() << "--" << m->severity << endl;
+		delete m->daemon;
+		delete m->date;
+		delete m->host;
+		delete m->message;
+		free(m);
+		return true;
+	}
+	
+	int dryad_many(drarray<struct syslog_message*> *m)
+	{
+		for( int c = 0; c < m->length(); c++ )
+		{
+			cout << m->at(c)->daemon->ascii() << endl << m->at(c)->date->ascii() << endl << m->at(c)->facility << endl << m->at(c)->host->ascii() << endl << m->at(c)->message->ascii() << endl << m->at(c)->severity << endl;
+			delete m->at(c)->daemon;
+			delete m->at(c)->date;
+			delete m->at(c)->host;
+			delete m->at(c)->message;
+			free(m->at(c));
+			return true;
+		}
+	}
 
-//! This is how it comes at ya.
-struct syslog_message {
-	int facility;
-	int severity;
-	dstring *date;
-	dstring *host;
-	dstring *message;
-	dstring *daemon;
-};
 }
-#endif
+
+}

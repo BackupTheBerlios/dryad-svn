@@ -92,6 +92,10 @@ extern "C" {
 		}
 		delete msg;
 		free(m);
+		delete m->daemon;
+		delete m->date;
+		delete m->host;
+		delete m->message;
 		return ret;
 	}
 	

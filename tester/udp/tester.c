@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
 //--------------------------
 int main( int argc, char *argv[] )
 {
@@ -10,15 +11,15 @@ int main( int argc, char *argv[] )
 	char *msg, *ipaddr;
 	struct sockaddr_in mine, his;
 	
-	if( argc != 3 )
+	if( argc != 4 )
 	{
-		fprintf(stderr, "%s ipaddress port\n", argv[0]);
+		fprintf(stderr, "%s ipaddress port message\n", argv[0]);
 		exit(1);
 	}
 	dport = atoi(argv[2]);
 	if( dport < 1 )
 	{
-		fprintf(stderr, "%s ipaddress port\n", argv[0]);
+		fprintf(stderr, "%s ipaddress port message\n", argv[0]);
 		exit(1);
 	}
 	ipaddr = argv[1];
@@ -46,9 +47,8 @@ int main( int argc, char *argv[] )
 	his.sin_addr.s_addr = inet_addr(ipaddr);
 	memset(&(his.sin_zero), '\0', 8);
 
-	msg = (char*)malloc(sizeof(char) * 78);
-	msg = "<34>Oct 11 22:14:15 mymachine su: 'su root' failed for lonvick on /dev/pts/8\0";
-	msglen = 77;
+	msg = argv[3];
+	msglen = strlen(msg);
 	
 	ret = sendto(sock, msg, msglen, 0, (struct sockaddr*)&his, sizeof(struct sockaddr));
 	printf( "Sent %d bytes to %s:%d.\n", ret, ipaddr, dport );

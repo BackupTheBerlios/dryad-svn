@@ -11,7 +11,8 @@
 # You can use any number of dbfile options, and each will be loaded and
 # referenced, however at this time, doing so would be kinda pointless.
 # USAGE: dbfile /path/to/db
-dbfile /etc/dryad/generic.logsentry.db
+#dbfile /etc/dryad/generic.logsentry.db
+dbfile /home/peter/src/dryad/dryad/trunk/databases/generic.logsentry.db
 
 # cache_size specifies the size of the in memory cache of messages. Messages
 # are stored here upon being recieved and before the processing unit gets them.

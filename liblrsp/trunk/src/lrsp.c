@@ -54,7 +54,7 @@ int lrsp_client_init(char *server, int port, char mode)
 	#ifdef HAVE_PTHREADS
 	lrsp_client_send_thread = malloc(sizeof(pthread_t));
 	#endif
-	lrsp_client_s = malloc(sizeof(char)*strlen(server));
+	lrsp_client_s = malloc(sizeof(char)*(strlen(server)+1));
 	strcpy(lrsp_client_s, server);
 	if( port == 0 )
 		lrsp_client_p = LRSP_PORT;
@@ -91,7 +91,6 @@ int lrsp_client_free()
 {
 	if( 0 == lrsp_client_inited )
 		return 0;
-	close(lrsp_client_sock);
 	#ifdef HAVE_PTHREADS
 	free(lrsp_client_send_thread);
 	#endif
@@ -103,15 +102,17 @@ int lrsp_client_free()
 int lrsp_client_send_message(char *msg)
 {
 	#ifdef HAVE_PTHREADS
-	return pthread_create(lrsp_client_send_thread, NULL, (void*)lrsp_client_go, msg);
+	pthread_create(lrsp_client_send_thread, NULL, (void*)lrsp_client_go, msg);
+	return pthread_join(*lrsp_client_send_thread, NULL);
 	#endif
 	return lrsp_client_go(msg);
 }
 
 int lrsp_client_go(char *msg)
 {
-	int sent, c, err;
-	char *try;
+	int sent, c, err, t;
+	char *try, *code;
+	
 	
 	sent = 0;
 	try = msg;
@@ -136,7 +137,17 @@ int lrsp_client_go(char *msg)
 		{
 			#ifdef HAVE_PTHREADS
 			if( lrsp_client_cb != NULL )
-				(*lrsp_client_cb)(err, msg);
+				(*lrsp_client_cb)(-5, msg);
+			return 0;
+			#else
+			return -5;
+			#endif
+		}
+		if( 0 == sent )
+		{
+			#ifdef HAVE_PTHREADS
+			if( lrsp_client_cb != NULL )
+				(*lrsp_client_cb)(-5, msg);
 			return 0;
 			#else
 			return -5;
@@ -145,6 +156,28 @@ int lrsp_client_go(char *msg)
 		for( c = 0; c <= (sent/sizeof(char)); c++ )
 			try = try + sizeof(char);
 	}
+	/* now we check our return code */
+	code = malloc(sizeof(char)*3);
+	t = recv(lrsp_client_sock, code, 2, 0);
+	if( t == 0 || t == -1 )
+	{
+		free(code);
+		return -8;
+	}
+	code[2] = '\0'; /* so we can strcmp */
+	if( strcmp(code, "OK") )
+	{
+		free(code);
+		close(lrsp_client_sock);
+		#ifdef HAVE_PTHREADS
+		if( lrsp_client_cb != NULL )
+			(*lrsp_client_cb)(err, msg);
+		return 0;
+		#else
+		return -10;
+		#endif
+	}
+	close(lrsp_client_sock);
 	return 1;
 }
 
@@ -153,16 +186,16 @@ int lrsp_client_start_convo(char m)
 	char *msg;
 	int t;
 	struct sockaddr_in him;
+	
 
 	him.sin_family = AF_INET;
-	him.sin_port = lrsp_client_p;
+	him.sin_port = htons(lrsp_client_p);
 	him.sin_addr.s_addr = inet_addr(lrsp_client_s);
 	memset(&(him.sin_zero), '\0', 8);
 	if( -1 == connect(lrsp_client_sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
 	{
 		return -6;
 	}
-	
 	msg = malloc(sizeof(char)*1);
 	msg[0] = lrsp_client_m;
 	if( -1 == send(lrsp_client_sock, msg, 1*sizeof(char), 0) )
@@ -191,33 +224,37 @@ char *lrsp_client_error_message(int err)
 	switch(err)
 	{
 		case -1:
-			return "Failed to create a socket in lrsp_create.\n";
+			return "Failed to create a socket in lrsp_client_init.\n";
 			break;
 		case -2:
-			return "Failed to bind a socket in lrsp_create.\n";
+			return "Failed to bind a socket in lrsp_client_init.\n";
 			break;
 		case -3:
-			return "Failed to start the persistant connection in lrsp_create.\n";
+			return "Failed to start the persistant connection in lrsp_client_init.\n";
 			break;
 		case -4:
-			return "Failed to start the single connection in lrsp_send_message.\n";
+			return "Failed to start the single connection in lrsp_client_send_message.\n";
 			break;
 		case -5:
-			return "Failed to send the message in lrsp_send_message.\n";
+			return "Failed to send the message in lrsp_client_send_message.\n";
 			break;
 		case -6:
-			return "Failed to connect the socket in lrsp_start_convo.\n";
+			return "Failed to connect the socket in lrsp_client_start_convo.\n";
 			break;
 		case -7:
-			return "Failed to send mode character in lrsp_start_convo.\n";
+			return "Failed to send mode character in lrsp_client_start_convo.\n";
 			break;
 		case -8:
-			return "Failed to get OK from server in lrsp_start_convo.\n";
+			return "Failed to get OK from server in lrsp_client_start_convo.\n";
 			break;
 		case -9:
-			return "Failed to get OK from server in lrsp_start_convo.\n";
+			return "Failed to get OK from server in lrsp_client_start_convo.\n";
+			break;
+		case -10:
+			return "Failed to get OK from server after sending the message.\n";
 			break;
 	}
+	return NULL;
 }
 
 void lrsp_client_register_callback(lrsp_client_callback c)

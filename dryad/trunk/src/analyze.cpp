@@ -173,7 +173,6 @@ int analyze::process( struct syslog_message *m )
 {
 	int rr;
 	int ovector[3];
-	
 	if( m == NULL )
 		return -1;
 	for(int c = 0; c < db_vec->length(); c++ )
@@ -183,6 +182,7 @@ int analyze::process( struct syslog_message *m )
 		do
 		{
 			rr = pcre_exec( db_vec->at(c)->re(), db_vec->at(c)->rs(), m->message->ascii(), m->message->length(), 0, 0, ovector, 3 );
+			cerr << rr << endl;
 			if( rr != PCRE_ERROR_NOMATCH )
 			{
 				m->daemon = db_vec->at(c)->daemon();
@@ -379,6 +379,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		ret->max = atoi(tmp->ascii());
 		ret->level = 0;
 		return ret;
+		return NULL;
 	}
 	//daemon specified
 	else
@@ -454,7 +455,7 @@ void *analyze_launch_thread(void *args)
 	a = (struct analyze_args*)args;
 	c = a->cash;
 	an = new analyze(a->c);
-
+	
 	for( int b = 0; b < a->c->num_dbs(); b++ )
 	{
 		loader = new database(a->c->db(b));

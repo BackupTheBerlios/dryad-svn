@@ -1,0 +1,33 @@
+emergency_track 1
+emergency_report 1
+emergency_all 0
+
+alert_track 1
+alert_report 1
+alert_all 0
+
+critical_track 1
+critical_report 0
+critical_max 3
+critical_all 0
+
+error_track 1
+error_report 0
+error_max 10
+error_all 0
+
+warning_track 1
+warning_report 0
+warning_max 25
+warning_all 0
+
+notice_track 1
+notice_report 0
+notice_max 50
+notice_all 0
+
+informational_track 0
+
+debug_track 0
+
+lib_handler libnull.so

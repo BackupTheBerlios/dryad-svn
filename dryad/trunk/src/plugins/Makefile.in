@@ -93,10 +93,13 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-lib_LTLIBRARIES = libemail.la
+lib_LTLIBRARIES = libemail.la libnull.la
 libemail_la_LDFLAGS = -module 
 noinst_HEADERS = plugin.h
 libemail_la_SOURCES = email.cpp
+
+libnull_la_LDFLAGS = -module 
+libnull_la_SOURCES = null.cpp
 subdir = src/plugins
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -106,6 +109,9 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libemail_la_LIBADD =
 am_libemail_la_OBJECTS = email.lo
 libemail_la_OBJECTS = $(am_libemail_la_OBJECTS)
+libnull_la_LIBADD =
+am_libnull_la_OBJECTS = null.lo
+libnull_la_OBJECTS = $(am_libnull_la_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -114,7 +120,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/email.Plo
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/email.Plo ./$(DEPDIR)/null.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -124,11 +130,11 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(libemail_la_SOURCES)
+DIST_SOURCES = $(libemail_la_SOURCES) $(libnull_la_SOURCES)
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
-SOURCES = $(libemail_la_SOURCES)
+SOURCES = $(libemail_la_SOURCES) $(libnull_la_SOURCES)
 
 all: all-am
 
@@ -169,6 +175,8 @@ clean-libLTLIBRARIES:
 	done
 libemail.la: $(libemail_la_OBJECTS) $(libemail_la_DEPENDENCIES) 
 	$(CXXLINK) -rpath $(libdir) $(libemail_la_LDFLAGS) $(libemail_la_OBJECTS) $(libemail_la_LIBADD) $(LIBS)
+libnull.la: $(libnull_la_OBJECTS) $(libnull_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(libdir) $(libnull_la_LDFLAGS) $(libnull_la_OBJECTS) $(libnull_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -177,6 +185,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/email.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/null.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
