@@ -96,7 +96,7 @@ int analyze::process( dstring *str )
 			rr = pcre_exec( (db_vec[c])->re(), (db_vec[c])->rs(), str->ascii(), str->length(), 0, 0, ovector, 3 );
 			if( rr != PCRE_ERROR_NOMATCH )
 			{
-				reg( str, (db_vec[c])->level() );
+				this->reg( str, (db_vec[c])->level() );
 			}
 		} while( (db_vec[c])->next() );
 	}
@@ -104,13 +104,20 @@ int analyze::process( dstring *str )
 
 int analyze::reg( dstring *str, int level )
 {
-	if( a->exists(str) )
+	int i;
+	if( (i = a->exists(str)) != -1 )
 	{
-		
+		a->increment(i);
 	}
 	else
 	{
 		a->pushback(str);
 	}
 	points = points + level;
+	this->report();
+}
+
+int analyze::report()
+{
+	
 }

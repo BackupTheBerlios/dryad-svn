@@ -113,10 +113,21 @@ int dsarray::exists(dstring *s)
 {
 	for( int c = 0; c < num_items; c++ )
 	{
-		if( ! strcmp( s->ascii(), a[c]->ascii() ) )
+		if( ! strcmp( s->ascii(), a[c]->str->ascii() ) )
 		{
 			return c;
 		}
 	}
 	return -1;
+}
+
+int dsarray::increment(int i)
+{
+	if( i < 0 || i >= num_items )
+		return false;
+	else
+	{
+		a[i]->count++;
+		return a[i]->count;
+	}
 }

@@ -90,6 +90,13 @@ public:
 		Note that this function is, in it's current incarnation incredibly inneficient.
 	*/
 	int exists(dstring *s);
+	
+	//! Increments the index at i
+	/*!
+		\param The location to increment
+		\return the new value at that position, or FALSE if i is out of bounds
+	*/
+	int increment(int i);
 
 private:
 	struct dsastruct **a;
