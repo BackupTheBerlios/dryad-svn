@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <iostream>
+#include <iostream.h>
 #include <pthread.h>
 
 //! Dryad-string
@@ -109,6 +109,9 @@ public:
 		If contracting it, characters will be truncated from high to low
 	*/
 	void resize( int s );
+	
+	dstring *prior(char t);
+	dstring *following(char t);
 	
 	const dstring & operator = ( const dstring & s );
 	const dstring & operator = ( const dstring * s );

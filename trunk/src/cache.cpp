@@ -28,6 +28,7 @@ cache::cache(int s, dstring *fname)
 	pthread_mutex_init(&head_lock, NULL);
 	pthread_mutex_init(&tail_lock, NULL);
 	pthread_mutex_init(&file_lock, NULL);
+	pthread_cond_init(&get_wait, NULL );
 	count = 0;
 	
 	if( fname != NULL )
@@ -49,6 +50,7 @@ cache::~cache()
 	pthread_mutex_destroy(&head_lock);
 	pthread_mutex_destroy(&tail_lock);
 	pthread_mutex_destroy(&file_lock);
+	pthread_cond_destroy(&get_wait);
 }
 
 int cache::get_size() const
@@ -63,10 +65,6 @@ int cache::add(struct syslog_message *m)
 	
 	if( m == NULL )
 		return -1;
-	
-	#ifdef DEBUG
-	cerr << "Caching a message:\nfacility: " << m->facility << "\nseverity: " << m->severity << "\ndate: " << m->date->ascii() << "\nhost: " << m->host->ascii() << "\nmessage: " << m->message->ascii() << endl;
-	#endif
 	
 	msg_size = (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(m->date->length() + m->host->length() + m->message->length()));
 	if( (count+msg_size) <=  size )
@@ -89,6 +87,7 @@ int cache::add(struct syslog_message *m)
 			head->item->severity = m->severity;
 			tail = head;
 			pthread_mutex_unlock(&head_lock);
+			pthread_cond_signal(&get_wait);
 		}
 		else
 		{
@@ -140,7 +139,9 @@ struct syslog_message *cache::get()
 	
 	pthread_mutex_lock(&head_lock);
 	if( head == NULL )
-		return NULL;
+	{
+		pthread_cond_wait(&get_wait, &head_lock);
+	}
 	if( file_cache )
 	{
 		pthread_mutex_lock(&tail_lock);
@@ -149,16 +150,19 @@ struct syslog_message *cache::get()
 		pthread_mutex_unlock(&tail_lock);
 		pthread_mutex_unlock(&file_lock);
 	}
+	ret = (struct syslog_message*)malloc(sizeof(struct syslog_message));
 	ret = head->item;
 	curr = head->next;
-	curr->prev = NULL;
+	if(curr != NULL)
+		curr->prev = NULL;
 	free(head);
 	head = curr;
 	if( head == NULL )
 		tail = NULL;
+	count -= (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(ret->date->length() + ret->host->length() + ret->message->length()));
 	pthread_mutex_unlock(&head_lock);
-	//REMEMBER TO SUBTRACT FROM COUNT!!!
 	return ret;
+	return NULL;
 }
 
 void cache::load_disk_cache()

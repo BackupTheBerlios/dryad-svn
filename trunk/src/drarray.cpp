@@ -32,8 +32,8 @@ drarray<T>::drarray()
 template <class T>
 drarray<T>::drarray(int size)
 {
-	size > 0 ? len = size : size = 1;
-	a = (T*)malloc(sizeof(T)*size);
+	size > 0 ? len = size : len = 1;
+	a = (T*)malloc(sizeof(T)*len);
 }
 
 template <class T>
@@ -93,7 +93,7 @@ int drarray<T>::exists(T item)
 template <class T>
 T & drarray<T>::operator[ ]( int i )
 {
-	if( i > 0 && i < len )
+	if( i >= 0 && i < len )
 		return a[i];
 	else
 		return NULL;
@@ -102,7 +102,16 @@ T & drarray<T>::operator[ ]( int i )
 template <class T>
 T drarray<T>::operator[ ]( int i ) const
 {
-	if( i > 0 && i < len )
+	if( i >= 0 && i < len )
+		return a[i];
+	else
+		return NULL;
+}
+
+template <class T>
+T drarray<T>::at(int i)
+{
+	if( i >= 0 && i < len )
 		return a[i];
 	else
 		return NULL;

@@ -19,329 +19,85 @@
  ***************************************************************************/
 #include "conf.h"
 
-conf::conf(dstring *c)
+conf::conf(dstring *cf)
 {
-	reloading = false;
-	num_daemons = 0;
-	num_db = 0;
-	port = 0;
-	cache_file = NULL;
-	cache_size = 0;
-	dfilestream *f;
-	f = new dfilestream;
-	if( f->open(c, "r") )
+	dfilestream *fs;
+	if( cf == NULL )
 	{
-		if( loadconfig(f) )
-			file = c;
+		cerr << "NULL config file passed to conf object!\nAborting!\n";
+		exit(1);
+	}
+	fs = new dfilestream;
+	if( ! fs->open(cf, "r") )
+	{
+		cerr << "Failed to config file!\nAborting!\n";
+		exit(1);
+	}
+	
+	reload = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(reload, NULL);
+	
+	dbs = new drarray<dstring*>;
+	vars = new drarray<variable*>;
+	
+	this->readconfig(fs);
+}
+
+conf::~conf()
+{
+	pthread_mutex_destroy(reload);
+}
+
+void conf::readconfig(dfilestream *fs)
+{
+	dstring *tmp;
+	variable *v;
+	
+	pthread_mutex_lock(reload);
+	
+	while( tmp = fs->readline() )
+	{
+		if( !strncmp( tmp->ascii(), "#", 1 ) )
+		{
+			continue;
+		}
+		if( !strncmp( tmp->ascii(), "dbfile ", 7 ) && tmp->length() > 7 )
+		{
+			dbs->pushback(tmp->remove("dbfile "));
+		}
 		else
-			file = NULL;
-	}
-}
-
-int conf::reload()
-{
-	int rval;
-	reloading = true;
-	num_daemons = 0;
-	num_db = 0;
-	free(daemons);
-	dfilestream *f;
-	f = new dfilestream;
-	if(f->open(file, "r"))
-	{
-		rval = loadconfig(f);
-		reloading = false;
-		return rval;
-	}
-	else
-	{
-		reloading = false;
-		return false;
-	}
-}
-
-int conf::loadconfig(dfilestream *f)
-{
-	dstring *tmp, *t;
-	dstring *cur_mod;
-	struct daemon *d;
-	struct daemon **n;
-	dstring **nd;
-	int *i;
-	
-	cur_mod = NULL;
-	
-	while( tmp = f->readline() )
-	{
-		if( !strncmp( tmp->ascii(), "port ", 5 ) )
 		{
-			port = atoi(tmp->remove("port ")->ascii());
-		}
-		if( !strncmp( tmp->ascii(), "cache_file ", 11 ) )
-		{
-			cache_file = tmp->remove("cache_file ");
-		}
-		if( ! strncmp( tmp->ascii(), "cache_size ", 11 ) )
-		{
-			cache_size = atoi(tmp->remove("cache_size ")->ascii());
-		}
-		if( !strncmp( tmp->ascii(), "dbfile ", 7 ) )
-		{
-			num_db++;
-			nd = (dstring**)malloc(sizeof(dstring*) * num_db);
-			i = (int*)malloc(sizeof(int) * num_db);
-			for( int c = 0; c < (num_db-1); c++ )
+			v = (variable*)malloc(sizeof(variable));
+			v->name = tmp->prior(' ');
+			v->value = tmp->following(' ');
+			if( v->name == NULL || v->value == NULL )
 			{
-				nd[c] = dbs[c];
-				i[c] = db_levels[c];
-			}
-			nd[num_db-1] = tmp->remove("dbfile ");
-			free( db_levels );
-			free(dbs);
-			db_levels = i;
-			dbs = nd;
-		}
-		if( ! strncmp( tmp->ascii(), "dblevel ", 8 ) )
-		{
-			db_levels[num_db-1] = atoi(tmp->remove("dblevel ")->ascii());
-		}
-		if( !strncmp( tmp->ascii(), "BEGIN ", 6 ) )
-		{
-			cur_mod = tmp->remove( "BEGIN " );
-			d = (struct daemon*)malloc(sizeof(struct daemon));
-			d->name = cur_mod;
-			num_daemons++;
-			//grow the array of daemons
-			n = (struct daemon**)malloc(sizeof(struct daemon*) * num_daemons);
-			for( int c = 0; c < (num_daemons-1); c++ )
-			{
-				n[c] = daemons[c];
-			}
-			n[num_daemons-1] = d;
-			free(daemons);
-			daemons = n;
-			continue;
-		}
-		if( !strncmp( tmp->ascii(), "END", 3) )
-		{
-			cur_mod = NULL;
-			continue;
-		}
-		if( ! strncmp( tmp->ascii(), "warn_level ", 11 ) )
-		{
-			if( cur_mod == NULL )
-			{
-				warn_level = atoi(tmp->remove("warn_level ")->ascii());
+				free(v);
 				continue;
 			}
-			d->warn_level = atoi(tmp->remove("warn_level ")->ascii());
-			continue;
-		}
-		if( ! strncmp( tmp->ascii(), "clear_on_warn ", 14 ) )
-		{
-			if( cur_mod == NULL )
-			{
-				clear_on_warn = atoi(tmp->remove("clear_on_warn ")->ascii());
-				continue;
-			}
-			d->clear_on_warn = atoi(tmp->remove("clear_on_warn ")->ascii());
-			continue;
-		}
-		if( ! strncmp( tmp->ascii(), "error_level ", 12 ) )
-		{
-			if( cur_mod == NULL )
-			{
-				error_level = atoi(tmp->remove("error_level ")->ascii());
-				continue;
-			}
-			d->error_level = atoi(tmp->remove("error_level ")->ascii());
-			continue;
-		}
-		if( ! strncmp( tmp->ascii(), "clear_on_error ", 15 ) )
-		{
-			if( cur_mod == NULL )
-			{
-				clear_on_error = atoi(tmp->remove("clear_on_error ")->ascii());
-				continue;
-			}
-			d->clear_on_error = atoi(tmp->remove("clear_on_error ")->ascii());
-			continue;
-		}
-	} //end while
-	this->checkconfig();
-	return true;
-}
-
-int conf::checkconfig()
-{
-	struct stat *buf;
-	if( port < 0 )
-		port = 514;
-	if( cache_size < 1 )
-		cache_size = 8388608;
-	if( warn_level < 1 )
-	{
-		cerr << "Invalid warn_level: " << warn_level << ".\nAborting.\n";
-		exit(1);
-	}
-	if( clear_on_warn != 1 && clear_on_warn != 0 )
-	{
-		cerr << "Invalid clear_on_warn: " << clear_on_warn << ".\nAborting.\n";
-		exit(1);
-	}
-	if( error_level < warn_level )
-	{
-		cerr << "Invalid error_level: " << error_level << ".\nAborting.\n";
-		exit(1);
-	}
-	if( clear_on_error != 1 && clear_on_error != 0 )
-	{
-		cerr << "Invalid clear_on_error: " << clear_on_error << ".\nAborting.\n";
-		exit(1);
-	}
-	for( int c = 0; c < num_daemons; c++ )
-	{
-		if( daemons[c]->warn_level < 1 )
-		{
-			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid warn_level: " << daemons[c]->warn_level  <<".\nAborting.\n";
-			exit(1);
-		}
-		if( daemons[c]->clear_on_warn != 1 && daemons[c]->clear_on_warn != 0 )
-		{
-			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid clear_on_warn: " << daemons[c]->clear_on_warn << ".\nAborting.\n";
-			exit(1);
-		}
-		if( daemons[c]->error_level < daemons[c]->warn_level )
-		{
-			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid error_level: " << daemons[c]->error_level << ".\nAborting.\n";
-			exit(1);
-		}
-		if( daemons[c]->clear_on_error != 1 && daemons[c]->clear_on_error != 0 )
-		{
-			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid clear_on_error: " << daemons[c]->clear_on_error << ".\nAborting.\n";
-			exit(1);
+			vars->pushback(v);
+			v = NULL;
 		}
 	}
-	for( int c = 0; c < num_db; c++ )
-	{
-		buf = (struct stat*)malloc(sizeof(struct stat));
-		if( -1 == stat( dbs[c]->ascii(), buf ) )
-		{
-			cerr << "Unable to stat database path: " << dbs[c]->ascii() << "\nAborting\n";
-			free(buf);
-			exit(1);
-		}
-		free(buf);
-		if( db_levels[c] < 1 )
-		{
-			cerr << "Invalid dblevel (" << db_levels[c] << ") for: " << dbs[c]->ascii() << "\nAborting\n";
-			exit(1);
-		}
-	}
-}
-
-struct daemon *conf::get_daemon(char *name) const
-{
-	// block until we're done
-	while(reloading);
-
-	struct daemon *d; //only used if they want default settings.
-	if( name == NULL )
-	{
-		d = (struct daemon*)malloc(sizeof(struct daemon));
-		d->name = NULL;
-		d->warn_level = warn_level;
-		d->clear_on_warn = clear_on_warn;
-		d->error_level = error_level;
-		d->clear_on_error = clear_on_error;
-		return d;
-	}
-	for( int c = 0; c < num_daemons; c++ )
-	{
-		if( ! strcmp( name, daemons[c]->name->ascii() ) )
-		{
-			return daemons[c];
-		}
-	}
-	return NULL;
-}
-
-struct daemon *conf::get_daemon(dstring *name) const
-{
-	// block until we're done
-	while(reloading);
-	
-	struct daemon *d; //only used if they want default settings.
-	if( name == NULL )
-	{
-		d = (struct daemon*)malloc(sizeof(struct daemon));
-		d->name = NULL;
-		d->warn_level = warn_level;
-		d->clear_on_warn = clear_on_warn;
-		d->error_level = error_level;
-		d->clear_on_error = clear_on_error;
-		return d;
-	}
-	for( int c = 0; c < num_daemons; c++ )
-	{
-		if( ! strcmp( name->ascii(), daemons[c]->name->ascii() ) )
-		{
-			return daemons[c];
-		}
-	}
-	return NULL;
+	pthread_mutex_unlock(reload);
 }
 
 int conf::num_dbs() const
 {
-	while(reloading);
-	return num_db;
+	return dbs->length();
 }
 
 dstring *conf::db(int k) const
 {
-	while(reloading);
-	if( k < 0 || k > num_db )
-		return NULL;
-	return dbs[k];
+	return dbs->at(k);
 }
 
-int conf::db_level(int k) const
+dstring *conf::get(char *name)
 {
-	while(reloading);
-	if( k < 0 || k > num_db )
-		return 0;
-	return db_levels[k];
-}
-
-int conf::get_port() const
-{
-	return port;
-}
-
-int conf::get_cache_size() const
-{
-	return cache_size;
-}
-
-dstring *conf::get_cache_file()
-{
-	return cache_file;
-}
-
-#ifdef DEBUG
-void conf::dump()
-{
-	cerr << "warn_level " << warn_level << "\nclear_on_warn " << clear_on_warn << "\nerror_level " << error_level << "\nclear_on_error " << clear_on_error << endl;
-	for( int c = 0; c < num_daemons; c++ )
+	for( int c = 0; c < vars->length(); c++ )
 	{
-		cerr << "BEGIN " << daemons[c]->name->ascii() << endl;
-		cerr << "warn_level " << daemons[c]->warn_level << endl;
-		cerr << "clear_on_warn " << daemons[c]->clear_on_warn << endl;
-		cerr << "error_level " << daemons[c]->error_level << endl;
-		cerr << "clear_on_error " << daemons[c]->clear_on_error << endl;
-		cerr << "END\n";
+		if( !strcmp(vars->at(c)->name->ascii(), name) )
+			return vars->at(c)->value;
 	}
+	return NULL;
 }
-#endif
-

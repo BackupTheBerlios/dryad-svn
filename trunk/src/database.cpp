@@ -21,14 +21,13 @@
 
 database::database()
 {
-	mlevel = 0;
 	mList = NULL;
 	curr_pos = 0;
 	max_pos = 0;
 	curr = NULL;
 }
 
-database::database( dstring *path, int level )
+database::database( dstring *path )
 {
 	dfilestream *fs;
 	dstring *tmp, *currDaemon;
@@ -38,7 +37,6 @@ database::database( dstring *path, int level )
 	struct stat *buf;
 	
 	currDaemon = new dstring("NULL");
-	mlevel = level;
 	curr_pos = 0;
 	max_pos = 0;
 	curr = NULL;
@@ -102,7 +100,7 @@ database::database( dstring *path, int level )
 	curr = mList;
 }
 
-int database::load( dstring *path, int level )
+int database::load( dstring *path )
 {
 	dfilestream *fs;
 	dstring *tmp, *currDaemon;
@@ -112,7 +110,6 @@ int database::load( dstring *path, int level )
 	struct stat *buf;
 	
 	currDaemon = new dstring("NULL");
-	mlevel = level;
 	curr_pos = 0;
 	max_pos = 0;
 	
@@ -193,13 +190,8 @@ database::~database()
 		}
 	}
 	curr = 0;
-	mList = 0;
 }
 
-int database::level() const
-{
-	return mlevel;
-}
 
 int database::next()
 {

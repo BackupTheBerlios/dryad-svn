@@ -239,6 +239,51 @@ void dstring::resize(int s)
 	pthread_mutex_unlock(l);
 }
 
+dstring *dstring::prior(char t)
+{
+	dstring *ret;
+	pthread_mutex_lock(l);
+	for( int c = 0; c < len; c++ )
+	{
+		if( str[c] == t )
+		{
+			ret = new dstring;
+			ret->resize(c);
+			for( int a = 0; a < c; a++ )
+			{
+				ret->str[a] = str[a];
+			}
+			pthread_mutex_unlock(l);
+			return ret;
+		}
+	}
+	pthread_mutex_unlock(l);
+	return NULL;
+}
+
+dstring *dstring::following(char t)
+{
+	dstring *ret;
+	pthread_mutex_lock(l);
+	for( int c = 0; c < len; c++ )
+	{
+		if( str[c] == t )
+		{
+			ret = new dstring;
+			ret->resize(len-c -1);
+			c++;
+			for( int a = c; a < len; a++ )
+			{
+				ret->str[a-c] = str[a];
+			}
+			pthread_mutex_unlock(l);
+			return ret;
+		}
+	}
+	pthread_mutex_unlock(l);
+	return NULL;
+}
+
 const dstring & dstring::operator = ( const dstring & s )
 {
 	pthread_mutex_lock(l);

@@ -22,123 +22,35 @@
 
 #include "dstring.h"
 #include "dfilestream.h"
-#include <pthread.h>
-#include <iostream.h>
+#include "drarray.h"
+#include "database.h"
 
-struct daemon {
+#include <iostream.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+struct variable {
 	dstring *name;
-	int warn_level;
-	int clear_on_warn;
-	int error_level;
-	int clear_on_error;
+	dstring *value;
 };
 
-//! The config class
-/*!
-	The basic purpose of this class is to load and store config information.\n\n	
-	Document structure:\n
-	Configuration for a specific daemon is set of in a block, denoted by BEGIN and END tags. The BEGIN tag must specifiy the name of the daemon:\n
-	BEGIN daemonname\n
-	END tags do not need any additional content, though they may have them, should you so desire\n
-	Between the BEGIN and END tags go the parameters for the given daemon. Currently the valid params are:\n
-	- warn_level -- [0-2^32] The point value to initiate the warning procedure for that daemon
-	- clear_on_warn -- [0-1] Should the register of seens strings be cleared of all entries for that daemon when warn_level is reached
-	- error_level -- [0-2^32] The point value to initiate the error procedure for that daemon
-	- clear_on_error -- [0-1] Should the register of seen strings be cleared of all entries for the daemon when error_level is reached (1 is recommended strongly)
-	In order to set global setting, simply place the params outside of any daemon block.
-*/
-class conf {
+class conf
+{
 public:
-	//! The construcor. You *must* pass the path to the config file.
-	/*!
-		\param c The path to the config file. Make sure you ensure that it is good first.
-	*/
-	conf( dstring *c );
+	conf( dstring *cf );
 	~conf();
 	
-	//! Reloads the config, to be used when a sighup is recieved
-	int reload();
-	
-	//! Returns the information for the given daemon
-	/*!
-		\param name The name of the daemon to get info on. Use a NULL pointer to get information on the default settings.
-		\return A daemon* struct if it's found, otherwise NULL.
-		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.\n
-		This function will block until the requested daemon is available.
-		\sa get_daemon(char *name)
-  */ 
-	struct daemon *get_daemon(dstring *name) const;
-	//! Returns the information for the given daemon
-	/*!
-		\param name The name of the daemon to get info on. Use a NULL pointer to get information on the default settings.
-		\return A daemon* struct if it's found, otherwise NULL.
-		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.\n
-		This function will block until the requested daemon is available.
-		\sa get_daemon(dstring *name)
-	*/
-	struct daemon *get_daemon(char *name) const;
-	
-	//! The number of databases defined
-	/*!
-		\return the number of databases defined
-	*/
 	int num_dbs() const;
-	
-	//! Returns the dstring at the given index
-	/*!
-		\param k The index
-		\return the dstring at that index
-	*/
 	dstring *db(int k) const;
 	
-	//! Returns the level of the given index
-	/*!
-		\param k The index
-		\return the int at that index
-	*/
-	int db_level(int k) const;
-	
-	//! Gets the user dictated port.
-	int get_port() const;
-	
-	//! Gets the cache size
-	int get_cache_size() const;
-	
-	//! gets the cache location
-	dstring *get_cache_file();
-	
-	#ifdef DEBUG
-	void dump();
-	#endif
+	dstring *get(char *name);
 
 private:
-	//! This is the actual funtion that loads the config file
-	/*!
-		\param f The file stream to read from
-		\return True if the load worked, otherwise false
-	*/
-	int loadconfig(dfilestream *f);
-	//! This verifies that the config settings are sane
-	int checkconfig();
-	int warn_level;
-	int clear_on_warn;
-	int error_level;
-	int clear_on_error;
-	struct daemon **daemons;
-	int num_daemons;
-	//! The file that the config came from
-	dstring *file;
-	int num_db;
-	//the array of paths to dbs
-	dstring **dbs;
-	//the array specifying what level the dbs are
-	int *db_levels;
-	//marks that the config is reloading
-	int reloading;
-	int port;
-	dstring *cache_file;
-	int cache_size;
-	
+	void readconfig( dfilestream *fs );
+	dstring *cfile;
+	pthread_mutex_t *reload;
+	drarray<variable*> *vars;
+	drarray<dstring*> *dbs;
 };
 
 #endif

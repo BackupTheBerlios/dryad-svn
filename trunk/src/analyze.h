@@ -20,102 +20,63 @@
 #ifndef ANALYZE_H
 #define ANALYZE_H
 
-#include "database.h"
-#include "darray.h"
-#include "conf.h"
-#include <pcre.h>
-#include <iostream.h>
 
-struct dstrint {
-	dstring *str;
-	int count;
+#include "conf.h"
+#include "syslog.h"
+#include "darray.h"
+#include "drarray.h"
+#include "database.h"
+#include "cache.h"
+
+#include <iostream.h>
+#include <pcre.h>
+
+struct severity {
+	//! The level of warnings of this severity
+	int level;
+	//! If true, report occurences as soon as they happen
+	int report;
+	//! If false, this severity of message will be disregarded. Primarly used for debug/informational.
+	int track;
+	//! The level at which to report
+	int max;
+	//! If true, all severities for a given daemon will be reported when any one of them triggers, otherwise just that severity level will go off
+	int all;
 };
 
-//! Performs analysis of strings
-/*!
-	This class performs the meat of the actual functionality. It process strings, and compares them against known ones. It tracks the warning level, and issues reports as needed.
-*/
-class analyze {
+struct analyze_args {
+	conf *c;
+	cache *cash;
+};
+
+class analyze
+{
 public:
-	//! The basic constructor
-	/*!
-		note that this is the prefered way of instantiating the class
-	*/
-	analyze();
-	//! The complex constructor
-	/*!
-		\param db_list An array of database objects to use to analyze strings
-		While this does work as a way to get database objects in, it is not the prefered way. Unless you really need to, please use load() instead.
-		\sa load()
-	*/
-	analyze( conf *c );
+	analyze(conf *c);
 	~analyze();
 	
-	//! Loads a conf object into the object
-	/*!
-		\param c A pointer to the config object to use
-	*/
-	void load_conf( conf *c );
-	
-	//! Loads a database object into the set
-	/*!
-		\param db The database object to load
-		\return False if db is null, otherwise True.
-		Once a database object has been loaded via this method, they will be used for all future log checks
-	*/
 	int load( database *db );
 	
-	//! Process a log string
-	/*!
-		\param str The string to process
-		\return The level of severity of the string, 0 if not found. -1 if not databases are load()ed
-		This function also increments the warning level, if needed, and performs other appropriate actions\n\n
-		Please Note: IF process decides that str must be registered in the database, it will make a copy of str. Thus, it is safe to free() str once process returns.
-		\sa register()
-	*/
-	int process( dstring *str );
-	
-	#ifdef DEBUG
-	void dump();
-	#endif
+	int process( struct syslog_message *m );
 
 private:
-	//! Registers a log string in the database of already seen ones
-	/*!
-		\param str The string to register
-		\param level The warning level of str
-		\return True if not seen before, otherwise false
-		\sa process() flush_register()
-		This function should not be called directly.
-	*/
-	int reg( dstring *str, int level );
-	
-	//! Flushes the register of log messages
-	/*!
-		\param reset if True, the point level will be reset to 0.
-		\return False if no entries in register, otherwise True.
-		This function is generally called after reporting.
-		\sa report()
-	*/
-	int flush_register( int reset );
-	
-	//! Reports on the status of log levels
-	/*!
-		\return True if the report was sent off successfuly, otherwise False.
-		This function performs the user configurable actions to undertake when various point levels are reached.
-	*/
-	int report();
-	
-	//! The vector to store the database objects.
-	database **db_vec;
-	int num_db;
-	//! The current count of points
-	int points;
-	//! the register of already seen log strings
-	darray<dstrint*> *seen;
-	//! A pointer to the config file
-	conf *cnf;
-	
+	void reg( struct syslog_message *m );
+	void report_once( struct syslog_message *m );
+	void report( struct syslog_message *m, int all );
+	struct severity *emergency;
+	struct severity *alert;
+	struct severity *critical;
+	struct severity *error;
+	struct severity *warning;
+	struct severity *notice;
+	struct severity *informational;
+	struct severity *debug;
+	darray<struct syslog_message*> *seen;
+	drarray<database*> *db_vec;
 };
+
+void *analyze_launch_thread(void *args);
+
+struct analyze_args *analyze_build_args(conf *c, cache *cash);
 
 #endif

@@ -54,23 +54,18 @@ public:
 	//! The complex constructor
 	/*!
 		\param path Specifies the path to the definitions to load
-		\param level Specifies the level of severity this particular file entails.
 		\sa load()
 	*/
-	database( dstring *path, int level );
+	database( dstring *path );
 	
 	~database();
 	
 	//! Loads log definitions after instantiantion
 	/*!
 		\param path Specifies the path to the definitions to load
-		\param level Specifies the level of severity this particular file entails.
 		\return True.
 	*/
-	int load( dstring *path, int level );
-	
-	//! Returns the level of severity for this object
-	int level() const;
+	int load( dstring *path );
 	
 	//! Advances to the next log entry
 	/*!
@@ -114,8 +109,6 @@ private:
 	int curr_pos;
 	//! The total number of positions in mlist. This is a *1* based index!
 	int max_pos;
-	//! The level of severity
-	unsigned int mlevel;
 };
 
 #endif

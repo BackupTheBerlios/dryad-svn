@@ -68,6 +68,8 @@ public:
 	*/
 	int exists(T item);
 	
+	T at(int i);
+	
 	T & operator[ ]( int i );
 	T operator[ ]( int i ) const;
 

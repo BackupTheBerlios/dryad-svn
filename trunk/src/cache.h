@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <iostream.h>
 
+//! A linked list struct, used in a fifo fashion, for caching syslog_messages
 struct dstrlist {
 	struct syslog_message *item;
 	dstrlist *next;
@@ -39,13 +40,14 @@ struct dstrlist {
 
 //! The caching class
 /*!
-	This class handles the storage of dstrings. First it stores n in memory, then it starts writing them to disk as needed. It has very finely granulated mutex locking, so it is very thread safe.
+	This class handles the storage of syslog_messages. It stores a given number of bytes in memory. Once that number is surpassed, it stores them to disk. Generally, a fairly low number of in mem storage is fine, say 8mb, as a syslog message is only going to be ~1kb.
 */
 class cache {
 public:
 	//! Init the cache
 	/*!
 		\param s The number of bytes of to use as in memory storage
+		\param fname The name of the cache file to use. Pass NULL to use a randomly created one.
 	*/
 	cache( int s, dstring *fname );
 	~cache();
@@ -58,20 +60,21 @@ public:
 	
 	//! Adds item to the cache
 	/*!
-		\param item The dstring to add.
+		\param m The syslog_message to cache.
 		\return True if it's cached to memory, False if it's sent to disk. It prolly won't return if you're out of disk space... :p
-		A copy of item is what get's stored to the cache. Remember to deallocate the space if you don't need it anymore!
+		A copy of m is stored in memory, however the internals of the syslog_message are NOT copied. DO NOT deallocate the dstrings inside the message itself.
 	*/
 	int add( struct syslog_message *m );
 	
 	//! Gets the next item awaiting processing.
 	/*!
 		\return A pointer to a syslog_message.
+		This call will also move n items out of the on disk cache, if it exists. n being a number that brings the in memory cache to it's limit.
 	*/
 	struct syslog_message *get();
 
 private:
-	// You MUST have locks on tail and file before calling this function!!!
+	//! You MUST have locks on tail and file before calling this function!!!
 	void load_disk_cache();
 	int size;
 	int count;
@@ -79,6 +82,7 @@ private:
 	struct dstrlist *head;
 	struct dstrlist *tail;
 	pthread_mutex_t head_lock, tail_lock, file_lock;
+	pthread_cond_t get_wait;
 	dstring *cache_file;
 };
 #endif

@@ -50,14 +50,13 @@ int main(int argc, char *argv[])
 {
 	conf *cnf;
 	dstring *cfile;
-	analyze *core;
-	database *loader;
 	cache *cash;
 	struct cmdlineargs *args;
-	pthread_t *udp_t, *tcp_t;
+	pthread_t *udp_t, *tcp_t, *core;
 	
 	udp_t = NULL;
 	tcp_t = NULL;
+	core = NULL;
 	
 	args = parse_commandline(argc, argv);
 	
@@ -66,15 +65,7 @@ int main(int argc, char *argv[])
 	
 	cnf = new conf(args->conffile);
 	
-	core = new analyze(cnf);
-	for( int c = 0; c < cnf->num_dbs(); c++ )
-	{
-		loader = new database(cnf->db(c), cnf->db_level(c));
-		core->load(loader);
-		loader = NULL;
-	}
-	
-	cash = new cache( cnf->get_cache_size(), cnf->get_cache_file() );
+	cash = new cache( atoi(cnf->get("cache_size")->ascii()), cnf->get("cache_file") );
 	
 	if( args->udp > -1 )
 	{
@@ -90,6 +81,8 @@ int main(int argc, char *argv[])
 		cerr << "You really should specify tcp and/or udp mode, if you actually want me to do anything.\n";
 		exit(1);
 	}
+	core = (pthread_t*)malloc(sizeof(pthread_t));
+	pthread_create(core, NULL, analyze_launch_thread, analyze_build_args(cnf, cash));
 	if( udp_t != NULL )
 		pthread_join( *udp_t, NULL );
 	if( tcp_t != NULL )

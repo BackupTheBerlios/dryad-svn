@@ -28,5 +28,7 @@ struct syslog_message {
 	dstring *date;
 	dstring *host;
 	dstring *message;
+	// This gets filled in by analyze
+	dstring *daemon;
 };
 #endif
