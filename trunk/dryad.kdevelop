@@ -50,7 +50,7 @@
         <cxxflags>-O0 -Wno-deprecated -g3</cxxflags>
         <topsourcedir/>
         <cppflags>-DDEBUG</cppflags>
-        <ldflags/>
+        <ldflags>-lpthread</ldflags>
         <ccompilerbinary/>
         <cxxcompilerbinary/>
         <f77compilerbinary/>

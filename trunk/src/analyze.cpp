@@ -25,21 +25,21 @@ analyze::analyze()
 	num_db = 0;
 	db_vec = NULL;
 	seen = new dsarray();
+	cnf = NULL;
 }
 
-analyze::analyze( database *db_list[] )
+analyze::analyze( conf *c )
 {
-	if( db_list )
-	{
-		db_vec = db_list;
-	}
-	else
-	{
-		db_vec = NULL;
-	}
 	points = 0;
 	num_db = 0;
+	db_vec = NULL;
 	seen = new dsarray();
+	cnf = c;
+}
+
+void analyze::load_conf( conf *c )
+{
+	cnf = c;
 }
 
 analyze::~analyze()

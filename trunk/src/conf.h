@@ -20,6 +20,7 @@
 #ifndef CONF_H
 #define CONF_H
 
+#include <pthread.h>
 #include "dstring.h"
 #include "dfilestream.h"
 
@@ -34,6 +35,7 @@ struct daemon {
 //! The config class
 /*!
 	The basic purpose of this class is to load and store config information.\n\n
+	Thread Safe: I believe so. The struct returned from get_daemon can be modified, in particular, the name dstring, however an array of semaphores is used to track that. The databases themselves may also be modified, however that class should be thread safe itself.
 	
 	Document structure:\n
 	Configuration for a specific daemon is set of in a block, denoted by BEGIN and END tags. The BEGIN tag must specifiy the name of the daemon:\n
@@ -62,7 +64,8 @@ public:
 	/*!
 		\param name The name of the daemon to get info on. Use a NULL pointer to get information on the default settings.
 		\return A daemon* struct if it's found, otherwise NULL.
-		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.
+		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.\n
+		This function will block until the requested daemon is available.
 		\sa get_daemon(char *name)
   */ 
 	struct daemon *get_daemon(dstring *name) const;
@@ -70,10 +73,39 @@ public:
 	/*!
 		\param name The name of the daemon to get info on. Use a NULL pointer to get information on the default settings.
 		\return A daemon* struct if it's found, otherwise NULL.
-		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.
+		NOTE: This does not make a copy of the struct, it simply returns the pointer to the instance in memory.\n
+		This function will block until the requested daemon is available.
 		\sa get_daemon(dstring *name)
 	*/
 	struct daemon *get_daemon(char *name) const;
+	
+	//! Unlocks the given daemon
+	/*!
+		\param name The daemon to unlock.
+		NOTE: This function MUST be called when you are done with the daemon you got from get_daemon()
+		\sa get_daemon()
+	*/
+	void unlock(char *name);
+	
+	//! The number of databases defined
+	/*!
+		\return the number of databases defined
+	*/
+	int num_dbs() const;
+	
+	//! Returns the dstring at the given index
+	/*!
+		\param k The index
+		\return the dstring at that index
+	*/
+	dstring *db(int k) const;
+	
+	//! Returns the level of the given index
+	/*!
+		\param k The index
+		\return the int at that index
+	*/
+	int db_level(int k) const;
 	
 	#ifdef DEBUG
 	void dump();
@@ -95,6 +127,10 @@ private:
 	struct daemon **daemons;
 	int num_daemons;
 	dstring *file;
+	int num_db;
+	dstring **dbs;
+	int *db_levels;
+	pthread_mutex_t **daemon_lock;
 };
 
 #endif

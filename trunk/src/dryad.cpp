@@ -22,11 +22,11 @@
 #include <config.h>
 #endif
 
-//#include "database.h"
-//#include "analyze.h"
-//#include "dstring.h"
-//#include "dfilestream.h"
+#include "database.h"
+#include "analyze.h"
+#include "dstring.h"
 #include "conf.h"
+#include <pthread.h>
 
 
 #include <iostream>
@@ -35,13 +35,29 @@
 using namespace std;
 
 int main(int argc, char *argv[])
-{	
-	dstring *c;
-	conf *a;
-	c = new dstring("/home/peter/tmp/config.test");
-	a = new conf(c);
-	a->dump();
+{
+	conf *cnf;
+	dstring *cfile;
+	analyze *core;
+	database *loader;
 	
-
+	if( argc > 1 )
+	{
+		//for now all we get from the command line is the config file, this may change
+		cfile = new dstring(argv[1]);
+	}
+	else
+	{
+		cfile = new dstring("/home/peter/tmp/config.test");
+	}
+	cnf = new conf(cfile);
+	
+	core = new analyze(cnf);
+	for( int c = 0; c < cnf->num_dbs(); c++ )
+	{
+		loader = new database(cnf->db(c), cnf->db_level(c));
+		core->load(loader);
+		loader = NULL;
+	}
   return EXIT_SUCCESS;
 }

@@ -22,6 +22,7 @@
 
 #include "database.h"
 #include "dsarray.h"
+#include "conf.h"
 #include <pcre.h>
 
 
@@ -43,8 +44,14 @@ public:
 		While this does work as a way to get database objects in, it is not the prefered way. Unless you really need to, please use load() instead.
 		\sa load()
 	*/
-	analyze( database *db_list[] );
+	analyze( conf *c );
 	~analyze();
+	
+	//! Loads a conf object into the object
+	/*!
+		\param c A pointer to the config object to use
+	*/
+	void load_conf( conf *c );
 	
 	//! Loads a database object into the set
 	/*!
@@ -102,6 +109,8 @@ private:
 	int points;
 	//! the register of already seen log strings
 	dsarray *seen;
+	//! A pointer to the config file
+	conf *cnf;
 	
 };
 

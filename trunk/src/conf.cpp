@@ -22,6 +22,7 @@
 conf::conf(dstring *c)
 {
 	num_daemons = 0;
+	num_db = 0;
 	dfilestream *f;
 	f = new dfilestream;
 	if( f->open(c) )
@@ -36,6 +37,7 @@ conf::conf(dstring *c)
 int conf::reload()
 {
 	num_daemons = 0;
+	num_db = 0;
 	free(daemons);
 	dfilestream *f;
 	f = new dfilestream;
@@ -54,16 +56,42 @@ int conf::loadconfig(dfilestream *f)
 	dstring *tmp, *t;
 	dstring *cur_mod;
 	struct daemon *d;
-	struct daemon **n; 
+	struct daemon **n;
+	dstring **nd;
+	int *i;
+	pthread_mutex_t **nm;
+	
 	cur_mod = NULL;
+	
 	while( tmp = f->readline() )
 	{
+		if( !strncmp( tmp->ascii(), "dbfile ", 7 ) )
+		{
+			num_db++;
+			nd = (dstring**)malloc(sizeof(dstring*) * num_db);
+			i = (int*)malloc(sizeof(int) * num_db);
+			for( int c = 0; c < (num_db-1); c++ )
+			{
+				nd[c] = dbs[c];
+				i[c] = db_levels[c];
+			}
+			nd[num_db-1] = tmp->remove("dbfile ");
+			free( db_levels );
+			free(dbs);
+			db_levels = i;
+			dbs = nd;
+		}
+		if( ! strncmp( tmp->ascii(), "dblevel ", 8 ) )
+		{
+			db_levels[num_db-1] = atoi(tmp->remove("dblevel ")->ascii());
+		}
 		if( !strncmp( tmp->ascii(), "BEGIN ", 6 ) )
 		{
 			cur_mod = tmp->remove( "BEGIN " );
 			d = (struct daemon*)malloc(sizeof(struct daemon));
 			d->name = cur_mod;
 			num_daemons++;
+			//grow the array of daemons
 			n = (struct daemon**)malloc(sizeof(struct daemon*) * num_daemons);
 			for( int c = 0; c < (num_daemons-1); c++ )
 			{
@@ -72,6 +100,16 @@ int conf::loadconfig(dfilestream *f)
 			n[num_daemons-1] = d;
 			free(daemons);
 			daemons = n;
+			// grow the array of mutexes
+			nm = (pthread_mutex_t**)malloc(sizeof(pthread_mutex_t*)*num_daemons);
+			for( int c = 0; c < (num_daemons-1); c++ )
+			{
+				nm[c] = daemon_lock[c];
+			}
+			free(daemon_lock);
+			daemon_lock = nm;
+			daemon_lock[num_daemons-1] = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+			pthread_mutex_init(daemon_lock[num_daemons-1], NULL);
 			continue;
 		}
 		if( !strncmp( tmp->ascii(), "END", 3) )
@@ -126,6 +164,7 @@ int conf::loadconfig(dfilestream *f)
 
 int conf::checkconfig()
 {
+	struct stat *buf;
 	if( warn_level < 1 )
 	{
 		cerr << "Invalid warn_level: " << warn_level << ".\nAborting.\n";
@@ -169,6 +208,22 @@ int conf::checkconfig()
 			exit(1);
 		}
 	}
+	for( int c = 0; c < num_db; c++ )
+	{
+		buf = (struct stat*)malloc(sizeof(struct stat));
+		if( -1 == stat( dbs[c]->ascii(), buf ) )
+		{
+			cerr << "Unable to stat database path: " << dbs[c]->ascii() << "\nAborting\n";
+			free(buf);
+			exit(1);
+		}
+		free(buf);
+		if( db_levels[c] < 1 )
+		{
+			cerr << "Invalid dblevel (" << db_levels[c] << ") for: " << dbs[c]->ascii() << "\nAborting\n";
+			exit(1);
+		}
+	}
 }
 
 struct daemon *conf::get_daemon(char *name) const
@@ -188,6 +243,7 @@ struct daemon *conf::get_daemon(char *name) const
 	{
 		if( ! strcmp( name, daemons[c]->name->ascii() ) )
 		{
+			pthread_mutex_lock(daemon_lock[c]);
 			return daemons[c];
 		}
 	}
@@ -211,10 +267,41 @@ struct daemon *conf::get_daemon(dstring *name) const
 	{
 		if( ! strcmp( name->ascii(), daemons[c]->name->ascii() ) )
 		{
+			pthread_mutex_lock(daemon_lock[c]);
 			return daemons[c];
 		}
 	}
 	return NULL;
+}
+
+int conf::num_dbs() const
+{
+	return num_db;
+}
+
+dstring *conf::db(int k) const
+{
+	if( k < 0 || k > num_db )
+		return NULL;
+	return dbs[k];
+}
+
+int conf::db_level(int k) const
+{
+	if( k < 0 || k > num_db )
+		return 0;
+	return db_levels[k];
+}
+
+void conf::unlock(char *name)
+{
+	for( int c = 0; c < num_daemons; c++ )
+	{
+		if( ! strcmp( name, daemons[c]->name->ascii() ) )
+		{
+			pthread_mutex_unlock(daemon_lock[c]);
+		}
+	}
 }
 
 #ifdef DEBUG
