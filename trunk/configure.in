@@ -12,4 +12,4 @@ AC_CHECK_LIB([pthread], [pthread_mutex_lock])
 AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([esmtp], [smtp_errno])
 
-AC_OUTPUT(Makefile src/Makefile src/plugins/Makefile)
+AC_OUTPUT(Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile)

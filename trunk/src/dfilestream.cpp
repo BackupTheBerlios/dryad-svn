@@ -78,7 +78,6 @@ int dfilestream::open( const char *path, char *mode )
 		{
 			free(buf);
 			fh = NULL;
-			cerr << "stat fail.\n";
 			return false;
 		}
 		free(buf);
@@ -139,7 +138,7 @@ dstring *dfilestream::readline()
 		if(buf = fgets(buf, 80, fh))
 		{
 			//this check is *probablly* unneeded, but it's possible that EOF might, somewhere, sometime, not be 0/NULL/false
-			if( buf == (char*)EOF )
+			if( buf[0] == EOF )
 			{
 				again = false;
 				free(buf);
@@ -150,7 +149,7 @@ dstring *dfilestream::readline()
 			}
 			for( c = 0; c < 80; c++ )
 			{
-				if( buf[c] == '\n' )
+				if( buf[c] == '\n' || (buf[c] == '\0' && c < 79) )
 				{
 					again = false;
 					break;

@@ -1,24 +1,22 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="1" >
+ <DocsAndViews NumberOfDocuments="2" >
   <Doc0 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dryad.cpp" >
-   <View0 line="39" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="748" Left="2" MinMaxMode="0" />
+   <View0 line="22" Type="???" >
+    <AdditionalSettings Top="2" Width="1094" Attach="1" Height="724" Left="2" MinMaxMode="0" />
    </View0>
   </Doc0>
+  <Doc1 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/docs/dryad.conf.dist" >
+   <View0 line="28" Type="???" >
+    <AdditionalSettings Top="2" Width="1086" Attach="1" Height="724" Left="2" MinMaxMode="0" />
+   </View0>
+  </Doc1>
  </DocsAndViews>
  <pluginList>
   <kdevbookmarks>
    <bookmarks/>
   </kdevbookmarks>
-  <kdevsubversion>
-   <subversion recurseresolve="1" recurserelocate="1" recursemerge="1" recursecommit="1" base="" recursepropget="1" recurseswitch="1" recurseupdate="1" recursepropset="1" recursediff="1" recurserevert="1" forcemove="1" recursecheckout="1" forceremove="1" recurseadd="1" recurseproplist="1" forcemerge="1" />
-  </kdevsubversion>
-  <kdevvalgrind>
-   <executable path="" params="" />
-   <valgrind path="" params="" />
-  </kdevvalgrind>
   <kdevdebugger>
    <breakpointList/>
   </kdevdebugger>

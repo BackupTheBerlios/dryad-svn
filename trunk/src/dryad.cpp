@@ -46,6 +46,7 @@ struct cmdlineargs
 };
 
 struct cmdlineargs *parse_commandline(int argc, char *argv[]);
+void usage(char **argv);
 
 
 //! Welcome to the dryad documentation!
@@ -148,6 +149,21 @@ struct cmdlineargs *parse_commandline(int argc, char *argv[])
 					ret->udp = 0;
 			}
 		}
+		if( ! strcmp(argv[c], "-h") )
+		{
+			usage(argv);
+			exit(0);
+		}
 	}
 	return ret;
+}
+
+void usage(char **argv)
+{
+	cout << "Usage: " << argv[0] << " [options]\n";
+	cout << "Options:\n";
+	cout << "-c conffile    Specifies the config file to use, defaults to\n\t/etc/dryad/dryad.conf\n";
+	cout << "-t [port]      Specifies that the TCP network module should be started.\n\tIf a port is specified, it will bind to that port, otherwise the\n\tRFC specified port will be used. NYI.\n";
+	cout << "-u [port]      Specifies that the UDP network module should be started.\n\tIf a port is specified, it will bind to that port, otherwise the\n\tRFC specified port will be used.\n";
+	cout << "NB: It is valid to specify both -t and -u.\n";
 }
