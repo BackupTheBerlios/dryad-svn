@@ -23,6 +23,8 @@ dstring::dstring()
 {
 	len = 0;
 	str = NULL;
+	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(l, NULL);
 }
 
 dstring::dstring( int c )
@@ -33,6 +35,8 @@ dstring::dstring( int c )
 	{
 		str[a] = '\0';
 	}
+	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(l, NULL);
 }
 
 dstring::dstring( dstring *s )
@@ -44,6 +48,8 @@ dstring::dstring( dstring *s )
 		str[c] = s->str[c];
 	}
 	str[len] = '\0';
+	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(l, NULL);
 }
 
 dstring::dstring( dstring &s )
@@ -55,6 +61,8 @@ dstring::dstring( dstring &s )
 		str[c] = s.str[c];
 	}
 	str[len] = '\0';
+	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(l, NULL);
 }
 
 dstring::dstring( char *s )
@@ -66,6 +74,8 @@ dstring::dstring( char *s )
 		str[c] = s[c];
 	}
 	str[len] = '\0';
+	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(l, NULL);
 }
 
 dstring::~dstring()
@@ -75,10 +85,15 @@ dstring::~dstring()
 		free(str);
 		str = NULL;
 	}
+	pthread_mutex_destroy(l);
 }
 
 int dstring::length() const
 {
+	int ret;
+	pthread_mutex_lock(l);
+	ret = len;
+	pthread_mutex_unlock(l);
 	return len;
 }
 
@@ -111,8 +126,11 @@ dstring *dstring::remove( dstring *r )
 	char *tmp;
 	dstring *n = new dstring();
 	
+	pthread_mutex_lock(l);
+	
 	if( (len - r->length()) <= 0 )
 	{
+		pthread_mutex_unlock(l);
 		return n;
 	}
 	
@@ -138,6 +156,7 @@ dstring *dstring::remove( dstring *r )
 		// yes, it's nitpicky to use sizeof(char) rather than ++, but Tod made me :(
 		tmp += sizeof(char);
 	}
+	pthread_mutex_unlock(l);
 	return n;
 }
 
@@ -147,8 +166,11 @@ dstring *dstring::remove( char *r )
 	dstring *n = new dstring();
 	int rlen = strlen(r);
 	
+	pthread_mutex_lock(l);
+	
 	if( (len - rlen) <= 0 )
 	{
+		pthread_mutex_unlock(l);
 		return n;
 	}
 	
@@ -173,18 +195,21 @@ dstring *dstring::remove( char *r )
 		}
 		tmp++;
 	}
+	pthread_mutex_unlock(l);
 	return n;
 }
 
 char *dstring::cstring()
 {
 	char *r;
+	pthread_mutex_lock(l);
 	r = (char *)malloc( sizeof(char) * len + sizeof(char) );
 	for( int c = 0; c < len; c++ )
 	{
 		r[c] = str[c];
 	}
 	r[len] = '\0';
+	pthread_mutex_unlock(l);
 	return r;
 }
 
@@ -196,6 +221,7 @@ const char *dstring::ascii()
 void dstring::resize(int s)
 {
 	char *n;
+	pthread_mutex_lock(l);
 	n = (char *)malloc( sizeof(char) * s + sizeof(char) );
 	for( int c = 0; c < s; c++ )
 	{
@@ -209,10 +235,12 @@ void dstring::resize(int s)
 		free(str);
 	str = n;
 	len = s;
+	pthread_mutex_unlock(l);
 }
 
 const dstring & dstring::operator = ( const dstring & s )
 {
+	pthread_mutex_lock(l);
 	if( this != &s )
 	{
 		if( str )
@@ -224,11 +252,13 @@ const dstring & dstring::operator = ( const dstring & s )
 			str[c] = s.str[c];
 		}
 	}
+	pthread_mutex_unlock(l);
 	return *this;
 }
 
 const dstring & dstring::operator = ( const dstring * s )
 {
+	pthread_mutex_lock(l);
 	if( this != s )
 	{
 		if( str )
@@ -240,11 +270,13 @@ const dstring & dstring::operator = ( const dstring * s )
 			str[c] = s->str[c];
 		}
 	}
+	pthread_mutex_unlock(l);
 	return *this;
 }
 
 const dstring & dstring::operator = ( const char * s )
 {
+	pthread_mutex_lock(l);
 	if( s != str )
 	{
 		if( str )
@@ -256,30 +288,40 @@ const dstring & dstring::operator = ( const char * s )
 			str[c] = s[c];
 		}
 	}
+	pthread_mutex_unlock(l);
 	return *this;
 }
 
 char dstring::operator[ ]( int i ) const
 {
+	char ret;
+	pthread_mutex_lock(l);
 	if( i < len || i < 0 )
 	{
-		return str[i];
+		ret = str[i];
+		pthread_mutex_unlock(l);
+		return ret;
 	}
 	else
 	{
+		pthread_mutex_unlock(l);
 		return '\0';
 	}
 }
 
 char & dstring::operator[ ]( int i )
 {
-	char r = '\0';
+	char ret, r = '\0';
+	pthread_mutex_lock(l);
 	if( i < len || i < 0 )
 	{
-		return str[i];
+		ret = str[i];
+		pthread_mutex_unlock(l);
+		return ret;
 	}
 	else
 	{
+		pthread_mutex_unlock(l);
 		return r;
 	}
 }

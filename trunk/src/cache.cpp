@@ -17,57 +17,68 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CACHE_H
-#define CACHE_H
+#include "cache.h"
 
-#include "dstring.h"
+cache::cache(int s)
+{
+	head = NULL;
+	tail = NULL;
+	s > 0 ? size = s : size = 32;
+	pthread_mutex_init(&head_lock, NULL);
+	pthread_mutex_init(&tail_lock, NULL);
+	count = 0;
+}
 
-#include <pthread.h>
+cache::~cache()
+{
+	struct dstrlist *curr;
+	while( head->next != NULL )
+	{
+		curr = head;
+		head = head->next;
+		free(curr);
+	}
+	free(head);
+	pthread_mutex_destroy(&head_lock);
+	pthread_mutex_destroy(&tail_lock);
+}
 
-struct dstrlist {
-	dstring *item;
-	dstrlist *next;
-	dstrlist *prev;
-};
+int cache::get_size() const
+{
+	return size;
+}
 
-//! The caching class
-/*!
-	This class handles the storage of dstrings. First it stores n in memory, then it starts writing them to disk as needed. It has very finely granulated mutex locking, so it is very thread safe.
-*/
-class cache {
-public:
-	//! Init the cache
-	/*!
-		\param s The number of bytes of to use as in memory storage
-	*/
-	cache( int s );
-	~cache();
+int cache::add(dstring *item)
+{
+	int str_size;
 	
-	//! Gets the max size of the cache
-	/*!
-		\return the size of the cache
-	*/
-	int get_size() const;
+	if( item == NULL )
+		return -1;
 	
-	//! Adds item to the cache
-	/*!
-		\param item The dstring to add.
-		\return True if it's cached to memory, False if it's sent to disk. It prolly won't return if you're out of disk space... :p
-		A copy of item is what get's stored to the cache. Remember to deallocate the space if you don't need it anymore!
-	*/
-	int add( dstring *item );
-	
-	//! Gets the next item awaiting processing.
-	/*!
-		\return A pointer to the dstring.
-	*/
-	dstring *get();
-
-private:
-	int size;
-	int count;
-	struct dstrlist *head;
-	struct dstrlist *tail;
-	pthread_mutex_t head_lock, tail_lock;
-};
-#endif
+	str_size = (sizeof(char) * item->length()) + sizeof(dstring);
+	if( (count+str_size) <=  size )
+	{
+		pthread_mutex_lock(&tail_lock);
+		if( head == NULL )
+		{
+			pthread_mutex_lock(&head_lock);
+			head = (struct dstrlist*)malloc(sizeof(struct dstrlist));
+			head->prev = NULL;
+			head->next = NULL;
+			head->item = new dstring((char*)(item->ascii()));
+			tail = head;
+			pthread_mutex_unlock(&head_lock);
+		}
+		else
+		{
+			tail->next = (struct dstrlist*)malloc(sizeof(struct dstrlist));
+			tail->next->prev = tail;
+			tail = tail->next;
+			tail->next = NULL;
+			tail->item = new dstring((char*)(item->ascii()));
+		}
+		count += str_size;
+		pthread_mutex_unlock(&tail_lock);
+	}
+	// do stuff to cache it to disk. I'll prolly need to extend dfilestream...
+}

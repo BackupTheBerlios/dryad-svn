@@ -92,7 +92,7 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp network.cpp dqueue.cpp darray.cpp drarray.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp network.cpp dqueue.cpp darray.cpp drarray.cpp cache.cpp
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
@@ -111,7 +111,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_dryad_OBJECTS = dryad.$(OBJEXT) database.$(OBJEXT) analyze.$(OBJEXT) \
 	dstring.$(OBJEXT) dfilestream.$(OBJEXT) conf.$(OBJEXT) \
 	network.$(OBJEXT) dqueue.$(OBJEXT) darray.$(OBJEXT) \
-	drarray.$(OBJEXT)
+	drarray.$(OBJEXT) cache.$(OBJEXT)
 dryad_OBJECTS = $(am_dryad_OBJECTS)
 dryad_DEPENDENCIES =
 
@@ -122,11 +122,12 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/analyze.Po ./$(DEPDIR)/conf.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/darray.Po ./$(DEPDIR)/database.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dfilestream.Po ./$(DEPDIR)/dqueue.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/drarray.Po ./$(DEPDIR)/dryad.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dstring.Po ./$(DEPDIR)/network.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/analyze.Po ./$(DEPDIR)/cache.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/conf.Po ./$(DEPDIR)/darray.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/database.Po ./$(DEPDIR)/dfilestream.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dqueue.Po ./$(DEPDIR)/drarray.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dstring.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/network.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -191,6 +192,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/darray.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@

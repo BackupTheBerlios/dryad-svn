@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream.h>
+#include <pthread.h>
 
 //! Dryad-string
 /*!
@@ -124,6 +125,7 @@ private:
 	char *str;
 	//! The length of *str. This a *1* based count
 	int len;
+	pthread_mutex_t *l;
 };
 
 #endif
