@@ -34,36 +34,37 @@
 #ifdef HAVE_PTHREADS
 #include <pthread.h>
 
-pthread_t *send_thread;
+pthread_t *lrsp_send_thread;
 #endif
 
 int lrsp_start_convo(char m);
 int lrsp_go(char *msg);
 
-char *s;
-int p;
-char m;
-int inited;
-int sock;
+char *lrsp_s;
+int lrsp_p;
+char lrsp_m;
+int lrsp_inited;
+int lrsp_sock;
+lrsp_callback lrsp_cb;
 
 int lrsp_init(char *server, int port, char mode)
 {
 	struct sockaddr_in me;
 
 	#ifdef HAVE_PTHREADS
-	send_thread = malloc(sizeof(pthread_t));
+	lrsp_send_thread = malloc(sizeof(pthread_t));
 	#endif
-	s = malloc(sizeof(char)*strlen(server));
-	strcpy(s, server);
+	lrsp_s = malloc(sizeof(char)*strlen(server));
+	strcpy(lrsp_s, server);
 	if( port == 0 )
-		p = LRSP_PORT;
+		lrsp_p = LRSP_PORT;
 	else
-		p = port;
+		lrsp_p = port;
 	if( mode == LRSP_PERSISTANT || mode == LRSP_SINGLE )
-		m = mode;
+		lrsp_m = mode;
 	else
-		m = LRSP_SINGLE;
-	if( -1 == (sock = socket(AF_INET, SOCK_STREAM, 0)) )
+		lrsp_m = LRSP_SINGLE;
+	if( -1 == (lrsp_sock = socket(AF_INET, SOCK_STREAM, 0)) )
 	{
 		return -1;
 	}
@@ -71,60 +72,76 @@ int lrsp_init(char *server, int port, char mode)
 	me.sin_port = htons(0);
 	me.sin_addr.s_addr = htonl(INADDR_ANY);
 	memset(&(me.sin_zero), '\0', 8);
-	if( -1 == bind(sock, (struct sockaddr*)&me, sizeof(struct sockaddr)) )
+	if( -1 == bind(lrsp_sock, (struct sockaddr*)&me, sizeof(struct sockaddr)) )
 	{
 		return -2;
 	}
-	if( m == LRSP_PERSISTANT )
+	if( lrsp_m == LRSP_PERSISTANT )
 	{
 		if( ! lrsp_start_convo(LRSP_PERSISTANT) )
 		{
 			return -3;
 		}
 	}
-	inited = 1;
+	lrsp_inited = 1;
 	return 1;
 }
 
 int lrsp_free()
 {
-	if( 0 == inited )
+	if( 0 == lrsp_inited )
 		return 0;
-	close(sock);
+	close(lrsp_sock);
 	#ifdef HAVE_PTHREADS
-	free(send_thread);
+	free(lrsp_send_thread);
 	#endif
-	free(s);
-	inited = 0;
+	free(lrsp_s);
+	lrsp_inited = 0;
 	return 1;
 }
 
 int lrsp_send_message(char *msg)
 {
 	#ifdef HAVE_PTHREADS
-	return pthread_create(send_thread, NULL, (void*)lrsp_go, msg);
+	return pthread_create(lrsp_send_thread, NULL, (void*)lrsp_go, msg);
 	#endif
 	return lrsp_go(msg);
 }
 
 int lrsp_go(char *msg)
 {
-	int sent, c;
+	int sent, c, err;
 	char *try;
 	
 	sent = 0;
 	try = msg;
 
-	if( m == LRSP_SINGLE )
+	if( lrsp_m == LRSP_SINGLE )
 	{
-		if( 0 > lrsp_start_convo(LRSP_SINGLE) )
-			return -4;
+		if(  0 > (err = lrsp_start_convo(LRSP_SINGLE)) )
+		{
+			#ifdef HAVE_PTHREADS
+			if( lrsp_cb != NULL )
+				(*lrsp_cb)(err, msg);
+			return 0;
+			#else
+			return err;
+			#endif
+		}
 	}
 		
 	while( sent < (strlen(try) + sizeof(char)) )
 	{
-		if( -1 == (sent = send(sock, try, strlen(try) + sizeof(char), 0)) )
+		if( -1 == (sent = send(lrsp_sock, try, strlen(try) + sizeof(char), 0)) )
+		{
+			#ifdef HAVE_PTHREADS
+			if( lrsp_cb != NULL )
+				(*lrsp_cb)(err, msg);
+			return 0;
+			#else
 			return -5;
+			#endif
+		}
 		for( c = 0; c <= (sent/sizeof(char)); c++ )
 			try = try + sizeof(char);
 	}
@@ -138,23 +155,23 @@ int lrsp_start_convo(char m)
 	struct sockaddr_in him;
 
 	him.sin_family = AF_INET;
-	him.sin_port = p;
-	him.sin_addr.s_addr = inet_addr(s);
+	him.sin_port = lrsp_p;
+	him.sin_addr.s_addr = inet_addr(lrsp_s);
 	memset(&(him.sin_zero), '\0', 8);
-	if( -1 == connect(sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
+	if( -1 == connect(lrsp_sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
 	{
 		return -6;
 	}
 	
 	msg = malloc(sizeof(char)*1);
-	msg[0] = m;
-	if( -1 == send(sock, msg, 1*sizeof(char), 0) )
+	msg[0] = lrsp_m;
+	if( -1 == send(lrsp_sock, msg, 1*sizeof(char), 0) )
 	{
 		return -7;
 	}
 	free(msg);
 	msg = malloc(sizeof(char)*3);
-	t = recv(sock, msg, 2, 0);
+	t = recv(lrsp_sock, msg, 2, 0);
 	if( t == 0 || t == -1 )
 	{
 		free(msg);
@@ -201,4 +218,9 @@ char *lrsp_error_message(int err)
 			return "Failed to get OK from server in lrsp_start_convo.\n";
 			break;
 	}
+}
+
+void lrsp_register_callback(lrsp_callback c)
+{
+	lrsp_cb = c;
 }

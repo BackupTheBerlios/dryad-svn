@@ -1,0 +1,72 @@
+<chapter>
+<title>The Conversation</title>
+<sect1>
+<title>Initiating the conversation</title>
+	<para>All LRSP conversation begin with a single mode character:
+		<itemizedlist mark="bullet">
+			<listitem><para>S -- Denotes the connection shall be used to send a single message, afterwhich it will be closed.</para></listitem>
+			<listitem><para>P -- Denotes the connection shall be persistant, multiple messages will be sent.</para></listitem>
+		</itemizedlist>
+	</para>
+	<para>When to use the different modes:
+		<itemizedlist mark="bullet">
+			<listitem><para>S -- This connection mode should be used when sending a message to a non standard log server. For example, if your syslog client is configure to pass messages of a specific severity to a special log server, then this mode should be used when it needs to transmit one.</para></listitem>
+			<listitem><para>P -- This connection mode should be used to send messages to the main log server(s) for the client device.</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+<sect1>
+<title>Transmitting data</title>
+	<para>After the conversation has been initiated, the device may send the actually syslog message. As per RFC3164, the message may not exceed the length of 1024 bytes.</para>
+	<para>If the connection is running in persistant mode, the message must be suceeded by a \0 character to indicate the completion of the message.</para>
+</sect1>
+
+<sect1>
+<title>Ending the conversation</title>
+	<para>If the connection is running in single mode, no notification of termination need be sent. Both parties should simply close their socket.</para>
+	<para>If the connection is running in persistant mode, the client should end the conversation by sending a second \0 character after the end of message delineator \0.</para>
+</sect1>
+
+<sect1>
+<title>Status Codes</title>
+	<para>Upon recieving any sort of data from the device, the syslog server responds with a status code:
+		<itemizedlist mark="bullet">
+			<listitem><para>OK -- Sent when the message was recieved and understood correctly.</para></listitem>
+			<listitem><para>NO -- Sent when the device sends a valid message, but the server denies it. In particular, this code is to be used if the device requests of connection mode that the server does not support.</para></listitem>
+			<listitem><para>WT -- Sent when the device sends an invalid message.</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+<sect1>
+<title>An example single message connection</title>
+	<para>For this example, L: shall represent the syslog server. C: shall represent the syslog device.</para>
+	<para>
+		<itemizedlist mark="bullet">
+			<listitem><para>C: S</para></listitem>
+			<listitem><para>L: OK</para></listitem>
+			<listitem><para>C: <10>May  5 13:22:43 [sudo] peter : TTY=pts/37 ; PWD=/home/peter ; USER=root ; COMMAND=/bin/su</para></listitem>
+			<listitem><para>L: OK</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+<sect1>
+<title>An example persistant connection</title>
+	<para>Again, L: is the syslog server, and C: is the device.</para>
+	<para>
+		<itemizedlist mark="bullet">
+			<listitem><para>C: P</para></listitem>
+			<listitem><para>L: OK</para></listitem>
+			<listitem><para>C: <10>May  5 13:22:43 [sudo] peter : TTY=pts/37 ; PWD=/home/peter ; USER=root ; COMMAND=/bin/su\0</para></listitem>
+			<listitem><para>L: OK</para></listitem>
+			<listitem><para>C: May  5 13:27:34 [su(pam_unix)] session opened for user root by (uid=0)\0</para></listitem>
+			<listitem><para>L: OK</para></listitem>
+			<listitem><para>C: \0</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+</chapter>
+

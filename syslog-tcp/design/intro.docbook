@@ -1,0 +1,35 @@
+<chapter>
+<title>Introduction</title>
+
+<sect1>
+	<title>Purpose</title>
+	<para>The second generation syslog protocol as set out in RFC3195 is bit heavy weight for an application as simple as system logging. While BEEP is a very interesting concept, it posses some qualities that are very much overkill. It is this author's opinion that it is far better to design a protocol based on the needs of the information being transmitted, rather than attempting to shoehorn the information into a multi purpose transport system. As has been said before<footnote><para>Unfortunatly, I can't seem to find the site that brought up this concept, if anyone knows it, drop me a line.</para></footnote> the strength of the Internet is in its utter simplicity. Because the basic governing control of the 'net is very dumb, totally content unaware, it is able to do anything, transmit any kind of data we can envision. However, something like BEEP limits this. It forces us to express data in certain paradigms, making us fit the data to the protocol, and thus limiting the potential for doing cool things over the Internet.</para>
+	<para>I would like to take a moment to say, I have nothing against the supporters of BEEP. As I've said it is a very interesting idea, I just feel that it is a bit misguided to use it for the syslog protocol. To jump on my soapbox for a moment, I think this yet another instance of people going "OOOH! I can use XML here!" and forgetting about practical considerations, such as the fact that XML is bloated and slow to process. XML is very useful, in some situation, but of late there is a disturbing trend of forgetting where those areas are and forcing into every possible area. XML is not a panacea, people.</para>
+</sect1>
+
+<sect1>
+	<title>Revision History</title>
+	<para>2004-05-04
+		<itemizedlist mark="bullet">
+			<listitem><para>Initial Draft</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+<sect1>
+	<title>Feedback</title>
+	<para>Feedback is of course welcome! However, if you wish to flame me, or otherwise present nonconstructive criticism, I would ask that you simply remember that this is not that big a deal and grow up a bit. If you wish to discuss this in a group setting, you may use the <ulink url="http://lists.sourceforge.net/lists/listinfo/dryad-lrsp">dryad-lrsp</ulink>. Otherwise, please send me an email at <ulink url="lrsp@entropicaccess.net">lrsp@entropicaccess.net</ulink>.</para>
+</sect1>
+
+<sect1>
+	<title>Distribution Policy</title>
+	  <para>This work is licensed under the Creative Commons Attribution-ShareAlike License. To view a copy of this license, visit <ulink url="http://creativecommons.org/licenses/by-sa/1.0/">http://creativecommons.org/licenses/by-sa/1.0/</ulink> or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.</para>
+</sect1>
+
+<sect1>
+	<title>Intended Audience</title>
+	<para>This paper is intended for anyone with an interest the protocol syslog daemons use to communicate, be you a sysadmin, developer, or manager.</para>
+</sect1>
+
+</chapter>
+

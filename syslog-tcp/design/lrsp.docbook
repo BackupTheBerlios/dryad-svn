@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd"
+[ <!ENTITY intro SYSTEM "intro.docbook">
+	<!ENTITY details SYSTEM "details.docbook">
+]>
+
+<book>
+<title>A Lightweight, Reliable Syslog Protocol</title>
+<bookinfo>
+<author>
+	<firstname>Peter</firstname>
+	<surname>Snoblin</surname>
+</author>
+</bookinfo>
+&intro;
+&details;
+</book>
+
