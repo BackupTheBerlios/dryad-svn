@@ -1,1 +1,27 @@
+RTLAD Dryad Readme
+
+Thank you for giving Dryad a shot! We really appreciate it!
+
+This file contains a few bits and pieces that you may find of interest.
+
+./configure options of note:
+--enable-paranoid-shutdown
+	Because of how the core of dryad, the analysis thread, works it can't
+	shutdown until it recieves a message to process. When we catch SIGINT
+	and SIGTERM, we signal the networking threads that they need to end,
+	and we wait for them to finish. We'd like to do the same for the core,
+	but we can't be assured that it will get our signal until n timeperiods
+	later. Basically, turn this option on if you want to have the cleanest of
+	all possible shutdowns. If you just want Dryad to quit when you tell it to,
+	ignore this options
+
+--enable-emailplug
+	This will cause the plugin sends emails to be built. If you enable this
+	option you will need to have libesmtp installed as well.
+
+--enable-pythonplug=/path/to/Python.h
+	This will cause the python plugin to be built. You must specify the path
+	to the instance of Python.h you wish to use. Generally, this is installed
+	at $PREFIX/include/pythonVER/. The plugin has been tested with Python
+	version 2.2 and 2.3.
 

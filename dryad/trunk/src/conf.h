@@ -90,6 +90,7 @@ public:
 	/*!
 		\param daemon The name of the daemon to use.
 		\param name The name of the variable you want to get.
+		\param all If not null, this will be filled with *all* occurencess of name in that scope. In that case, the *first* one found will be returned.
 		\return The value of the requested variable. If it's not found, or the specified daemon is not found, NULL is returned. Again, if multiple occurences exist, the first is returned.
 		\sa get()
 		This method works a lot like get(), with the difference that it will use a daemon scope, defined thusly:\n
@@ -99,6 +100,7 @@ public:
 		...\n
 		END\n
 	*/
+	dstring *daemon_get(const char *daemon, const char *name, drarray<dstring*> *all);
 	dstring *daemon_get(const char *daemon, const char *name);
 	//! Returns the number of daemons
 	/*!

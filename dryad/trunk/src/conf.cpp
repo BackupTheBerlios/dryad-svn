@@ -158,7 +158,7 @@ dstring *conf::get(const char *name)
 	return NULL;
 }
 
-dstring *conf::daemon_get(const char *daemon, const char *name)
+dstring *conf::daemon_get(const char *daemon, const char *name, drarray<dstring*> *all)
 {
 	for( int c = 0; c < daemons->length(); c++ )
 	{
@@ -168,13 +168,24 @@ dstring *conf::daemon_get(const char *daemon, const char *name)
 			{
 				if( !strcmp(daemons->at(c)->contents->at(d)->name->ascii(), name) )
 				{
-					return daemons->at(c)->contents->at(d)->value;
+					if( all == NULL )
+						return daemons->at(c)->contents->at(d)->value;
+					else
+						all->pushback(daemons->at(c)->contents->at(d)->value);
 				}
 			}
-			return NULL;
+			if( all == NULL )
+				return NULL;
+			else
+				return all->at(0);
 		}
 	}
 	return NULL;
+}
+
+dstring *conf::daemon_get(const char* daemon, const char*name)
+{
+	return this->daemon_get(daemon, name, NULL);
 }
 
 int conf::num_daemons() const

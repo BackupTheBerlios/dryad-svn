@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CXXDEPMODE build build_cpu build_vendor build_os host host_cpu host_vendor host_os CC CFLAGS ac_ct_CC CCDEPMODE EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CPP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS EMAILPLUG_TRUE EMAILPLUG_FALSE NULLPLUG_TRUE NULLPLUG_FALSE FILEPLUG_TRUE FILEPLUG_FALSE EXTERNALPLUG_TRUE EXTERNALPLUG_FALSE PYTHONPLUG_TRUE PYTHONPLUG_FALSE PKGLIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CXXDEPMODE build build_cpu build_vendor build_os host host_cpu host_vendor host_os CC CFLAGS ac_ct_CC CCDEPMODE EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CPP CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1029,6 +1029,11 @@ Optional Features:
   --enable-paranoid-shutdown
                           force the signal handler to wait for the analysis
                           core to exit before quiting.
+  --enable-emailplug      build the libemail.so libhandler
+  --disable-nullplug      don't build the libnull.so libhandler
+  --disable-fileplug      don't build the libfile.so libhandler
+  --disable-externalplug  don't build the libexternal.so libhandler
+  --enable-pythonplug     build the libpython.so libhandler
   --disable-dependency-tracking Speeds up one-time builds
   --enable-dependency-tracking  Do not reject slow dependency extractors
   --enable-shared[=PKGS]
@@ -1509,15 +1514,150 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+# check if we should use the paranoid shutdown code
 # Check whether --enable-paranoid-shutdown or --disable-paranoid-shutdown was given.
 if test "${enable_paranoid_shutdown+set}" = set; then
   enableval="$enable_paranoid_shutdown"
-
+  case "${enableval}" in
+		yes)
 cat >>confdefs.h <<\_ACEOF
 #define PARANOID_SHUTDOWN 1
 _ACEOF
-
+ paranoid=true
+		;;
+		no) paranoid=false
+		;;
+		*) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-paranoid-shutdown" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-paranoid-shutdown" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
 fi;
+
+# check which plugins we should build. By default, we build all that don't have external dependencies
+# Check whether --enable-emailplug or --disable-emailplug was given.
+if test "${enable_emailplug+set}" = set; then
+  enableval="$enable_emailplug"
+  case "${enableval}" in
+		yes) emailplug=true; PKGLIBS=$PKGLIBS'libemail.la '
+		;;
+		no) emailplug=false
+		;;
+		*) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-emailplug" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-emailplug" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  emailplug=false
+fi;
+
+# Check whether --enable-nullplug or --disable-nullplug was given.
+if test "${enable_nullplug+set}" = set; then
+  enableval="$enable_nullplug"
+  case "${disableval}" in
+		yes) nullplug=false
+		;;
+		no) nullplug=true; PKGLIBS=$PKGLIBS'libnull.la '
+		;;
+		*) { { echo "$as_me:$LINENO: error: bad value ${disableval} for --disable-nullplug" >&5
+echo "$as_me: error: bad value ${disableval} for --disable-nullplug" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  nullplug=true; PKGLIBS=$PKGLIBS'libnull.la '
+fi;
+
+# Check whether --enable-fileplug or --disable-fileplug was given.
+if test "${enable_fileplug+set}" = set; then
+  enableval="$enable_fileplug"
+  case "{$disableval}" in
+		yes) fileplug=false
+		;;
+		no) fileplug=true; PKGLIBS=$PKGLIBS+'libfile.la '
+		;;
+		*) { { echo "$as_me:$LINENO: error: bad value ${disableval} for --disable-fileplug" >&5
+echo "$as_me: error: bad value ${disableval} for --disable-fileplug" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  fileplug=true; PKGLIBS=$PKGLIBS'libfile.la '
+fi;
+
+# Check whether --enable-externalplug or --disable-externalplug was given.
+if test "${enable_externalplug+set}" = set; then
+  enableval="$enable_externalplug"
+  case "{$disableval}" in
+		yes) externalplug=false
+		;;
+		no) externalplug=true; PKGLIBS=$PKGLIBS+'libexternal.la '
+		;;
+		*) { { echo "$as_me:$LINENO: error: bad value ${disableval} for --disable-externalplug" >&5
+echo "$as_me: error: bad value ${disableval} for --disable-externalplug" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  externalplug=true;PKGLIBS=$PKGLIBS'libexternal.la '
+fi;
+
+# Check whether --enable-pythonplug or --disable-pythonplug was given.
+if test "${enable_pythonplug+set}" = set; then
+  enableval="$enable_pythonplug"
+  pythonplug=true; pythonincl=${enableval}; PKGLIBS=$PKGLIBS'libpython.la '
+else
+  pythonplug=false
+fi;
+
+
+
+if test x$emailplug = xtrue; then
+  EMAILPLUG_TRUE=
+  EMAILPLUG_FALSE='#'
+else
+  EMAILPLUG_TRUE='#'
+  EMAILPLUG_FALSE=
+fi
+
+
+
+if test x$nullplug = xtrue; then
+  NULLPLUG_TRUE=
+  NULLPLUG_FALSE='#'
+else
+  NULLPLUG_TRUE='#'
+  NULLPLUG_FALSE=
+fi
+
+
+
+if test x$fileplug = xtrue; then
+  FILEPLUG_TRUE=
+  FILEPLUG_FALSE='#'
+else
+  FILEPLUG_TRUE='#'
+  FILEPLUG_FALSE=
+fi
+
+
+
+if test x$externalplug = xtrue; then
+  EXTERNALPLUG_TRUE=
+  EXTERNALPLUG_FALSE='#'
+else
+  EXTERNALPLUG_TRUE='#'
+  EXTERNALPLUG_FALSE=
+fi
+
+
+
+if test x$pythonplug = xtrue; then
+  PYTHONPLUG_TRUE=
+  PYTHONPLUG_FALSE='#'
+else
+  PYTHONPLUG_TRUE='#'
+  PYTHONPLUG_FALSE=
+fi
+
+
+
 
 # Add the stamp file to the list of files AC keeps track of,
 # along with our hook.
@@ -4018,7 +4158,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 4021 "configure"' > conftest.$ac_ext
+  echo '#line 4161 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5144,7 +5284,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:5147:" \
+echo "$as_me:5287:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -6178,11 +6318,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6181: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6321: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:6185: \$? = $ac_status" >&5
+   echo "$as_me:6325: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6411,11 +6551,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6414: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6554: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:6418: \$? = $ac_status" >&5
+   echo "$as_me:6558: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -6471,11 +6611,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:6474: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:6614: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:6478: \$? = $ac_status" >&5
+   echo "$as_me:6618: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -7850,7 +7990,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*)
-    echo '#line 7853 "configure"' > conftest.$ac_ext
+    echo '#line 7993 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8710,7 +8850,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8713 "configure"
+#line 8853 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8808,7 +8948,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8811 "configure"
+#line 8951 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10987,11 +11127,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10990: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11130: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10994: \$? = $ac_status" >&5
+   echo "$as_me:11134: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -11047,11 +11187,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:11050: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11190: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:11054: \$? = $ac_status" >&5
+   echo "$as_me:11194: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11603,7 +11743,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*)
-    echo '#line 11606 "configure"' > conftest.$ac_ext
+    echo '#line 11746 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -12463,7 +12603,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12466 "configure"
+#line 12606 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12561,7 +12701,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12564 "configure"
+#line 12704 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13388,11 +13528,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13391: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13531: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13395: \$? = $ac_status" >&5
+   echo "$as_me:13535: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -13448,11 +13588,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13451: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13591: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13455: \$? = $ac_status" >&5
+   echo "$as_me:13595: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14807,7 +14947,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*)
-    echo '#line 14810 "configure"' > conftest.$ac_ext
+    echo '#line 14950 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -15537,11 +15677,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15540: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15680: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15544: \$? = $ac_status" >&5
+   echo "$as_me:15684: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15770,11 +15910,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15773: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15913: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15777: \$? = $ac_status" >&5
+   echo "$as_me:15917: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15830,11 +15970,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15833: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15973: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15837: \$? = $ac_status" >&5
+   echo "$as_me:15977: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17209,7 +17349,7 @@ linux*)
   libsuff=
   case "$host_cpu" in
   x86_64*)
-    echo '#line 17212 "configure"' > conftest.$ac_ext
+    echo '#line 17352 "configure"' > conftest.$ac_ext
     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -18069,7 +18209,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 18072 "configure"
+#line 18212 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -18167,7 +18307,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 18170 "configure"
+#line 18310 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -21023,6 +21163,7 @@ See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+if  "$emailplug" = "true" ; then
 
 echo "$as_me:$LINENO: checking for smtp_errno in -lesmtp" >&5
 echo $ECHO_N "checking for smtp_errno in -lesmtp... $ECHO_C" >&6
@@ -21096,13 +21237,14 @@ _ACEOF
   LIBS="-lesmtp $LIBS"
 
 else
-  { { echo "$as_me:$LINENO: error: Dryad requires libesmtp!
+  { { echo "$as_me:$LINENO: error: The libemail libhandler requires libesmtp!
 See \`config.log' for more details." >&5
-echo "$as_me: error: Dryad requires libesmtp!
+echo "$as_me: error: The libemail libhandler requires libesmtp!
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+fi
 
 echo "$as_me:$LINENO: checking for lrsp_client_free in -llrsp" >&5
 echo $ECHO_N "checking for lrsp_client_free in -llrsp... $ECHO_C" >&6
@@ -21183,6 +21325,158 @@ See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+
+if  "$pythonplug" = "true" ; then
+CPPFLAGS="$CPPFLAGS -I$pythonincl"
+if test "${ac_cv_header_Python_h+set}" = set; then
+  echo "$as_me:$LINENO: checking for Python.h" >&5
+echo $ECHO_N "checking for Python.h... $ECHO_C" >&6
+if test "${ac_cv_header_Python_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_Python_h" >&5
+echo "${ECHO_T}$ac_cv_header_Python_h" >&6
+else
+  # Is the header compilable?
+echo "$as_me:$LINENO: checking Python.h usability" >&5
+echo $ECHO_N "checking Python.h usability... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <Python.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_header_compiler=no
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6
+
+# Is the header present?
+echo "$as_me:$LINENO: checking Python.h presence" >&5
+echo $ECHO_N "checking Python.h presence... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <Python.h>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_cxx_preproc_warn_flag
+    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+rm -f conftest.err conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: Python.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: Python.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: Python.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: Python.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: Python.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: Python.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: Python.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: Python.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: Python.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: Python.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: Python.h: in the future, the compiler will take precedence" >&2;}
+    (
+      cat <<\_ASBOX
+## ----------------------------------- ##
+## Report this to dryad-bugs@rtlad.org ##
+## ----------------------------------- ##
+_ASBOX
+    ) |
+      sed "s/^/$as_me: WARNING:     /" >&2
+    ;;
+esac
+echo "$as_me:$LINENO: checking for Python.h" >&5
+echo $ECHO_N "checking for Python.h... $ECHO_C" >&6
+if test "${ac_cv_header_Python_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_Python_h=$ac_header_preproc
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_Python_h" >&5
+echo "${ECHO_T}$ac_cv_header_Python_h" >&6
+
+fi
+if test $ac_cv_header_Python_h = yes; then
+  :
+else
+  { { echo "$as_me:$LINENO: error: The libpython libhandler requires that you specify the path to your python includes. Generally, these are in PYTHON_PREFIX/include/pythonVER/. Dryad has been confirmed to work with both version 2.2 and 2.3.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The libpython libhandler requires that you specify the path to your python includes. Generally, these are in PYTHON_PREFIX/include/pythonVER/. Dryad has been confirmed to work with both version 2.2 and 2.3.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+fi
 
                                                   ac_config_files="$ac_config_files Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile"
 cat >confcache <<\_ACEOF
@@ -21276,6 +21570,41 @@ LIBOBJS=$ac_libobjs
 LTLIBOBJS=$ac_ltlibobjs
 
 
+if test -z "${EMAILPLUG_TRUE}" && test -z "${EMAILPLUG_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"EMAILPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"EMAILPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${NULLPLUG_TRUE}" && test -z "${NULLPLUG_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"NULLPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"NULLPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FILEPLUG_TRUE}" && test -z "${FILEPLUG_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"FILEPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"FILEPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${EXTERNALPLUG_TRUE}" && test -z "${EXTERNALPLUG_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"EXTERNALPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"EXTERNALPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${PYTHONPLUG_TRUE}" && test -z "${PYTHONPLUG_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"PYTHONPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"PYTHONPLUG\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -21819,6 +22148,17 @@ s,@ECHO_C@,$ECHO_C,;t t
 s,@ECHO_N@,$ECHO_N,;t t
 s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
+s,@EMAILPLUG_TRUE@,$EMAILPLUG_TRUE,;t t
+s,@EMAILPLUG_FALSE@,$EMAILPLUG_FALSE,;t t
+s,@NULLPLUG_TRUE@,$NULLPLUG_TRUE,;t t
+s,@NULLPLUG_FALSE@,$NULLPLUG_FALSE,;t t
+s,@FILEPLUG_TRUE@,$FILEPLUG_TRUE,;t t
+s,@FILEPLUG_FALSE@,$FILEPLUG_FALSE,;t t
+s,@EXTERNALPLUG_TRUE@,$EXTERNALPLUG_TRUE,;t t
+s,@EXTERNALPLUG_FALSE@,$EXTERNALPLUG_FALSE,;t t
+s,@PYTHONPLUG_TRUE@,$PYTHONPLUG_TRUE,;t t
+s,@PYTHONPLUG_FALSE@,$PYTHONPLUG_FALSE,;t t
+s,@PKGLIBS@,$PKGLIBS,;t t
 s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
@@ -22576,3 +22916,36 @@ if test "$no_create" != yes; then
   $ac_cs_success || { (exit 1); exit 1; }
 fi
 
+
+echo
+echo "Summary:"
+echo "Building the following libhandlers:"
+if [ "$emailplug" = "true" ]; then
+	echo "  libemail.so"
+fi
+if [ "$nullplug" = "true" ]; then
+	echo "  libnull.so"
+fi
+if [ "$fileplug" = "true" ]; then
+	echo "  libfile.so"
+fi
+if [ "$externalplug" = "true" ]; then
+	echo "  libexternal.so"
+fi
+if [ "$pythonplug" = "true" ]; then
+	echo "  libpython.so"
+fi
+echo
+echo -n "Paranoid shutdown is "
+if [ "$paranoid" = "true" ]; then
+	echo "on"
+else
+	echo "off"
+fi
+echo
+echo -n "-fstack-protector is "
+if [ "$worked" = "yes" ]; then
+	echo "enabled"
+else
+	echo "disabled"
+fi

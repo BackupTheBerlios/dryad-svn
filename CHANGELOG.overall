@@ -1,4 +1,23 @@
 ------------------------------------------------------------------------
+r70 | peter | 2004-05-31 02:41:07 -0500 (Mon, 31 May 2004) | 9 lines
+
+file.cpp: cleaned up a bit, now free's everything properly
+dstring.[cpp|h]: added a new cat(const char) method to complement the old cat(const char*)method
+configure.in: Added more tests based on autoscan's findings
+module_test.cpp: Switched where it looks for it's config
+module_test/build.sh: fixed it for the tree restructering we did some time ago
+external.cpp: Added a new plugin that passes the the log messages to an external command
+	NB: The sanatize_string() function here *_need_* to be cleaned up.
+config.xml: Added configuration options for libfile.so
+
+------------------------------------------------------------------------
+r69 | peter | 2004-05-29 01:12:31 -0500 (Sat, 29 May 2004) | 4 lines
+
+Added signal handling to dryad
+Added --enable-paranoid-shutdown to configure.in
+	This enables waiting for the analysis core to shutdown, however, because get()s from the cache block, it will not shutdown until a syslog message is recieved and processed.
+
+------------------------------------------------------------------------
 r68 | peter | 2004-05-23 21:42:59 -0500 (Sun, 23 May 2004) | 2 lines
 
 Opps
