@@ -255,7 +255,7 @@ dstring *dstring::following(char t)
 	return NULL;
 }
 
-void dstring::cat(char *c)
+void dstring::cat(const char *c)
 {
 	char *n;
 	int q;

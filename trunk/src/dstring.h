@@ -135,7 +135,7 @@ public:
 		\param c The string to appened
 		This tacks c onto the end of the string.
 	*/
-	void cat(char *c);
+	void cat(const char *c);
 	
 	const dstring & operator = ( const dstring & s );
 	const dstring & operator = ( const dstring * s );

@@ -22,10 +22,14 @@
 
 #include "../drarray.h"
 #include "../dstring.h"
+#include "../functions.h"
 
+namespace plugin
+{
 using DRArray::drarray;
 using DString::dstring;
 using std::cerr;
+using DFunctions::itoa;
 
 //! This is how it comes at ya.
 struct syslog_message {
@@ -36,5 +40,5 @@ struct syslog_message {
 	dstring *message;
 	dstring *daemon;
 };
-
+}
 #endif

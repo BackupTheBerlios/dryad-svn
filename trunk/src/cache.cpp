@@ -131,7 +131,7 @@ int cache::add(struct syslog_message *m)
 		writer = new dfilestream( cache_file, "a" );
 		// if cache_file is null, the first time we do this, a temp file name will be created. However, for get() and future file caching we need to know it's name!
 		if( cache_file == NULL )
-			cache_file = new dstring((char*)writer->get_filename()->ascii());
+			cache_file = new dstring(writer->get_filename());
 		writer->writeline(m->date);
 		writer->writeline(m->facility);
 		writer->writeline(m->host);
@@ -173,7 +173,6 @@ struct syslog_message *cache::get()
 	count -= (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(ret->date->length() + ret->host->length() + ret->message->length()));
 	pthread_mutex_unlock(head_lock);
 	return ret;
-	return NULL;
 }
 
 void cache::load_disk_cache()
@@ -242,9 +241,9 @@ void cache::load_disk_cache()
 		writer->writeline(t);
 		delete t;
 	}
-	t = new dstring((char*)reader->get_filename()->ascii());
+	t = new dstring(reader->get_filename());
 	delete reader;
-	q = new dstring((char*)writer->get_filename()->ascii());
+	q = new dstring(writer->get_filename());
 	delete writer;
 	rename( q->ascii(), t->ascii() );
 }
