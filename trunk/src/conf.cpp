@@ -24,9 +24,12 @@ conf::conf(dstring *c)
 	reloading = false;
 	num_daemons = 0;
 	num_db = 0;
+	port = 0;
+	cache_file = NULL;
+	cache_size = 0;
 	dfilestream *f;
 	f = new dfilestream;
-	if( f->open(c) )
+	if( f->open(c, "r") )
 	{
 		if( loadconfig(f) )
 			file = c;
@@ -44,7 +47,7 @@ int conf::reload()
 	free(daemons);
 	dfilestream *f;
 	f = new dfilestream;
-	if(f->open(file))
+	if(f->open(file, "r"))
 	{
 		rval = loadconfig(f);
 		reloading = false;
@@ -70,6 +73,18 @@ int conf::loadconfig(dfilestream *f)
 	
 	while( tmp = f->readline() )
 	{
+		if( !strncmp( tmp->ascii(), "port ", 5 ) )
+		{
+			port = atoi(tmp->remove("port ")->ascii());
+		}
+		if( !strncmp( tmp->ascii(), "cache_file ", 11 ) )
+		{
+			cache_file = tmp->remove("cache_file ");
+		}
+		if( ! strncmp( tmp->ascii(), "cache_size ", 11 ) )
+		{
+			cache_size = atoi(tmp->remove("cache_size ")->ascii());
+		}
 		if( !strncmp( tmp->ascii(), "dbfile ", 7 ) )
 		{
 			num_db++;
@@ -160,6 +175,10 @@ int conf::loadconfig(dfilestream *f)
 int conf::checkconfig()
 {
 	struct stat *buf;
+	if( port < 0 )
+		port = 514;
+	if( cache_size < 1 )
+		cache_size = 8388608;
 	if( warn_level < 1 )
 	{
 		cerr << "Invalid warn_level: " << warn_level << ".\nAborting.\n";
@@ -293,6 +312,21 @@ int conf::db_level(int k) const
 	if( k < 0 || k > num_db )
 		return 0;
 	return db_levels[k];
+}
+
+int conf::get_port() const
+{
+	return port;
+}
+
+int conf::get_cache_size() const
+{
+	return cache_size;
+}
+
+dstring *conf::get_cache_file()
+{
+	return cache_file;
 }
 
 #ifdef DEBUG

@@ -37,33 +37,37 @@ public:
 	//! Reads from path
 	/*!
 		\param path The file to open
+		\param mode The mode in which to open the file, r = read, w = write
 		If file doesn't exist, nothing happens. If you try to read, you'll get errors.
 		\sa dfilestream( char *path )
 	*/
-	dfilestream( dstring *path );
+	dfilestream( dstring *path, char *mode );
 	//! Reads from path
 	/*!
 		\param path The file to open
+		\param mode The mode in which to open the file, r = read, w = write
 		Of course, path must be null terminated. Also, note that the dstring version is prefered.
 		\sa dfilestream(dstring *path)
 	*/
-	dfilestream( char *path );
+	dfilestream( char *path, char *mode );
 	~dfilestream();
 	
 	//! Opens a file
 	/*!
 		\param path The file to open
+		\param mode The mode in which to open the file, r = read, a = write
 		\return True on success, false on failure.
 		\sa open( char *path )
 	*/
-	int open( dstring *path );
+	int open( dstring *path, char *mode );
 	//! Opens a file
 	/*!
 		\param path The file to open
+		\param mode The mode in which to open the file, r = read, w = write
 		Of course, path must be null termianted. Also, note that the dstring version is prefered
 		\return True on success, false on failure.
 	*/
-	int open( char *path );
+	int open( char *path, char *mode );
 	
 	//! fetches a line
 	/*!
@@ -74,8 +78,16 @@ public:
 	*/
 	dstring *readline();
 	
+	//! Writes the line to a file
+	/*!
+		\param line The line to write
+		This function writes the line to the file associated with the object, please note that it will appened a \n after the string.
+	*/
+	void writeline(dstring *line);
+	
 private:
 	FILE *fh;
+	char *filemode;
 };
 
 #endif

@@ -22,41 +22,21 @@
 dfilestream::dfilestream()
 {
 	fh = NULL;
+	filemode = '\0';
 }
 
-dfilestream::dfilestream( dstring *path )
+dfilestream::dfilestream( dstring *path, char *mode )
 {
-	struct stat *buf;
-	
-	buf = (struct stat*)malloc( sizeof(struct stat) );
-	if( -1 == stat( path->ascii(), buf ) )
-	{
-		free(buf);
-		fh = NULL;
-	}
-	else
-	{
-		free(buf);
-		fh = fopen(path->ascii(), "r");
-	}
+	fh = NULL;
+	filemode = '\0';
+	this->open( path, mode );
 }
 
-dfilestream::dfilestream( char *path )
+dfilestream::dfilestream( char *path, char *mode )
 {
-	struct stat *buf;
-	
-	buf = (struct stat*)malloc( sizeof(struct stat) );
-	if( -1 == stat( path, buf ) )
-	{
-		free(buf);
-		fh = NULL;
-	}
-	else
-	{
-		free(buf);
-		buf = NULL;
-		fh = fopen( path, "r" );
-	}
+	fh = NULL;
+	filemode = '\0';
+	this->open( path, mode );
 }
 
 dfilestream::~dfilestream()
@@ -64,8 +44,10 @@ dfilestream::~dfilestream()
 	fclose(fh);
 }
 
-int dfilestream::open( dstring *path )
+int dfilestream::open( dstring *path, char *mode )
 {
+	char *tmpname;
+	int f;
 	if( fh != NULL )
 		fclose(fh);
 	struct stat *buf;
@@ -80,13 +62,28 @@ int dfilestream::open( dstring *path )
 	else
 	{
 		free(buf);
-		fh = fopen( path->ascii(), "r" );
+		if( mode != "r" || mode != "a" )
+		{
+			mode = "r";
+		}
+		filemode = mode;
+		if( filemode == "a" && path == NULL )
+		{
+			tmpname = (char*)malloc(sizeof(char) * 18);
+			tmpname = "dryad-cache-XXXXXX";
+			f = mkstemp(tmpname);
+			fh = fdopen(f, "a");
+		}
+		else
+			fh = fopen( path->ascii(), filemode );
 		return ( fh != NULL );
 	}
 }
 
-int dfilestream::open( char *path )
+int dfilestream::open( char *path, char *mode )
 {
+	char *tmpname;
+	int f;
 	if( fh != NULL )
 		fclose(fh);
 	struct stat *buf;
@@ -101,7 +98,20 @@ int dfilestream::open( char *path )
 	else
 	{
 		free(buf);
-		fh = fopen( path, "r" );
+		if( mode != "r" || mode != "a" )
+		{
+			mode = "r";
+		}
+		filemode = mode;
+		if( filemode == "a" && path == NULL )
+		{
+			tmpname = (char*)malloc(sizeof(char) * 18);
+			tmpname = "dryad-cache-XXXXXX";
+			f = mkstemp(tmpname);
+			fh = fdopen(f, "a");
+		}
+		else
+			fh = fopen( path, mode );
 		return (fh != NULL);
 	}
 }
@@ -116,7 +126,7 @@ dstring *dfilestream::readline()
 	
 	again = true;
 
-	if( fh == NULL )
+	if( fh == NULL || filemode == "a" )
 	{
 		b = NULL;
 		return b;
@@ -158,4 +168,21 @@ dstring *dfilestream::readline()
 		free(buf);
 	}
 	return b;
+}
+
+void dfilestream::writeline(dstring *line)
+{
+	if( fh == NULL || filemode != "a" || line == NULL )
+		return;
+	
+	if( EOF == fputs(line->ascii(), fh) )
+	{
+		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		exit(1);
+	}
+	if( EOF == fputc('\n', fh) )
+	{
+		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		exit(1);
+	}
 }

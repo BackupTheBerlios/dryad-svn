@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "cache.h"
 
-cache::cache(int s)
+cache::cache(int s, dstring *fname)
 {
 	head = NULL;
 	tail = NULL;
@@ -27,6 +27,11 @@ cache::cache(int s)
 	pthread_mutex_init(&head_lock, NULL);
 	pthread_mutex_init(&tail_lock, NULL);
 	count = 0;
+	
+	if( fname != NULL )
+		cache_file = new dstring((char*)fname->ascii());
+	else
+		cache_file = NULL;
 }
 
 cache::~cache()
@@ -50,6 +55,7 @@ int cache::get_size() const
 
 int cache::add(dstring *item)
 {
+	dfilestream *writer;
 	int str_size;
 	
 	if( item == NULL )
@@ -79,6 +85,12 @@ int cache::add(dstring *item)
 		}
 		count += str_size;
 		pthread_mutex_unlock(&tail_lock);
+	}
+	else
+	{
+		writer = new dfilestream( cache_file, "a" );
+		writer->writeline(item);
+		delete writer;
 	}
 	// do stuff to cache it to disk. I'll prolly need to extend dfilestream...
 }

@@ -28,6 +28,7 @@
 #include "conf.h"
 #include "dqueue.h"
 #include "network.h"
+#include "cache.h"
 #include <pthread.h>
 
 
@@ -36,6 +37,16 @@
 
 using namespace std;
 
+struct cmdlineargs
+{
+	dstring *conffile;
+	int port;
+	int tcp;
+	int udp;
+};
+
+struct cmdlineargs *parse_commandline(int argc, char *argv[]);
+
 int main(int argc, char *argv[])
 {
 	conf *cnf;
@@ -43,17 +54,15 @@ int main(int argc, char *argv[])
 	analyze *core;
 	database *loader;
 	network *net;
+	cache *cash;
+	struct cmdlineargs *args;
 	
-	if( argc > 1 )
-	{
-		//for now all we get from the command line is the config file, this may change
-		cfile = new dstring(argv[1]);
-	}
-	else
-	{
-		cfile = new dstring("/home/peter/tmp/config.test");
-	}
-	cnf = new conf(cfile);
+	args = parse_commandline(argc, argv);
+	
+	if( args->conffile == NULL )
+		args->conffile = new dstring("/home/peter/tmp/config.test");
+	
+	cnf = new conf(args->conffile);
 	
 	core = new analyze(cnf);
 	for( int c = 0; c < cnf->num_dbs(); c++ )
@@ -63,8 +72,61 @@ int main(int argc, char *argv[])
 		loader = NULL;
 	}
 	
-	net = new network(5674, NULL, 5);
+	cash = new cache( cnf->get_cache_size(), cnf->get_cache_file() );
+	
+	net = new network( cnf->get_port(), cash, 5);
 	net->start_listening();
 	
   return EXIT_SUCCESS;
+}
+
+struct cmdlineargs *parse_commandline(int argc, char *argv[])
+{
+	struct cmdlineargs *ret;
+	
+	ret = (struct cmdlineargs*)malloc(sizeof(struct cmdlineargs));
+	ret->conffile = NULL;
+	ret->port = 0;
+	ret->tcp = 0;
+	ret->udp = 0;
+	if( argc == 1 )
+	{
+		return ret;
+	}
+	for( int c = 1; c < argc; c++ )
+	{
+		if( ! strcmp(argv[c], "-c") )
+		{
+			if( (c+1) < argc && argv[c+1][0] != '-' )
+				ret->conffile = new dstring(argv[++c]);
+		}
+		if( ! strcmp(argv[c], "-p") )
+		{
+			if( (c+1) < argc && argv[c+1][0] != '-' )
+			{
+				ret->port = atoi(argv[++c]);
+				if( ret->port < 0 )
+					ret->port = 0;
+			}
+		}
+		if( ! strcmp(argv[c], "-t") )
+		{
+			if( (c+1) < argc && argv[c+1][0] != '-' )
+			{
+				ret->tcp = atoi(argv[++c]);
+				if( ret->tcp != 0 && ret->tcp != 1 )
+					ret->tcp = 0;
+			}
+		}
+		if( ! strcmp(argv[c], "-u") )
+		{
+			if( (c+1) < argc && argv[c+1][0] != '-' )
+			{
+				ret->udp = atoi(argv[++c]);
+				if( ret->udp != 0 && ret->udp != 1 )
+					ret->udp = 0;
+			}
+		}
+	}
+	return ret;
 }

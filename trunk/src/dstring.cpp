@@ -35,6 +35,7 @@ dstring::dstring( int c )
 	{
 		str[a] = '\0';
 	}
+	str[len] = '\0';
 	l = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(l, NULL);
 }
@@ -94,7 +95,7 @@ int dstring::length() const
 	pthread_mutex_lock(l);
 	ret = len;
 	pthread_mutex_unlock(l);
-	return len;
+	return ret;
 }
 
 /*
@@ -294,34 +295,26 @@ const dstring & dstring::operator = ( const char * s )
 
 char dstring::operator[ ]( int i ) const
 {
-	char ret;
-	pthread_mutex_lock(l);
-	if( i < len || i < 0 )
+	if( i < len && i >= 0 )
 	{
-		ret = str[i];
-		pthread_mutex_unlock(l);
-		return ret;
+		return str[i];
 	}
 	else
 	{
-		pthread_mutex_unlock(l);
 		return '\0';
 	}
 }
 
 char & dstring::operator[ ]( int i )
 {
-	char ret, r = '\0';
-	pthread_mutex_lock(l);
-	if( i < len || i < 0 )
+	//this call can't be locked, because it cannot return a temporay var, it needs to return the mem address >.>
+	char r = '\0';
+	if( i < len && i >= 0 )
 	{
-		ret = str[i];
-		pthread_mutex_unlock(l);
-		return ret;
+		return str[i];
 	}
 	else
 	{
-		pthread_mutex_unlock(l);
 		return r;
 	}
 }

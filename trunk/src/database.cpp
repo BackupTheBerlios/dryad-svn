@@ -53,11 +53,10 @@ database::database( dstring *path, int level )
 	free(buf);
 	buf = NULL;
 	
-	fs = new dfilestream( path );
+	fs = new dfilestream( path, "r" );
 	
 	while( tmp = fs->readline() )
 	{
-		
 		if( ! strncmp( "BEGIN ", tmp->ascii(), 6 ) ) // strncmp is bassackwards, needs !
 		{
 			currDaemon = tmp->remove( "BEGIN " );
@@ -126,7 +125,7 @@ int database::load( dstring *path, int level )
 	free(buf);
 	buf = NULL;
 	
-	fs = new dfilestream( path );
+	fs = new dfilestream( path, "r" );
 	
 	while( tmp = fs->readline() )
 	{

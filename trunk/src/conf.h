@@ -99,6 +99,15 @@ public:
 	*/
 	int db_level(int k) const;
 	
+	//! Gets the user dictated port.
+	int get_port() const;
+	
+	//! Gets the cache size
+	int get_cache_size() const;
+	
+	//! gets the cache location
+	dstring *get_cache_file();
+	
 	#ifdef DEBUG
 	void dump();
 	#endif
@@ -127,6 +136,10 @@ private:
 	int *db_levels;
 	//marks that the config is reloading
 	int reloading;
+	int port;
+	dstring *cache_file;
+	int cache_size;
+	
 };
 
 #endif

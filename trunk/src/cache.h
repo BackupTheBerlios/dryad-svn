@@ -21,8 +21,12 @@
 #define CACHE_H
 
 #include "dstring.h"
+#include "dfilestream.h"
 
 #include <pthread.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 struct dstrlist {
 	dstring *item;
@@ -40,7 +44,7 @@ public:
 	/*!
 		\param s The number of bytes of to use as in memory storage
 	*/
-	cache( int s );
+	cache( int s, dstring *fname );
 	~cache();
 	
 	//! Gets the max size of the cache
@@ -69,5 +73,6 @@ private:
 	struct dstrlist *head;
 	struct dstrlist *tail;
 	pthread_mutex_t head_lock, tail_lock;
+	dstring *cache_file;
 };
 #endif
