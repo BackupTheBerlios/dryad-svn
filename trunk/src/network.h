@@ -21,22 +21,23 @@
 #define NETWORK_H
 
 #include "dstring.h"
+#include "dqueue.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
-typedef struct {
-	int *fd;
-} squeue;
+//template class dfifo<int>;
 
 class network {
 public:
 	//! Constructor
 	/*!
-		\param port The port to bind to.\
+		\param p The port to bind to.
 		\param queue The queue to use to pass messages
+		\param threads The number of threads to use
 	*/
-	network(int port, dstring **queue);
+	network(int p, cache *queue, int threads);
 	~network();
 	
 	//! Start listening
@@ -46,7 +47,10 @@ public:
 	void start_listening();
 
 private:
-	squeue **sockets;
+	dfifo<int> *sockets;
+	cache *mqueue;
+	int nthreads;
+	int port;
 };
 
 #endif

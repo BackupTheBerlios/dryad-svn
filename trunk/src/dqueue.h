@@ -17,49 +17,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef DQUEUE_H
+#define DQUEUE_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#include "cache.h"
 
-#include "database.h"
-#include "analyze.h"
-#include "dstring.h"
-#include "conf.h"
-#include "dqueue.h"
+#include <stdlib.h>
 #include <pthread.h>
 
-
-#include <iostream>
-#include <cstdlib>
-
-using namespace std;
-
-int main(int argc, char *argv[])
+template <class ItemType>
+struct queue
 {
-	conf *cnf;
-	dstring *cfile;
-	analyze *core;
-	database *loader;
+	ItemType content;
+	queue<ItemType> *next;
+	queue<ItemType> *prev;
+};
+
+template <class T>
+class dfifo
+{
+public:
+	dfifo();
+	~dfifo();
+	void enqueue( T item );
+ 	T dequeue();
 	
-	if( argc > 1 )
-	{
-		//for now all we get from the command line is the config file, this may change
-		cfile = new dstring(argv[1]);
-	}
-	else
-	{
-		cfile = new dstring("/home/peter/tmp/config.test");
-	}
-	cnf = new conf(cfile);
-	
-	core = new analyze(cnf);
-	for( int c = 0; c < cnf->num_dbs(); c++ )
-	{
-		loader = new database(cnf->db(c), cnf->db_level(c));
-		core->load(loader);
-		loader = NULL;
-	}
-	
-  return EXIT_SUCCESS;
-}
+	int length() const;
+
+private:
+	queue<T> *head;
+	queue<T> *tail;
+	int qlen;
+	pthread_mutex_t lock;
+};
+
+#include "dqueue.cpp"
+#endif

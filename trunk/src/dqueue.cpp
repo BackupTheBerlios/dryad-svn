@@ -17,49 +17,87 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include "database.h"
-#include "analyze.h"
-#include "dstring.h"
-#include "conf.h"
+ 
+#ifndef DQUEUE_CPP
+#define DQUEUE_CPP
 #include "dqueue.h"
-#include <pthread.h>
 
-
-#include <iostream>
-#include <cstdlib>
-
-using namespace std;
-
-int main(int argc, char *argv[])
+template <class T>
+dfifo<T>::dfifo()
 {
-	conf *cnf;
-	dstring *cfile;
-	analyze *core;
-	database *loader;
-	
-	if( argc > 1 )
+	head = NULL;
+	tail = NULL;
+	qlen = 0;
+	pthread_mutex_init(&lock,NULL);
+}
+
+template <class T>
+dfifo<T>::~dfifo()
+{
+	queue<T> tmp;
+	while( head != NULL )
 	{
-		//for now all we get from the command line is the config file, this may change
-		cfile = new dstring(argv[1]);
+		tmp = head->next;
+		free(head);
+		head = tmp;
+	}
+	pthread_mutex_destroy(&lock);
+}
+
+template <class T>
+void dfifo<T>::enqueue(T item)
+{
+	pthread_mutex_lock(&lock);
+	if( ! head )
+	{
+		head = (queue<T>*)malloc(sizeof(queue<T>));
+		tail = head;
+		tail->next = NULL;
+		tail->prev = NULL;
+		tail->content = item;
 	}
 	else
 	{
-		cfile = new dstring("/home/peter/tmp/config.test");
+		tail->next = (queue<T>*)malloc(sizeof(queue<T>));
+		tail->next->prev = tail;
+		tail->next->next = NULL;
+		tail = tail->next;
+		tail->content = item;
 	}
-	cnf = new conf(cfile);
-	
-	core = new analyze(cnf);
-	for( int c = 0; c < cnf->num_dbs(); c++ )
-	{
-		loader = new database(cnf->db(c), cnf->db_level(c));
-		core->load(loader);
-		loader = NULL;
-	}
-	
-  return EXIT_SUCCESS;
+	qlen++;
+	pthread_mutex_unlock(&lock);
 }
+
+template <class T>
+T dfifo<T>::dequeue()
+{
+	T ret;
+	queue<T> *old;
+
+	pthread_mutex_lock(&lock);
+	if( ! head )
+	{
+		pthread_mutex_unlock(&lock);
+		return NULL;
+	}
+	
+	ret = head->content;
+	old = head;
+	head = head->next;
+	head->prev = NULL;
+	free(old);
+	qlen--;
+	pthread_mutex_unlock(&lock);
+	return ret;
+}
+
+template <class T>
+int dfifo<T>::length() const
+{
+	int ret;
+	pthread_mutex_lock(&lock);
+	ret = qlen;
+	pthread_mutex_unlock(&lock);
+	return ret;
+}
+#endif
