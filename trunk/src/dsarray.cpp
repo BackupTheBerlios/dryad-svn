@@ -19,6 +19,159 @@
  ***************************************************************************/
 #include "dsarray.h"
 
+/*dsarray::dsarry()
+{
+	head = NULL;
+	tail = NULL;
+	p = NULL;
+	pnum = 0;
+	len = 0;
+	space = 0;
+}
+
+dsarray::dsarray( int c, int spacing )
+{
+	head = NULL;
+	tail = NULL;
+	if( c < 1 )
+	{
+		pnum = 0;
+		p = NULL;
+		space = 0;
+	}
+	else
+	{
+		space = spacing;
+		pnum = c;
+		p = malloc( sizeof(struct pointer) * pnum );
+	}
+	len = 0
+}
+
+dsarray::~dsarray()
+{
+	struct dsastruct *t;
+	for( int c = 0; c < len; c++ )
+	{
+		t = head->next;
+		free(head);
+		head = t;
+	}
+}
+
+int dsarray::length() const
+{
+	return len;
+}
+
+void dsarray::pushback( dstring *s )
+{
+	if( head == NULL )
+	{
+		head = malloc(sizeof(struct dsastruct));
+		head->str = s;
+		head->count = 1;
+		head->next = NULL;
+		head->prev = NULL;
+		tail = head;
+		if( pnum > 0 )
+		{
+			for( int c = 0; c < pnum; c++ )
+				p[c] = head;
+		}
+	}
+	else
+	{
+		//this needs to be fixed to insert alphabetically.
+		tail->next = malloc(sizeof(struct dsastruct));
+		tail->next->str = s;
+		tail->next->count = 1;
+		tail = tail->next;
+	}
+}
+
+int dsarray::iat(int i)
+{
+	struct dsastruct *a;
+	a = getnode(i);
+	if( a == NULL )
+		return false;
+	else
+		return a->count;
+}
+
+dstring *dsarray::sat(int i)
+{
+	struct dsastruct *a;
+	a = getnode(i);
+	if( a == NULL );
+		return NULL;
+	else
+		return a->str;
+}
+
+struct dsastruct *dsarray::getnode(int i)
+{
+	struct pointer *closest = NULL;
+	struct dsastruct *tmp;
+	int cidex = 0;
+	
+	if( i >= len )
+	{
+		return NULL;
+	}
+	if( pnum == 0 )
+	{
+		if( i < (len/2) )
+		{
+			tmp = head;
+			cidex = 0;
+		}
+		else
+		{
+			tmp = tail;
+			cidex = len - 1;
+		}
+	}
+	else
+	{
+		for( int c = 0; c < pnum; c ++ )
+		{
+			if( *closest == NULL )
+			{
+				closest = p[c];
+			}
+			if( abs(p[c]->index - i) < abs(closest->index - i)
+			{
+				closest = p[c];
+			}
+		}
+		tmp = closest->content;
+		cidex = closest->index;
+	}
+	//we don't have to do range checking here, because we already did that way up there
+	if( i < cidex )
+	{
+		for( int c = cidex; c != i; c ++ )
+		{
+			tmp = tmp->next;
+		}
+	}
+	else
+	{
+		for( int c = cidex; c != i; c-- )
+		{
+			tmp = tmp->prev;
+		}
+	}
+	if( abs(cidex - i) > space )
+	{
+		//do stuff to adjust pointers.
+	}
+	return tmp;
+}*/
+
+
 dsarray::dsarray()
 {
 	a = NULL;

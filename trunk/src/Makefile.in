@@ -85,14 +85,14 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp dsarray.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp dsarray.cpp conf.cpp
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
 
 # the library search path.
 dryad_LDFLAGS = $(all_libraries) 
-noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h dsarray.h
+noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h dsarray.h conf.h
 dryad_LDADD = -lpcre
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -102,7 +102,8 @@ bin_PROGRAMS = dryad$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_dryad_OBJECTS = dryad.$(OBJEXT) database.$(OBJEXT) analyze.$(OBJEXT) \
-	dstring.$(OBJEXT) dfilestream.$(OBJEXT) dsarray.$(OBJEXT)
+	dstring.$(OBJEXT) dfilestream.$(OBJEXT) dsarray.$(OBJEXT) \
+	conf.$(OBJEXT)
 dryad_OBJECTS = $(am_dryad_OBJECTS)
 dryad_DEPENDENCIES =
 
@@ -113,9 +114,10 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/analyze.Po ./$(DEPDIR)/database.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dfilestream.Po ./$(DEPDIR)/dryad.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dsarray.Po ./$(DEPDIR)/dstring.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/analyze.Po ./$(DEPDIR)/conf.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/database.Po ./$(DEPDIR)/dfilestream.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dsarray.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dstring.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -180,6 +182,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dfilestream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dryad.Po@am__quote@

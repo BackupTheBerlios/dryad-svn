@@ -26,7 +26,43 @@ struct dsastruct
 {
 	dstring *str;
 	int count;
+	//struct dsastruct *next;
+	//struct dsastruct *prev;
 };
+
+/*struct pointer
+{
+	struct dsastruct *content;
+	int index;
+};
+
+class dsarray{
+public:
+	dsarray();
+	dsarray(int c);
+	~dsarray();
+	
+	int length() const;
+	
+	void pushback( dstring *str );
+	
+	int iat(int i) const;
+	dstring *sat(int i) const;
+	
+	int exists(dstring *str);
+	
+	int increment(int i);
+
+private:
+	struct dsastruct *head;
+	struct dsastruct *tail;
+	struct pointer **p;
+	int pnum;
+	int len;
+	int space;
+	struct dsastruct *getnode(int i);
+};*/
+
 
 //! A very simple array of dstring/int structs
 /*!
