@@ -22,6 +22,10 @@
 
 #include "dstring.h"
 
+namespace Syslog
+{
+using DString::dstring;
+
 struct syslog_message {
 	int facility;
 	int severity;
@@ -31,4 +35,5 @@ struct syslog_message {
 	// This gets filled in by analyze
 	dstring *daemon;
 };
+}
 #endif

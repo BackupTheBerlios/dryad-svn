@@ -22,6 +22,8 @@
 #define DQUEUE_CPP
 #include "dqueue.h"
 
+namespace DQueue
+{
 template <class T>
 dfifo<T>::dfifo()
 {
@@ -99,5 +101,6 @@ int dfifo<T>::length() const
 	ret = qlen;
 	pthread_mutex_unlock(&lock);
 	return ret;
+}
 }
 #endif

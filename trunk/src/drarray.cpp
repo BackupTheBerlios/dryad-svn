@@ -22,6 +22,8 @@
 
 #include "drarray.h"
 
+namespace DRArray
+{
 template <class T>
 drarray<T>::drarray()
 {
@@ -115,6 +117,8 @@ T drarray<T>::at(int i)
 		return a[i];
 	else
 		return NULL;
+}
+
 }
 
 #endif

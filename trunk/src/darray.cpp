@@ -22,6 +22,8 @@
 
 #include "darray.h"
 
+namespace DArray
+{
 template <class T>
 darray<T>::darray()
 {
@@ -190,5 +192,5 @@ void darray<T>::dump()
 	}
 }
 #endif
-
+}
 #endif

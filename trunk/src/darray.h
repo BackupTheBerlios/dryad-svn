@@ -22,6 +22,8 @@
 
 #include <stdlib.h>
 
+namespace DArray
+{
 //! The struct used to create darrays.
 template <class T>
 struct darray_p {
@@ -106,6 +108,8 @@ private:
 	struct darray_p<T> *tail;
 	// we'll prolly use more pointers later
 };
+
+}
 
 #include "darray.cpp"
 #endif

@@ -19,12 +19,14 @@
  ***************************************************************************/
 #include "cache.h"
 
+namespace DCache
+{
 cache::cache(int s, dstring *fname)
 {
 	head = NULL;
 	tail = NULL;
 	file_cache = false;
-	s > 0 ? size = s : size = 32;
+	s > 0 ? size = s : size = 1024;
 	
 	head_lock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
 	tail_lock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
@@ -39,7 +41,7 @@ cache::cache(int s, dstring *fname)
 	if( fname != NULL )
 		cache_file = new dstring((char*)fname->ascii());
 	else
-		cache_file = NULL;
+		cache_file = NULL; // This is OK, because when we create the dfilestream, it will generate one.
 }
 
 cache::~cache()
@@ -245,4 +247,5 @@ void cache::load_disk_cache()
 	q = new dstring((char*)writer->get_filename()->ascii());
 	delete writer;
 	rename( q->ascii(), t->ascii() );
+}
 }

@@ -22,7 +22,10 @@
 
 #include <stdlib.h>
 
+namespace DFunctions
+{
 //! The reverse of atoi
 char *itoa(int i);
 
+}
 #endif

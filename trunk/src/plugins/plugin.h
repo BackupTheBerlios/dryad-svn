@@ -23,6 +23,10 @@
 #include "../drarray.h"
 #include "../dstring.h"
 
+using DRArray::drarray;
+using DString::dstring;
+using std::cerr;
+
 //! This is how it comes at ya.
 struct syslog_message {
 	int facility;

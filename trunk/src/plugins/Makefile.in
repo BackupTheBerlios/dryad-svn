@@ -97,7 +97,6 @@ lib_LTLIBRARIES = libemail.la
 libemail_la_LDFLAGS = -module 
 noinst_HEADERS = plugin.h
 libemail_la_SOURCES = email.cpp
-AM_CXXFLAGS = -Wno-deprecated
 subdir = src/plugins
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

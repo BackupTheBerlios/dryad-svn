@@ -25,9 +25,16 @@
 #include "drarray.h"
 #include "database.h"
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
 #include <pthread.h>
+
+namespace DConf
+{
+using std::cerr;
+using DFileStream::dfilestream;
+using DRArray::drarray;
+using DString::dstring;
 
 //! A simple struct for semi assoicatative arrays.
 struct variable {
@@ -111,5 +118,7 @@ private:
 	drarray<dstring*> *dbs;
 	drarray<daemon_section*> *daemons;
 };
+
+}
 
 #endif

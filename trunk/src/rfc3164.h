@@ -32,7 +32,15 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream.h>
+#include <iostream>
+
+namespace RFC3164
+{
+using std::cerr;
+using std::endl;
+using DCache::cache;
+using Syslog::syslog_message;
+using DString::dstring;
 
 //! This class provides an RFC3164 compliant interface.
 /*!
@@ -79,5 +87,5 @@ void *rfc3164_launch_thread(void *arg);
 
 struct rfc3164_args *rfc3164_build_args( cache *c, int port );
 
-
+}
 #endif

@@ -22,6 +22,8 @@
 
 #include <stdlib.h>
 
+namespace DRArray
+{
 //! The "real" array class
 /*!
 	Unlike darray, this array class uses a true array, rather than a linked list, to store it's elements.
@@ -85,6 +87,7 @@ private:
 	int len;
 	T *a;
 };
+}
 
 #include "drarray.cpp"
 #endif

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "rfc3164.h"
+namespace RFC3164
+{
 rfc3164::rfc3164( cache *s )
 {
 	create_socket(RFC3164_PORT);
@@ -237,4 +239,5 @@ struct rfc3164_args *rfc3164_build_args( cache *c, int port )
 	n->c = c;
 	n->port = port;
 	return n;
+}
 }

@@ -29,9 +29,14 @@
 #include "dqueue.h"
 #include "rfc3164.h"
 #include "cache.h"
+
 #include <pthread.h>
+#include <iostream>
 
 using namespace std;
+using DConf::conf;
+using DCache::cache;
+using DString::dstring;
 
 struct cmdlineargs
 {
@@ -53,7 +58,8 @@ struct cmdlineargs *parse_commandline(int argc, char *argv[]);
 int main(int argc, char *argv[])
 {
 	conf *cnf;
-	dstring *cfile;
+	dstring *csize;
+	int cs;
 	cache *cash;
 	struct cmdlineargs *args;
 	pthread_t *udp_t, *tcp_t, *core;
@@ -65,16 +71,24 @@ int main(int argc, char *argv[])
 	args = parse_commandline(argc, argv);
 	
 	if( args->conffile == NULL )
-		args->conffile = new dstring("/home/peter/tmp/config.test");
+		args->conffile = new dstring("/etc/dryad/dryad.conf");
 	
 	cnf = new conf(args->conffile);
 	
-	cash = new cache( atoi(cnf->get("cache_size")->ascii()), cnf->get("cache_file") );
+	csize = cnf->get("cache_size");
+	if( csize == NULL )
+		cs = 8388608; // 8MB default
+	else
+		cs = atoi(csize->ascii());
+	if( cs < 512 )
+		cs = 8388608; // 8MB default
+	
+	cash = new cache( cs, cnf->get("cache_file") );
 	
 	if( args->udp > -1 )
 	{
 		udp_t = (pthread_t*)malloc(sizeof(pthread_t));
-		pthread_create(udp_t, NULL, rfc3164_launch_thread, rfc3164_build_args(cash, args->udp) );
+		pthread_create(udp_t, NULL, RFC3164::rfc3164_launch_thread, RFC3164::rfc3164_build_args(cash, args->udp) );
 	}
 	if( args->tcp > -1 )
 	{
@@ -86,7 +100,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	core = (pthread_t*)malloc(sizeof(pthread_t));
-	pthread_create(core, NULL, analyze_launch_thread, analyze_build_args(cnf, cash));
+	pthread_create(core, NULL, DAnalyze::analyze_launch_thread, DAnalyze::analyze_build_args(cnf, cash));
 	if( udp_t != NULL )
 		pthread_join( *udp_t, NULL );
 	if( tcp_t != NULL )

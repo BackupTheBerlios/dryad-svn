@@ -20,13 +20,23 @@
 #ifndef DFILESTREAM_H
 #define DFILESTREAM_H
 
+
 #include "dstring.h"
 #include "functions.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
+
+namespace DFileStream
+{
+using std::cerr;
+using std::endl;
+using DFunctions::itoa;
+using DString::dstring;
+
 
 //! A very basic file stream class
 /*!
@@ -69,7 +79,7 @@ public:
 		Of course, path must be null termianted. Also, note that the dstring version is prefered
 		\return True on success, false on failure.
 	*/
-	int open( char *path, char *mode );
+	int open( const char *path, char *mode );
 	
 	//! fetches a line
 	/*!
@@ -103,5 +113,6 @@ private:
 	char *filemode;
 	dstring *filename;
 };
+}
 
 #endif

@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "analyze.h"
 
+namespace DAnalyze
+{
 analyze::analyze(conf *c)
 {
 	struct sev_group *tmp;
@@ -468,4 +470,4 @@ struct analyze_args *analyze_build_args(conf *c, cache *cash)
 	return n;
 }
 
-
+}

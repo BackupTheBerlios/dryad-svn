@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "conf.h"
 
+namespace DConf
+{
 conf::conf(dstring *cf)
 {
 	dfilestream *fs;
@@ -30,9 +32,11 @@ conf::conf(dstring *cf)
 	fs = new dfilestream;
 	if( ! fs->open(cf, "r") )
 	{
-		cerr << "Failed to config file!\nAborting!\n";
+		cerr << "Failed open to config file!\nAborting!\n";
 		exit(1);
 	}
+	
+	cfile = new dstring(cf);
 	
 	reload = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(reload, NULL);
@@ -48,6 +52,10 @@ conf::~conf()
 {
 	pthread_mutex_destroy(reload);
 	free(reload);
+	delete dbs;
+	delete vars;
+	delete daemons;
+	delete cfile;
 }
 
 void conf::readconfig(dfilestream *fs)
@@ -64,17 +72,20 @@ void conf::readconfig(dfilestream *fs)
 	{
 		if( !strncmp( tmp->ascii(), "#", 1 ) )
 		{
+			delete tmp;
 			continue;
 		}
 		else if( !strncmp( tmp->ascii(), "dbfile ", 7 ) && tmp->length() > 7 )
 		{
 			dbs->pushback(tmp->remove("dbfile "));
+			delete tmp; //because remove() returns a whole new dstring
 		}
 		else if( !strncmp(tmp->ascii(), "BEGIN ", 6 ) && tmp->length() > 6 )
 		{
 			d = (struct daemon_section*)malloc(sizeof(struct daemon_section));
 			d->contents = new drarray<variable*>;
 			d->name = tmp->remove("BEGIN ");
+			delete tmp;
 		}
 		else if( !strncmp(tmp->ascii(), "END", 3 ) )
 		{
@@ -83,6 +94,7 @@ void conf::readconfig(dfilestream *fs)
 				daemons->pushback(d);
 				d = NULL;
 			}
+			delete tmp;
 		}
 		else if( d != NULL )
 		{
@@ -91,11 +103,14 @@ void conf::readconfig(dfilestream *fs)
 			v->value = tmp->following(' ');
 			if( v->name == NULL || v->value == NULL )
 			{
+				delete v->name;
+				delete v->value;
 				free(v);
 				continue;
 			}
 			d->contents->pushback(v);
 			v = NULL;
+			delete tmp;
 		}
 		else
 		{
@@ -104,12 +119,20 @@ void conf::readconfig(dfilestream *fs)
 			v->value = tmp->following(' ');
 			if( v->name == NULL || v->value == NULL )
 			{
+				delete v->name;
+				delete v->value;
 				free(v);
 				continue;
 			}
 			vars->pushback(v);
 			v = NULL;
+			delete tmp;
 		}
+	}
+	if( d != NULL )
+	{
+		cerr << "Malformed config file! Never saw an END for " << d->name->ascii() << "!\nAborting!\n";
+		exit(1);
 	}
 	pthread_mutex_unlock(reload);
 }
@@ -168,4 +191,6 @@ dstring *conf::daemon_name(int k)
 	if( k < 0 || k > daemons->length() )
 		return NULL;
 	return daemons->at(k)->name;
+}
+
 }

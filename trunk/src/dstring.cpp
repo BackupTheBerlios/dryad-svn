@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "dstring.h"
 
+namespace DString
+{
 dstring::dstring()
 {
 	len = 0;
@@ -125,44 +127,12 @@ If you have any questions about why this works, shoot me an email, or, better ye
 
 dstring *dstring::remove( dstring *r )
 {
-	char *tmp;
-	dstring *n = new dstring();
-	
-	pthread_mutex_lock(l);
-	
-	if( (len - r->length()) <= 0 )
-	{
-		pthread_mutex_unlock(l);
-		return n;
-	}
-	
-	n->resize(len - r->length());
-	
-	tmp = str;
-	while( tmp < (str + len - r->length() + 1) )
-	{
-		if( ! strncmp( tmp, r->str, r->length() ) ) // I know that ! seems a bit odd, but it's how strncmp works...
-		{
-			for( int c = 0; c < len; c++ )
-			{
-				if( & str[c] < tmp )
-				{
-					n->str[c] = str[c];
-				}
-				else if( &str[c] > (tmp + r->length() - 1) )
-				{
-					n->str[c - r->length()] = str[c];
-				}
-			}
-		}
-		// yes, it's nitpicky to use sizeof(char) rather than ++, but Tod made me :(
-		tmp += sizeof(char);
-	}
-	pthread_mutex_unlock(l);
-	return n;
+	if( r == NULL )
+		return NULL;
+	return this->remove(r->ascii());
 }
 
-dstring *dstring::remove( char *r )
+dstring *dstring::remove( const char *r )
 {
 	char *tmp;
 	dstring *n = new dstring();
@@ -383,4 +353,5 @@ char & dstring::operator[ ]( int i )
 	{
 		return r;
 	}
+}
 }

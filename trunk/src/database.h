@@ -19,17 +19,34 @@
  ***************************************************************************/
 #ifndef DATABASE_H
 #define DATABASE_H
- 
+
+#include "dstring.h"
+#include "dfilestream.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 #include <pcre.h>
-#include "dblist.h"
-#include "dstring.h"
-#include "dfilestream.h"
+
+namespace DDatabase
+{
+using std::cerr;
+using std::endl;
+using DFileStream::dfilestream;
+using DString::dstring;
+
+struct list {
+	pcre *re;
+	pcre_extra *rs;
+	dstring *str;
+	dstring *daemon;
+	struct list *next;
+	struct list *prev;
+};
+
 
 //! Stores log strings
 /*!
@@ -110,5 +127,7 @@ private:
 	//! The total number of positions in mlist. This is a *1* based index!
 	int max_pos;
 };
+
+}
 
 #endif

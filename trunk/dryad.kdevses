@@ -1,52 +1,12 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="9" >
+ <DocsAndViews NumberOfDocuments="1" >
   <Doc0 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dryad.cpp" >
-   <View0 line="96" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
+   <View0 line="39" Type="???" >
+    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="748" Left="2" MinMaxMode="0" />
    </View0>
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/conf.h" >
-   <View0 line="59" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/conf.cpp" >
-   <View0 line="41" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc2>
-  <Doc3 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/analyze.cpp" >
-   <View0 line="277" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc3>
-  <Doc4 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/analyze.h" >
-   <View0 line="67" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc4>
-  <Doc5 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dstring.cpp" >
-   <View0 line="303" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc5>
-  <Doc6 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/drarray.cpp" >
-   <View0 line="116" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc6>
-  <Doc7 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/plugins/plugin.h" >
-   <View0 line="36" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc7>
-  <Doc8 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/plugins/email.cpp" >
-   <View0 line="35" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc8>
  </DocsAndViews>
  <pluginList>
   <kdevbookmarks>

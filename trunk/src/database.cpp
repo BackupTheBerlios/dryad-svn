@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "database.h"
 
+namespace DDatabase
+{
 database::database()
 {
 	mList = NULL;
@@ -275,3 +277,4 @@ void database::dump()
 	}
 }
 #endif
+}

@@ -29,7 +29,15 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <iostream.h>
+#include <iostream>
+
+namespace DCache
+{
+using std::cerr;
+using std::endl;
+using DFileStream::dfilestream;
+using DString::dstring;
+using Syslog::syslog_message;
 
 //! A linked list struct, used in a fifo fashion, for caching syslog_messages
 struct dstrlist {
@@ -86,4 +94,5 @@ private:
 	pthread_cond_t *get_wait;
 	dstring *cache_file;
 };
+}
 #endif

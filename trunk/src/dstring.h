@@ -22,8 +22,12 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <pthread.h>
+
+namespace DString
+{
+using std::cerr;
 
 //! Dryad-string
 /*!
@@ -99,7 +103,7 @@ public:
 		
 		NOTE: As always, r MUST be null terminated.
 	*/
-	dstring* remove( char *r );
+	dstring* remove( const char *r );
 	
 	//! Resize the string to this size
 	/*!
@@ -150,5 +154,5 @@ private:
 	int len;
 	pthread_mutex_t *l;
 };
-
+}
 #endif

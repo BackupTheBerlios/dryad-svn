@@ -29,8 +29,20 @@
 #include "cache.h"
 
 #include <dlfcn.h>
-#include <iostream.h>
+#include <iostream>
 #include <pcre.h>
+
+namespace DAnalyze
+{
+using std::cerr;
+using std::endl;
+using DCache::cache;
+using DConf::conf;
+using DArray::darray;
+using DDatabase::database;
+using DRArray::drarray;
+using DString::dstring;
+using Syslog::syslog_message;
 
 //! This struct gets used by analyze to track it's default settings.
 struct severity {
@@ -122,5 +134,7 @@ void *analyze_launch_thread(void *args);
 
 //! Builds a struct analyze_args.
 struct analyze_args *analyze_build_args(conf *c, cache *cash);
+
+}
 
 #endif

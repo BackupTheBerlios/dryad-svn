@@ -20,11 +20,11 @@
 #ifndef DQUEUE_H
 #define DQUEUE_H
 
-#include "cache.h"
-
 #include <stdlib.h>
 #include <pthread.h>
 
+namespace DQueue
+{
 //! The basic struct type
 template <class ItemType>
 struct queue
@@ -71,6 +71,8 @@ private:
 	int qlen;
 	pthread_mutex_t lock;
 };
+}
+namespace DFifo = DQueue;
 
 #include "dqueue.cpp"
 #endif
