@@ -76,8 +76,12 @@ struct analyze_args {
 	cache *cash;
 };
 
+//! In reality, the arg is a syslog_message*
 typedef void* (*reporter_once)(void *args);
+//! In reality, the arg is a drarray<syslog_message*>*
 typedef void* (*reporter_many)(void *args);
+//! In reality, the arg is the conf object
+typedef void* (*reporter_config)(void *args);
 //! This struct is used to store report options for each daemon
 struct reporter {
 	dstring *name;

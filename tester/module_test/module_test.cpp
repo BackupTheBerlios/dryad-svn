@@ -4,6 +4,7 @@
 #include "dstring.h"
 #include "drarray.h"
 #include "syslog.h"
+#include "conf.h"
 //---------------------
 typedef void* (*export_func)(void *args);
 int main(int argc, char **argv)
@@ -11,17 +12,24 @@ int main(int argc, char **argv)
 	using Syslog::syslog_message;
 	using DString::dstring;
 	using DRArray::drarray;
+	using DConf::conf;
 	struct syslog_message *test;
 	void *dl;
-	export_func once, many;
+	export_func once, many, cfg;
 	char *e;
 	drarray<syslog_message*> *many_test;
+	conf *c;
+	dstring *tmp;
 
 	if( argc != 2 )
 	{
 		fprintf( stderr, "%s libmodule.so\n", argv[0] );
 		exit(1);
 	}
+
+	tmp = new dstring("/home/peter/tmp/config.test");
+	c = new conf(tmp);
+	
 	test = (struct syslog_message*)malloc(sizeof(struct syslog_message));
 	test->facility = 10;
 	test->severity = 0;
@@ -33,6 +41,13 @@ int main(int argc, char **argv)
 	if( ! (dl = dlopen(argv[1], RTLD_NOW)) )
 	{
 		fprintf( stderr, "Failed to dlopen() the module!\n%s\n", dlerror() );
+		exit(1);
+	}
+	dlerror();
+	cfg = (export_func)dlsym(dl, "dryad_config");
+	if( e = dlerror() )
+	{
+		fprintf( stderr, "Failed to resolve symbol dryad_config!\n%s\n", e);
 		exit(1);
 	}
 	dlerror();
@@ -50,6 +65,9 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	dlerror();
+
+	fprintf( stderr, "Sending in the clowns.\n");
+	(*cfg)(c);
 
 	fprintf( stderr, "Testing dryad_once function call.\n" );
 	(*once)(test); //test get's free'd here.

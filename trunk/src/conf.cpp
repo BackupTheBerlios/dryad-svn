@@ -30,6 +30,7 @@ conf::conf(dstring *cf)
 		exit(1);
 	}
 	fs = new dfilestream;
+
 	if( ! fs->open(cf, "r") )
 	{
 		cerr << "Failed open to config file!\nAborting!\n";

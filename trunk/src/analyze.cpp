@@ -27,6 +27,7 @@ analyze::analyze(conf *c)
 	dstring *dname, *t;
 	struct reporter *rpt;
 	char *error;
+	reporter_config cnf;
 	if( c == NULL )
 	{
 		cerr << "Invalid conf passed to analyze!\nAborting!\n";
@@ -99,6 +100,14 @@ analyze::analyze(conf *c)
 			free(rpt);
 			continue;
 		}
+		cnf = (reporter_config)dlsym(rpt->dlptr, "dryad_config");
+		if( (error = dlerror()) )
+		{
+			cerr << "Failed to export symbol dryad_config!\n" << error << endl;
+			free(rpt);
+			continue;
+		}
+		(*cnf)(c);
 		reports->pushback(rpt);
 		rpt = NULL;
 	}

@@ -33,19 +33,39 @@ namespace email_plugin
 {
 using namespace plugin;
 extern "C" {
+	
+	// yeah, I know globals are bad. This module isn't really comendable for it's coding standards. 's called being quick 'n' dirty.
+	dstring *to;
+	dstring *from;
+	dstring *mailhost;
 
 	int send_message(dstring *message, dstring *to, dstring *from, dstring *mailhost);
+	
+	int dryad_config(conf *c)
+	{
+		to = c->daemon_get("libemail_module", "to");
+		from = c->daemon_get("libemail_module", "from");
+		mailhost = c->daemon_get("libemail_module", "mailhost");
+		if( to == NULL || from == NULL || mailhost == NULL )
+		{
+			cerr << "Invalid configuration for libemail_module!\nAborting!\n";
+			exit(1);
+		}
+	}
 	
 	// The function used to report a single incident must be called dryad_once. Before it returns, it should also free() the passed syslog_message
 	int dryad_once(struct syslog_message *m)
 	{
-		dstring *msg, *to, *from, *mailhost;
+		dstring *msg;
 		char *tmp;
 		int ret;
 		
-		to = new dstring("peter@krondor.snoblin.net");
-		from = new dstring("dryad@localhost");
-		mailhost = new dstring("localhost:25");
+		if( to == NULL || from == NULL || mailhost == NULL )
+		{
+			cerr << "You MUST call libemail::dryad_config before dryad_once!\nAborting!\n";
+			exit(1);
+		}
+		
 		msg = new dstring;
 		msg->cat("Single log event report from your RTLAD Dryad installation:\nTriggering Group: ");
 		msg->cat(m->daemon->ascii());
@@ -71,9 +91,6 @@ extern "C" {
 			ret = false;
 		}
 		delete msg;
-		delete to;
-		delete from;
-		delete mailhost;
 		free(m);
 		return ret;
 	}
@@ -81,13 +98,16 @@ extern "C" {
 	//! Before it returns, we need to free() all messages in m, and delete m itself.
 	int dryad_many(drarray<struct syslog_message*> *m)
 	{
-		dstring *msg, *from, *to, *mailhost;
+		dstring *msg;
 		char *tmp;
 		int ret;
+
+		if( to == NULL || from == NULL || mailhost == NULL )
+		{
+			cerr << "You MUST call libemail::dryad_config before dryad_many!\nAborting!\n";
+			exit(1);
+		}
 		
-		to = new dstring("peter@krondor.snoblin.net");
-		from = new dstring("dryad@localhost");
-		mailhost = new dstring("localhost:25");
 		msg = new dstring;
 		msg->cat("Multiple log events report from your RTLAD Dryad installation:\n\n");
 		for( int c = 0; c < m->length(); c++ )

@@ -23,6 +23,7 @@
 #include "../drarray.h"
 #include "../dstring.h"
 #include "../functions.h"
+#include "../conf.h"
 
 namespace plugin
 {
@@ -30,6 +31,7 @@ using DRArray::drarray;
 using DString::dstring;
 using std::cerr;
 using DFunctions::itoa;
+using DConf::conf;
 
 //! This is how it comes at ya.
 struct syslog_message {

@@ -74,10 +74,11 @@ int dfilestream::open( const char *path, char *mode )
 	if( path != NULL )
 	{
 		buf = (struct stat*)malloc( sizeof(struct stat) );
-		if( -1 == stat( path, buf ) || ! S_ISREG((int)buf) )
+		if( -1 == stat( path, buf ) || ! S_ISREG(buf->st_mode) )
 		{
 			free(buf);
 			fh = NULL;
+			cerr << "stat fail.\n";
 			return false;
 		}
 		free(buf);
