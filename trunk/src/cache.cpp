@@ -23,9 +23,11 @@ cache::cache(int s, dstring *fname)
 {
 	head = NULL;
 	tail = NULL;
+	file_cache = false;
 	s > 0 ? size = s : size = 32;
 	pthread_mutex_init(&head_lock, NULL);
 	pthread_mutex_init(&tail_lock, NULL);
+	pthread_mutex_init(&file_lock, NULL);
 	count = 0;
 	
 	if( fname != NULL )
@@ -46,6 +48,7 @@ cache::~cache()
 	free(head);
 	pthread_mutex_destroy(&head_lock);
 	pthread_mutex_destroy(&tail_lock);
+	pthread_mutex_destroy(&file_lock);
 }
 
 int cache::get_size() const
@@ -58,15 +61,22 @@ int cache::add(struct syslog_message *m)
 	dfilestream *writer;
 	int msg_size;
 	
-	if( item == NULL )
+	if( m == NULL )
 		return -1;
 	
+	#ifdef DEBUG
+	cerr << "Caching a message:\nfacility: " << m->facility << "\nseverity: " << m->severity << "\ndate: " << m->date->ascii() << "\nhost: " << m->host->ascii() << "\nmessage: " << m->message->ascii() << endl;
+	#endif
+	
 	msg_size = (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(m->date->length() + m->host->length() + m->message->length()));
-	if( (count+str_size) <=  size )
+	if( (count+msg_size) <=  size )
 	{
 		pthread_mutex_lock(&tail_lock);
 		if( head == NULL )
 		{
+			#ifdef DEBUG
+			cerr << "Creating a new head pointer in the cache.\n";
+			#endif
 			pthread_mutex_lock(&head_lock);
 			head = (struct dstrlist*)malloc(sizeof(struct dstrlist));
 			head->prev = NULL;
@@ -74,7 +84,7 @@ int cache::add(struct syslog_message *m)
 			head->item = (struct syslog_message*)malloc(sizeof(struct syslog_message));
 			head->item->date = m->date;
 			head->item->facility = m->facility;
-			head->item->host = m->host
+			head->item->host = m->host;
 			head->item->message = m->message;
 			head->item->severity = m->severity;
 			tail = head;
@@ -82,6 +92,9 @@ int cache::add(struct syslog_message *m)
 		}
 		else
 		{
+			#ifdef DEBUG
+			cerr << "Apending a new tail node in the cache.\n";
+			#endif
 			tail->next = (struct dstrlist*)malloc(sizeof(struct dstrlist));
 			tail->next->prev = tail;
 			tail = tail->next;
@@ -89,18 +102,134 @@ int cache::add(struct syslog_message *m)
 			tail->item = (struct syslog_message*)malloc(sizeof(struct syslog_message));
 			tail->item->date = m->date;
 			tail->item->facility = m->facility;
-			tail->item->host = m->host
+			tail->item->host = m->host;
 			tail->item->message = m->message;
 			tail->item->severity = m->severity;
 		}
 		count += msg_size;
+		#ifdef DEBUG
+		cerr << "Current size of cache is " << count << " of " << size << endl;
+		#endif
 		pthread_mutex_unlock(&tail_lock);
 	}
 	else
 	{
+		#ifdef DEBUG
+		cerr << "Outputting to a file, cache full.\n";
+		#endif
+		pthread_mutex_lock(&file_lock);
 		writer = new dfilestream( cache_file, "a" );
-		writer->writeline(item);
+		// if cache_file is null, the first time we do this, a temp file name will be created. However, for get() and future file caching we need to know it's name!
+		if( cache_file == NULL )
+			cache_file = new dstring((char*)writer->get_filename()->ascii());
+		writer->writeline(m->date);
+		writer->writeline(m->facility);
+		writer->writeline(m->host);
+		writer->writeline(m->message);
+		writer->writeline(m->severity);
 		delete writer;
+		file_cache = true;
+		pthread_mutex_unlock(&file_lock);
 	}
-	// do stuff to cache it to disk. I'll prolly need to extend dfilestream...
+}
+
+struct syslog_message *cache::get()
+{
+	struct syslog_message *ret;
+	struct dstrlist *curr;
+	
+	pthread_mutex_lock(&head_lock);
+	if( head == NULL )
+		return NULL;
+	if( file_cache )
+	{
+		pthread_mutex_lock(&tail_lock);
+		pthread_mutex_lock(&file_lock);
+		this->load_disk_cache();
+		pthread_mutex_unlock(&tail_lock);
+		pthread_mutex_unlock(&file_lock);
+	}
+	ret = head->item;
+	curr = head->next;
+	curr->prev = NULL;
+	free(head);
+	head = curr;
+	if( head == NULL )
+		tail = NULL;
+	pthread_mutex_unlock(&head_lock);
+	//REMEMBER TO SUBTRACT FROM COUNT!!!
+	return ret;
+}
+
+void cache::load_disk_cache()
+{
+	dfilestream *reader, *writer;
+	struct syslog_message *m;
+	struct dstrlist *curr;
+	dstring *t,*q;
+	int msg_size;
+	
+	reader = new dfilestream(cache_file, "r");
+	m = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+	
+	//Yes, it is true that we overshoot the memory limit by one message. *shrug* not that big a deal.
+	while( count < size )
+	{
+		if( NULL == (m->date = reader->readline()) )
+		{
+			free(m);
+			break;
+		}
+		if( NULL == (t = reader->readline()) )
+		{
+			free(m);
+			break;
+		}
+		m->facility = atoi(t->ascii());
+		delete t;
+		if( NULL == (m->host = reader->readline()) )
+		{
+			free(m);
+			break;
+		}
+		if( NULL == (m->message = reader->readline()) )
+		{
+			free(m);
+			break;
+		}
+		if( NULL == (t = reader->readline()) )
+		{
+			free(m);
+			break;
+		}
+		m->severity = atoi(t->ascii());
+		delete t;
+		
+		msg_size = (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(m->date->length() + m->host->length() + m->message->length()));
+		count += msg_size;
+		
+		curr = (struct dstrlist*)malloc(sizeof(struct dstrlist));
+		curr->item = m;
+		m = NULL;
+		m = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+		curr->next = NULL;
+		curr->prev = tail;
+		curr->prev->next = curr;
+		tail = curr;
+		curr = NULL;
+	}
+	// now we copy the old cache file over to the new.
+	writer = new dfilestream((char*)NULL,"a");
+	file_cache = false;
+	while( NULL != (t = reader->readline()) )
+	{
+		file_cache = true;
+		writer->writeline(t);
+		delete t;
+	}
+	t = new dstring((char*)reader->get_filename()->ascii());
+	delete reader;
+	q = new dstring((char*)writer->get_filename()->ascii());
+	delete writer;
+	rename( q->ascii(), t->ascii() );
 }

@@ -56,6 +56,9 @@ void rfc3164::listen()
 			host = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
 			continue;
 		}
+		#ifdef DEBUG
+		cerr << "Recieved message: " << buf << endl;
+		#endif
 		m = parse_message(buf);
 		free(buf);
 		free(host);
@@ -71,7 +74,7 @@ void rfc3164::listen()
 			free(host);
 		}
 		
-		c->add(m->message);
+		c->add(m);
 		free(m);
 		
 		buf = (char*)malloc(RFC3164_PACKET_LENGTH);
@@ -204,5 +207,33 @@ struct syslog_message *rfc3164::parse_message(char *message)
 		free(m);
 		return NULL;
 	}
+	#ifdef DEBUG
+	cerr << "Returning a parsed message:\nfacility: " << m->facility << "\nseverity: " << m->severity << "\ndate: " << m->date->ascii() << "\nhost: " << m->host->ascii() << "\nmessage: " << m->message->ascii() << endl;
+	#endif
 	return m;
+}
+
+void *rfc3164_launch_thread(void *arg)
+{
+	struct rfc3164_args *a;
+	a = (struct rfc3164_args*)arg;
+	rfc3164 *obj;
+	if( a->port != 0 )
+		obj = new rfc3164(a->port, a->c);
+	else
+		obj = new rfc3164(a->c);
+	free(arg);
+	arg = NULL;
+	a = NULL;
+	obj->listen();
+	return NULL;
+}
+
+struct rfc3164_args *rfc3164_build_args( cache *c, int port )
+{
+	struct rfc3164_args *n;
+	n = (struct rfc3164_args*)malloc(sizeof(struct rfc3164_args));
+	n->c = c;
+	n->port = port;
+	return n;
 }

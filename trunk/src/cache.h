@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
 
 struct dstrlist {
 	struct syslog_message *item;
@@ -64,16 +65,19 @@ public:
 	
 	//! Gets the next item awaiting processing.
 	/*!
-		\return A pointer to the dstring.
+		\return A pointer to a syslog_message.
 	*/
-	dstring *get();
+	struct syslog_message *get();
 
 private:
+	// You MUST have locks on tail and file before calling this function!!!
+	void load_disk_cache();
 	int size;
 	int count;
+	int file_cache;
 	struct dstrlist *head;
 	struct dstrlist *tail;
-	pthread_mutex_t head_lock, tail_lock;
+	pthread_mutex_t head_lock, tail_lock, file_lock;
 	dstring *cache_file;
 };
 #endif

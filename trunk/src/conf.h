@@ -34,9 +34,7 @@ struct daemon {
 
 //! The config class
 /*!
-	The basic purpose of this class is to load and store config information.\n\n
-	Thread Safe: I believe so. The struct returned from get_daemon can be modified, in particular, the name dstring, however an array of semaphores is used to track that. The databases themselves may also be modified, however that class should be thread safe itself.
-	
+	The basic purpose of this class is to load and store config information.\n\n	
 	Document structure:\n
 	Configuration for a specific daemon is set of in a block, denoted by BEGIN and END tags. The BEGIN tag must specifiy the name of the daemon:\n
 	BEGIN daemonname\n

@@ -23,12 +23,14 @@ dfilestream::dfilestream()
 {
 	fh = NULL;
 	filemode = '\0';
+	filename = NULL;
 }
 
 dfilestream::dfilestream( dstring *path, char *mode )
 {
 	fh = NULL;
 	filemode = '\0';
+	filename = NULL;
 	this->open( path, mode );
 }
 
@@ -36,6 +38,7 @@ dfilestream::dfilestream( char *path, char *mode )
 {
 	fh = NULL;
 	filemode = '\0';
+	filename = NULL;
 	this->open( path, mode );
 }
 
@@ -46,77 +49,117 @@ dfilestream::~dfilestream()
 
 int dfilestream::open( dstring *path, char *mode )
 {
-	char *tmpname;
+	dstring *tmpname;
 	int f;
 	if( fh != NULL )
+	{
 		fclose(fh);
+		if( filename != NULL )
+			delete filename;
+	}
 	struct stat *buf;
 	
-	buf = (struct stat*)malloc( sizeof(struct stat) );
-	if( -1 == stat( path->ascii(), buf ) )
+	if( path != NULL )
 	{
+		buf = (struct stat*)malloc( sizeof(struct stat) );
+		if( -1 == stat( path->ascii(), buf ) )
+		{
+			free(buf);
+			fh = NULL;
+			return false;
+		}
 		free(buf);
+	}
+	if( strcmp(mode, "r") && strcmp(mode, "a") ) //remember, this actually means if not r and not a
+	{
+		mode = "r";
+	}
+	if( !strcmp(mode, "r") && path == NULL )
+	{
 		fh = NULL;
 		return false;
 	}
+	filemode = mode;
+	if( !strcmp(filemode,"a") && path == NULL )
+	{
+		tmpname = new dstring("/tmp/dryad-cache-XXXXXX");
+		if( -1 == (f = mkstemp((char*)tmpname->ascii())) )
+		{
+			cerr << "Failed to create temporary file!\nAborting!\n";
+			exit(1);
+		}
+		#ifdef DEBUG
+		cerr << "Temporary file created: " << tmpname->ascii() << endl;
+		#endif
+		fh = fdopen(f, "a");
+		filename = new dstring(tmpname);
+		free(tmpname);
+	}
 	else
 	{
-		free(buf);
-		if( mode != "r" || mode != "a" )
-		{
-			mode = "r";
-		}
-		filemode = mode;
-		if( filemode == "a" && path == NULL )
-		{
-			tmpname = (char*)malloc(sizeof(char) * 18);
-			tmpname = "dryad-cache-XXXXXX";
-			f = mkstemp(tmpname);
-			fh = fdopen(f, "a");
-		}
-		else
-			fh = fopen( path->ascii(), filemode );
-		return ( fh != NULL );
+		filename = new dstring((char*)path->ascii());
+		fh = fopen( path->ascii(), filemode );
 	}
+	return ( fh != NULL );
 }
 
 int dfilestream::open( char *path, char *mode )
 {
-	char *tmpname;
+	dstring *tmpname;
 	int f;
 	if( fh != NULL )
+	{
 		fclose(fh);
+		if( filename != NULL )
+			delete filename;
+	}
 	struct stat *buf;
 	
-	buf = (struct stat*)malloc( sizeof(struct stat) );
-	if( -1 == stat( path, buf ) )
+	if( path != NULL )
 	{
+		buf = (struct stat*)malloc( sizeof(struct stat) );
+		if( -1 == stat( path, buf ) )
+		{
+			free(buf);
+			fh = NULL;
+			return false;
+		}
 		free(buf);
+	}
+	
+	if( strcmp(mode, "r") || strcmp(mode, "a") )
+	{
+		mode = "r";
+	}
+	if( !strcmp(mode, "r") && path == NULL )
+	{
 		fh = NULL;
 		return false;
 	}
+	filemode = mode;
+	if( !strcmp(filemode, "a") && path == NULL )
+	{
+		tmpname = new dstring("/tmp/dryad-cache-XXXXXX");
+		if( -1 == (f = mkstemp((char*)tmpname->ascii())) )
+		{
+			cerr << "Failed to create temporary file!\nAborting!\n";
+			exit(1);
+		}
+		#ifdef DEBUG
+		cerr << "Temporary file created: " << tmpname->ascii() << endl;
+		#endif
+		fh = fdopen(f, "a");
+		filename = new dstring(tmpname);
+		free(tmpname);
+	}
 	else
 	{
-		free(buf);
-		if( mode != "r" || mode != "a" )
-		{
-			mode = "r";
-		}
-		filemode = mode;
-		if( filemode == "a" && path == NULL )
-		{
-			tmpname = (char*)malloc(sizeof(char) * 18);
-			tmpname = "dryad-cache-XXXXXX";
-			f = mkstemp(tmpname);
-			fh = fdopen(f, "a");
-		}
-		else
-			fh = fopen( path, mode );
-		return (fh != NULL);
+		filename = new dstring(path);
+		fh = fopen( path, mode );
 	}
+	return (fh != NULL);
 }
 
-//for the time being, lines can't be larger than 80 characters :(
 dstring *dfilestream::readline()
 {
 	dstring *b;
@@ -172,7 +215,7 @@ dstring *dfilestream::readline()
 
 void dfilestream::writeline(dstring *line)
 {
-	if( fh == NULL || filemode != "a" || line == NULL )
+	if( fh == NULL || strcmp(filemode, "a") || line == NULL )
 		return;
 	
 	if( EOF == fputs(line->ascii(), fh) )
@@ -185,4 +228,29 @@ void dfilestream::writeline(dstring *line)
 		cerr << "ERROR! Unable to write to file!\nAborting!\n";
 		exit(1);
 	}
+}
+
+void dfilestream::writeline(int line)
+{
+	char *a;
+	if( fh == NULL || strcmp(filemode, "a") )
+		return;
+	
+	a = itoa(line);
+	if( EOF == fputs(a, fh) )
+	{
+		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		exit(1);
+	}
+	if( EOF == fputc('\n', fh) )
+	{
+		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		exit(1);
+	}
+	free(a);
+}
+
+dstring *dfilestream::get_filename() const
+{
+	return filename;
 }

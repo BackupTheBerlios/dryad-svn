@@ -53,4 +53,14 @@ private:
 	cache *c;
 };
 
+struct rfc3164_args {
+	cache *c;
+	int port;
+};
+
+void *rfc3164_launch_thread(void *arg);
+
+struct rfc3164_args *rfc3164_build_args( cache *c, int port );
+
+
 #endif

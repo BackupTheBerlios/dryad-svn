@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "dstring.h"
+#include "functions.h"
 
 //! A very basic file stream class
 /*!
@@ -72,9 +73,7 @@ public:
 	//! fetches a line
 	/*!
 		\return The line read from the file.
-		On EOF it will return a null pointer. If there is a blank line, an empty string will be returned. \n will be stripped from the line. If no valid file has been opened, it will return EOF.
-		
-		This function currently has the limition that, if more than 80 characters exist on one line, they will not be read with the first call. This is a known bug and will be fixed at a later date.
+		On EOF it will return a null pointer. If there is a blank line, an empty string will be returned. \n will be stripped from the line. If no valid file has been opened, it will return NULL.
 	*/
 	dstring *readline();
 	
@@ -85,9 +84,23 @@ public:
 	*/
 	void writeline(dstring *line);
 	
+	//! Writes the line to a file
+	/*!
+		\param line The line to write
+		Unlikle the dstring version of this method, this call writes the given integer to the file, on it's own seperate line. It is first translated to ascii.
+	*/
+	void writeline(int line);
+	
+	//! Returns the opened file
+	/*!
+		\return the name of the open file, NULL if no file is open.
+	*/
+	dstring *get_filename() const;
+	
 private:
 	FILE *fh;
 	char *filemode;
+	dstring *filename;
 };
 
 #endif
