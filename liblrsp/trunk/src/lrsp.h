@@ -24,7 +24,7 @@
 #ifndef _LRSP_H
 #define _LRSP_H
 
-/*! \defgroup liblrsp
+/*! \defgroup liblrsp_general liblrsp general data
 @{*/
 
 /*! \brief The default port that liblrsp will attempt to connect to
@@ -39,12 +39,14 @@
  It is strongly recommended that you use the define rather than the value for compatibility with future revisions.
 */
 #define LRSP_SINGLE 'S'
+/*!@}*/
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/*! \defgroup liblrsp_client liblrsp client functions
+@{*/
 /*! \brief Use this specification for callback functions
 
 */
@@ -84,9 +86,11 @@ void lrsp_client_register_callback(lrsp_client_callback c);
 	\return A human readable description of the error.
 */
 char *lrsp_client_error_message(int err);
+/*!@}*/
 
 // server functions begin here.
-
+/*! \defgroup liblrsp_server liblrsp server functions
+@{*/
 /*! \brief Use this spec for the callback that will handle messages from the devices
 	Note that once your function has msg, it's in your court. It was malloc'd and it's your responsibility to free() it.
 */
