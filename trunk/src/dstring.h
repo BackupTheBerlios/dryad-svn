@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <pthread.h>
 
 //! Dryad-string

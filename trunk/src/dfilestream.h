@@ -20,12 +20,13 @@
 #ifndef DFILESTREAM_H
 #define DFILESTREAM_H
 
+#include "dstring.h"
+#include "functions.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "dstring.h"
-#include "functions.h"
+#include <iostream.h>
 
 //! A very basic file stream class
 /*!

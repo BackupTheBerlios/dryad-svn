@@ -20,9 +20,10 @@
 #ifndef CONF_H
 #define CONF_H
 
-#include <pthread.h>
 #include "dstring.h"
 #include "dfilestream.h"
+#include <pthread.h>
+#include <iostream.h>
 
 struct daemon {
 	dstring *name;

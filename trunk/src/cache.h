@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <iostream.h>
 
 struct dstrlist {
 	struct syslog_message *item;

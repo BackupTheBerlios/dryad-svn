@@ -24,6 +24,7 @@
 #include "darray.h"
 #include "conf.h"
 #include <pcre.h>
+#include <iostream.h>
 
 struct dstrint {
 	dstring *str;

@@ -30,7 +30,7 @@
       <autocompile>true</autocompile>
       <envvars/>
       <runarguments>
-        <dryad/>
+        <dryad></dryad>
       </runarguments>
     </run>
     <configurations>
@@ -47,15 +47,15 @@
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
-        <cxxflags>-O0 -Wno-deprecated -g3</cxxflags>
-        <topsourcedir/>
+        <cxxflags>-O0 -g3</cxxflags>
+        <topsourcedir></topsourcedir>
         <cppflags>-DDEBUG</cppflags>
-        <ldflags>-lpthread</ldflags>
-        <ccompilerbinary/>
-        <cxxcompilerbinary/>
-        <f77compilerbinary/>
-        <cflags/>
-        <f77flags/>
+        <ldflags></ldflags>
+        <ccompilerbinary></ccompilerbinary>
+        <cxxcompilerbinary></cxxcompilerbinary>
+        <f77compilerbinary></f77compilerbinary>
+        <cflags></cflags>
+        <f77flags></f77flags>
       </debug>
     </configurations>
     <make>

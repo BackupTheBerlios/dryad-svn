@@ -92,15 +92,17 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp network.cpp dqueue.cpp darray.cpp drarray.cpp cache.cpp rfc3164.cpp functions.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp dqueue.cpp darray.cpp drarray.cpp cache.cpp rfc3164.cpp functions.cpp
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
 
 # the library search path.
 dryad_LDFLAGS = $(all_libraries) 
-noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h conf.h network.h dqueue.h cache.h darray.h drarray.h rfc3164.h syslog.h functions.h
-dryad_LDADD = -lpcre
+noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h conf.h dqueue.h cache.h darray.h drarray.h rfc3164.h syslog.h functions.h
+dryad_LDADD = -lpthread -lpcre
+
+AM_CXXFLAGS = -Wno-deprecated
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -110,9 +112,8 @@ PROGRAMS = $(bin_PROGRAMS)
 
 am_dryad_OBJECTS = dryad.$(OBJEXT) database.$(OBJEXT) analyze.$(OBJEXT) \
 	dstring.$(OBJEXT) dfilestream.$(OBJEXT) conf.$(OBJEXT) \
-	network.$(OBJEXT) dqueue.$(OBJEXT) darray.$(OBJEXT) \
-	drarray.$(OBJEXT) cache.$(OBJEXT) rfc3164.$(OBJEXT) \
-	functions.$(OBJEXT)
+	dqueue.$(OBJEXT) darray.$(OBJEXT) drarray.$(OBJEXT) \
+	cache.$(OBJEXT) rfc3164.$(OBJEXT) functions.$(OBJEXT)
 dryad_OBJECTS = $(am_dryad_OBJECTS)
 dryad_DEPENDENCIES =
 
@@ -128,8 +129,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/database.Po ./$(DEPDIR)/dfilestream.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/dqueue.Po ./$(DEPDIR)/drarray.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dstring.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/functions.Po ./$(DEPDIR)/network.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rfc3164.Po
+@AMDEP_TRUE@	./$(DEPDIR)/functions.Po ./$(DEPDIR)/rfc3164.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -204,7 +204,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dryad.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/functions.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rfc3164.Po@am__quote@
 
 distclean-depend:

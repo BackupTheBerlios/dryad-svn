@@ -32,6 +32,7 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream.h>
 
 //! This class provides an RFC3164 compliant interface.
 /*!
