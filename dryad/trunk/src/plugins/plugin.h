@@ -24,6 +24,7 @@
 #include "../dstring.h"
 #include "../functions.h"
 #include "../conf.h"
+#include "../dfilestream.h"
 
 namespace plugin
 {
@@ -34,6 +35,7 @@ using std::cout;
 using std::endl;
 using DFunctions::itoa;
 using DConf::conf;
+using DFileStream::dfilestream;
 
 //! This is how it comes at ya.
 struct syslog_message {

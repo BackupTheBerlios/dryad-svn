@@ -12,7 +12,7 @@
 	<para>dryad.conf is the main configuration file to control the behavior of Dryad. It consists of a set of variable name/value pairs, in the form
 		<programlisting>varname value</programlisting>
 	</para>
-	<para>The config file is divided into blocks of variable/value pairs by use of the <command>BEGIN blockname</command> and <command>END</command> commands. The default block, however, does not have such tags, or rather, they are implied.</para>
+	<para>The config file is divided into blocks of these variable/value pairs by use of the <command>BEGIN blockname</command> and <command>END</command> commands. The default block, however, does not have such tags, or rather, they are implied.</para>
 	<sect2>
 	<title>Global only variables</title>
 		<para>These variables are ones that effect the overall operation of Dryad, and as such, may not appear inside any block.</para>
@@ -44,7 +44,7 @@
 		<sect3>
 		<title>lib_handler</title>
 			<para>Description: Defines the response module to use when events are reported.</para>
-			<para>Notes: The lib_handler defined in the global scope is used as the fallback if no lib_handler is defined in the scope of a particular block.</para>
+			<para>Notes: The lib_handler defined in the global scope is used as the fallback if no lib_handler is defined in the scope of a particular block. The file should specified relative to your LD_LIBRARY_PATH, which, on most systems, includes <command>/usr/local/lib/</command>. However, again on most systems, the default lib handlers reside in <command>/usr/local/lib/dryad/</command>. As such, when sepcifying a lib_handler, it should be in the form <command>lib_handler dryad/libname.so</command>.</para>
 		</sect3>
 	</sect2>
 	<sect2>
@@ -179,8 +179,8 @@
 	<para>Example database block:
 		<programlisting>
 			BEGIN block_name
-			/somepattern/
-			/anotherpattern/
+			somepattern
+			anotherpattern
 			END
 		</programlisting>
 	</para>

@@ -28,6 +28,16 @@
 </sect1>
 
 <sect1>
+<title>Post install notes</title>
+	<para>After completing the install of Dryad, from source, there are a few things that are recommended be done.
+		<itemizedlist mark="bullet">
+			<listitem><para>Move PREFIX/share/dryad/dryad.conf.dist to /etc/dryad/dryad.conf and edit it as needed.</para></listitem>
+			<listitem><para>Move to appropriate database file to /etc/dryad/databases/.</para></listitem>
+		</itemizedlist>
+	</para>
+</sect1>
+
+<sect1>
 <title>Operating system specific build notes</title>
 <sect2>
 	<title>OpenBSD</title>

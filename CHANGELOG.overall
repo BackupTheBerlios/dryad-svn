@@ -1,0 +1,333 @@
+------------------------------------------------------------------------
+r60 | peter | 2004-05-15 15:49:02 -0500 (Sat, 15 May 2004) | 3 lines
+
+Added another regression test.
+Fixed the bug where log messages would contain relics of yore.
+
+------------------------------------------------------------------------
+r59 | peter | 2004-05-14 19:23:36 -0500 (Fri, 14 May 2004) | 2 lines
+
+All regression tests I can think of have been written, and we (now) pass!
+
+------------------------------------------------------------------------
+r58 | peter | 2004-05-13 16:50:07 -0500 (Thu, 13 May 2004) | 2 lines
+
+Most, if not all, of these changes were made based on issues that the new regression_test.sh script found. The rest are supporting files for that test script.
+
+------------------------------------------------------------------------
+r57 | peter | 2004-05-11 16:56:38 -0500 (Tue, 11 May 2004) | 2 lines
+
+addedd lrsp_server_join function
+
+------------------------------------------------------------------------
+r56 | peter | 2004-05-09 17:34:01 -0500 (Sun, 09 May 2004) | 2 lines
+
+Reorganized the tree
+
+------------------------------------------------------------------------
+r55 | peter | 2004-05-09 14:19:50 -0500 (Sun, 09 May 2004) | 2 lines
+
+forgot to increment the version >.<
+
+------------------------------------------------------------------------
+r54 | peter | 2004-05-09 14:18:59 -0500 (Sun, 09 May 2004) | 1 line
+
+
+------------------------------------------------------------------------
+r53 | peter | 2004-05-09 01:17:23 -0500 (Sun, 09 May 2004) | 2 lines
+
+Added the section on configuration, through dryad.conf
+
+------------------------------------------------------------------------
+r52 | peter | 2004-05-08 20:45:40 -0500 (Sat, 08 May 2004) | 2 lines
+
+Added the beginings the user manual
+
+------------------------------------------------------------------------
+r51 | peter | 2004-05-08 00:25:50 -0500 (Sat, 08 May 2004) | 2 lines
+
+liblrsp now has server functions.
+
+------------------------------------------------------------------------
+r50 | peter | 2004-05-07 14:39:05 -0500 (Fri, 07 May 2004) | 2 lines
+
+liblrsp is ready
+
+------------------------------------------------------------------------
+r49 | peter | 2004-05-06 20:02:10 -0500 (Thu, 06 May 2004) | 2 lines
+
+More work
+
+------------------------------------------------------------------------
+r48 | peter | 2004-05-06 16:31:25 -0500 (Thu, 06 May 2004) | 2 lines
+
+Damn if I know
+
+------------------------------------------------------------------------
+r47 | peter | 2004-05-02 13:27:21 -0500 (Sun, 02 May 2004) | 2 lines
+
+forgot to add build instructions...
+
+------------------------------------------------------------------------
+r46 | peter | 2004-05-02 13:14:57 -0500 (Sun, 02 May 2004) | 3 lines
+
+A single fix to let it compile on windows
+*does happy dance*
+
+------------------------------------------------------------------------
+r45 | peter | 2004-05-02 01:32:59 -0500 (Sun, 02 May 2004) | 2 lines
+
+Switched from dlfcn to Libtool's ltdl
+
+------------------------------------------------------------------------
+r44 | peter | 2004-05-01 23:14:58 -0500 (Sat, 01 May 2004) | 4 lines
+
+analyze.cpp: Fixed a small bug that affected error reporting (not a big deal, it just delete'd a dstring a line or two before it should have)
+dryad.conf.dist: changed debug_report to debug_track. Which I could have sworn I'd already done...
+configure.in: Cleaned some tests up, set it to use -fstack-protector if it's available.
+
+------------------------------------------------------------------------
+r43 | peter | 2004-04-30 16:22:17 -0500 (Fri, 30 Apr 2004) | 2 lines
+
+Added M1 tag.
+
+------------------------------------------------------------------------
+r42 | peter | 2004-04-30 16:20:16 -0500 (Fri, 30 Apr 2004) | 2 lines
+
+Woops, forgot about these >.<
+
+------------------------------------------------------------------------
+r41 | peter | 2004-04-30 16:19:59 -0500 (Fri, 30 Apr 2004) | 2 lines
+
+I do believe we are ready for M1!
+
+------------------------------------------------------------------------
+r40 | peter | 2004-04-30 13:49:38 -0500 (Fri, 30 Apr 2004) | 2 lines
+
+meh
+
+------------------------------------------------------------------------
+r39 | peter | 2004-04-29 21:12:27 -0500 (Thu, 29 Apr 2004) | 2 lines
+
+We are *almost* ready for the M1 release. Just have to create the database defs... >.<
+
+------------------------------------------------------------------------
+r38 | peter | 2004-04-29 17:32:57 -0500 (Thu, 29 Apr 2004) | 2 lines
+
+A LOT of work on the plugins. Getting pretty close to having the features of LogSentry...
+
+------------------------------------------------------------------------
+r37 | peter | 2004-04-25 23:19:02 -0500 (Sun, 25 Apr 2004) | 2 lines
+
+A lot of code clean ups
+
+------------------------------------------------------------------------
+r36 | peter | 2004-04-25 15:59:58 -0500 (Sun, 25 Apr 2004) | 2 lines
+
+brushed some stuff for the initial release
+
+------------------------------------------------------------------------
+r35 | peter | 2004-04-23 23:04:37 -0500 (Fri, 23 Apr 2004) | 2 lines
+
+Now contains support for dlopen()ing plugins!
+
+------------------------------------------------------------------------
+r34 | peter | 2004-04-22 20:20:36 -0500 (Thu, 22 Apr 2004) | 1 line
+
+Fixed up the documentation
+------------------------------------------------------------------------
+r33 | peter | 2004-04-21 23:29:43 -0500 (Wed, 21 Apr 2004) | 4 lines
+
+Fixed a minor bug where I was kinda deallocating needed memory...
+>.>
+<.<
+
+------------------------------------------------------------------------
+r32 | peter | 2004-04-21 21:09:33 -0500 (Wed, 21 Apr 2004) | 2 lines
+
+per daemon config should now work!
+
+------------------------------------------------------------------------
+r31 | peter | 2004-04-21 12:48:39 -0500 (Wed, 21 Apr 2004) | 3 lines
+
+More work on supporting per daemon stuff. The loading process should work fine now, though I haven't had a chance to test it...
+We do not yet check for per daemon config in the reg() call.
+
+------------------------------------------------------------------------
+r30 | peter | 2004-04-21 00:49:42 -0500 (Wed, 21 Apr 2004) | 3 lines
+
+Various things have been commented a bit better, more to come on that later
+analyze.[h|cpp]/conf.[h|cpp] -- Working on adding per daemon settings. Only partially done, but old config files should still work
+
+------------------------------------------------------------------------
+r29 | peter | 2004-04-19 22:55:40 -0500 (Mon, 19 Apr 2004) | 2 lines
+
+memory fixes
+
+------------------------------------------------------------------------
+r28 | peter | 2004-04-19 22:01:12 -0500 (Mon, 19 Apr 2004) | 2 lines
+
+bettererer
+
+------------------------------------------------------------------------
+r27 | peter | 2004-04-19 17:49:44 -0500 (Mon, 19 Apr 2004) | 3 lines
+
+dfilestream.cpp: Found a small memory leak when a line was over 80 characters. Go valgrind!
+tester.c: I think it works now...
+
+------------------------------------------------------------------------
+r26 | peter | 2004-04-18 21:39:46 -0500 (Sun, 18 Apr 2004) | 2 lines
+
+Hoo boy, lotsa changes!
+
+------------------------------------------------------------------------
+r25 | peter | 2004-04-18 01:43:18 -0500 (Sun, 18 Apr 2004) | 2 lines
+
+Got rid of the now defunct network class, some minor sprucing of other files
+
+------------------------------------------------------------------------
+r24 | peter | 2004-04-17 22:42:13 -0500 (Sat, 17 Apr 2004) | 4 lines
+
+oops, I kinda forgot to add these
+>.>
+<.<
+
+------------------------------------------------------------------------
+r23 | peter | 2004-04-17 22:12:45 -0500 (Sat, 17 Apr 2004) | 3 lines
+
+A whole bunch of work, for all this! It all basically works!
+tester is a test program that fires a string at the listening daemon.
+
+------------------------------------------------------------------------
+r22 | peter | 2004-04-17 12:57:44 -0500 (Sat, 17 Apr 2004) | 4 lines
+
+syslog.h: defined a new syslog_message struct
+rfc3164.[h|cpp]: Started, and nearly finished, the class for recieving RFC3164 (UDP) syslog messages.
+cache.[h|cpp]: Started work on make cache work with syslog_message structs
+
+------------------------------------------------------------------------
+r21 | peter | 2004-04-17 00:17:47 -0500 (Sat, 17 Apr 2004) | 7 lines
+
+dfilestream.[h|cpp]: Added writing abilities
+cache.[cpp|h]: Added disk caching
+dryad.cpp: Modified startup scheme a bit
+database.cpp: I do not remember >.>
+dstring.[h|cpp]: Minor tweaks/bugfixes
+conf.[h|cpp]: Updated to support some new stuff.
+
+------------------------------------------------------------------------
+r20 | peter | 2004-04-15 12:09:36 -0500 (Thu, 15 Apr 2004) | 3 lines
+
+cache.[h|cpp]: started implementation, now waiting on further work on dfilestream
+dstring.[h|cpp]: dstring is a now a thread safe class
+
+------------------------------------------------------------------------
+r19 | peter | 2004-04-14 16:57:42 -0500 (Wed, 14 Apr 2004) | 2 lines
+
+Fixed the potential for a bug in super duper futuristic systems where sizeof(char) != 1. Because Tod is mean and made me.
+
+------------------------------------------------------------------------
+r18 | peter | 2004-04-14 12:23:28 -0500 (Wed, 14 Apr 2004) | 4 lines
+
+drarry.[h|cpp]: A templated array class, using true arrays
+network.cpp: A slight tweak to the network_helper main loop
+dsarray.[h|cpp]: REMOVED from the source tree. This class is hereby marked as DEAD.
+
+------------------------------------------------------------------------
+r17 | peter | 2004-04-13 16:52:19 -0500 (Tue, 13 Apr 2004) | 6 lines
+
+network.[h|cpp]: More general work
+dryad.cpp: Now inits the network object
+analyze.[h|cpp]: now uses the darray class instead of dsarray
+dsarray.[h|cpp]: DSARRAY IS DEAD! DO NOT USE IT!
+darray.[h|cpp]: The pseudo linked list array.
+
+------------------------------------------------------------------------
+r16 | peter | 2004-04-12 12:31:58 -0500 (Mon, 12 Apr 2004) | 3 lines
+
+network.[h|cpp]: more work
+dqueue.[h|cpp]: created a threadsafe queue structure
+
+------------------------------------------------------------------------
+r15 | peter | 2004-04-11 13:11:26 -0500 (Sun, 11 Apr 2004) | 2 lines
+
+switching to laptop
+
+------------------------------------------------------------------------
+r14 | peter | 2004-04-11 10:37:56 -0500 (Sun, 11 Apr 2004) | 2 lines
+
+more thread work, changed how I want it to be
+
+------------------------------------------------------------------------
+r13 | peter | 2004-04-11 01:40:53 -0500 (Sun, 11 Apr 2004) | 4 lines
+
+dryad.cpp: started the actuall init process
+analyze.[h|cpp]: now requires a conf object
+conf.[h|cpp]: work on making it thread safe
+
+------------------------------------------------------------------------
+r12 | peter | 2004-04-10 19:42:20 -0500 (Sat, 10 Apr 2004) | 4 lines
+
+dfilestream.cpp: fixed a bug where if you performed a blank instatiation and then used open() you'd get a segfault
+conf.[h|cpp]: added a dump method, fixed a logic blunder
+everything else: I don't ask.
+
+------------------------------------------------------------------------
+r11 | peter | 2004-04-10 14:07:50 -0500 (Sat, 10 Apr 2004) | 2 lines
+
+Updated documentation
+
+------------------------------------------------------------------------
+r10 | peter | 2004-04-10 13:35:47 -0500 (Sat, 10 Apr 2004) | 5 lines
+
+dfilestream.cpp: I'm an idiot. readline() now frees the BUFFER not the string to return >.<
+database.cpp: Added a bit more to the dump() method.
+dsarray.cpp: Added a bit more to the dump() method.
+conf.cpp: Added get_daemon() (I think... can't remember)
+
+------------------------------------------------------------------------
+r9 | peter | 2004-04-09 22:02:25 -0500 (Fri, 09 Apr 2004) | 1 line
+
+conf.[h|cpp]: added functions to allow access to information.
+------------------------------------------------------------------------
+r8 | peter | 2004-04-09 18:22:49 -0500 (Fri, 09 Apr 2004) | 2 lines
+
+dfilestream.cpp: dfilestream no longer has line length limitations
+
+------------------------------------------------------------------------
+r7 | peter | 2004-04-09 13:49:48 -0500 (Fri, 09 Apr 2004) | 3 lines
+
+dsarray.[h|cpp] - Began work on a sort-on-insert linked list implementation, set aside same work until later (balancing n pointers is a pain in the ass!)
+conf.[h|cpp] - Began work on parsing a config file and setting up config variables.
+
+------------------------------------------------------------------------
+r6 | peter | 2004-04-06 13:21:15 -0500 (Tue, 06 Apr 2004) | 2 lines
+
+Fixed some segfaults, cleaned up memory manegment
+
+------------------------------------------------------------------------
+r5 | peter | 2004-04-05 22:47:20 -0500 (Mon, 05 Apr 2004) | 2 lines
+
+core is almost complete, only need report() and bug testing
+
+------------------------------------------------------------------------
+r4 | peter | 2004-04-04 22:42:42 -0500 (Sun, 04 Apr 2004) | 2 lines
+
+some changes
+
+------------------------------------------------------------------------
+r3 | peter | 2004-04-04 00:15:45 -0600 (Sun, 04 Apr 2004) | 2 lines
+
+wrote dsarray, some other stuff
+
+------------------------------------------------------------------------
+r2 | peter | 2004-04-03 23:42:53 -0600 (Sat, 03 Apr 2004) | 2 lines
+
+initial import
+
+------------------------------------------------------------------------
+r1 | peter | 2004-04-03 23:39:48 -0600 (Sat, 03 Apr 2004) | 2 lines
+
+Initial directory setup
+
+------------------------------------------------------------------------
