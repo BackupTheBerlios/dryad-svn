@@ -24,6 +24,7 @@ analyze::analyze()
 	points = 0;
 	num_db = 0;
 	db_vec = NULL;
+	a = new dsarray();
 }
 
 analyze::analyze( database *db_list[] )
@@ -38,6 +39,7 @@ analyze::analyze( database *db_list[] )
 	}
 	points = 0;
 	num_db = 0;
+	a = new dsarray();
 }
 
 analyze::~analyze()
@@ -102,5 +104,13 @@ int analyze::process( dstring *str )
 
 int analyze::reg( dstring *str, int level )
 {
-
+	if( a->exists(str) )
+	{
+		
+	}
+	else
+	{
+		a->pushback(str);
+	}
+	points = points + level;
 }

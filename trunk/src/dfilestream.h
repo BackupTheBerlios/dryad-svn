@@ -69,6 +69,8 @@ public:
 	/*!
 		\return The line read from the file.
 		On EOF it will return a null pointer. If there is a blank line, an empty string will be returned. \n will be stripped from the line. If no valid file has been opened, it will return EOF.
+		
+		This function currently has the limition that, if more than 80 characters exist on one line, they will not be read with the first call. This is a known bug and will be fixed at a later date.
 	*/
 	dstring *readline();
 	

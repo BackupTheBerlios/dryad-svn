@@ -27,13 +27,13 @@ dsarray::dsarray()
 
 dsarray::dsarray( int c )
 {
-	a = (dstring **)malloc( sizeof(dstring *) * c );
+	a = (struct dsastruct **)malloc( sizeof(struct dsastruct *) * c );
 	num_items = c;
 }
 
 dsarray::dsarray( dsarray *s )
 {
-	a = (dstring **)malloc( sizeof(dstring *) * s->length() );
+	a = (struct dsastruct **)malloc( sizeof(struct dsastruct *) * s->length() );
 	num_items = s->length();
 	for( int c = 0; c < num_items; c++ )
 	{
@@ -54,31 +54,38 @@ int dsarray::length() const
 
 void dsarray::resize(int c)
 {
-	dstring **n;
+	struct dsastruct **n;
 	
-	n = (dstring **)malloc(sizeof(dstring *) * c);
+	n = (struct dsastruct **)malloc(sizeof(struct dsastruct *) * c);
 	for(int b = 0; b < num_items; b++)
 	{
 		n[c] = a[c];
 	}
+	free(a);
+	a = n;
 	num_items = c;
 }
 
 void dsarray::pushback( dstring *s )
 {
-	dstring **n;
+	struct dsastruct **n;
+	struct dsastruct *q;
 	
-	n = (dstring **)malloc(sizeof(dstring *) * (num_items + 1));
+	q = (struct dsastruct*)malloc( sizeof(struct dsastruct) );
+	q->str = s;
+	q->count = 1;
+	
+	n = (struct dsastruct **)malloc(sizeof(struct dsastruct *) * (num_items + 1));
 	for( int c = 0; c < num_items; c++ )
 	{
 		n[c] = a[c];
 	}
 	free(a);
-	n[num_items] = s;
+	n[num_items] = q;
 	num_items++;
 }
 
-dstring * dsarray::operator[ ]( int i ) const
+dstring *dsarray::sat(int i)
 {
 	if( i < 0 || i >= num_items )
 	{
@@ -86,20 +93,30 @@ dstring * dsarray::operator[ ]( int i ) const
 	}
 	else
 	{
-		return a[i]; //ai... hehe. Movie woulda been better if it hadn't been Spielburg...
+		return a[i]->str;
 	}
 }
-	
-dstring * & dsarray::operator[ ]( int i )
+
+int dsarray::iat(int i)
 {
-	dstring *f;
-	f = NULL;
 	if( i < 0 || i >= num_items )
 	{
-		return f;
+		return 0;
 	}
 	else
 	{
-		return a[i];
+		return a[i]->count;
 	}
+}
+
+int dsarray::exists(dstring *s)
+{
+	for( int c = 0; c < num_items; c++ )
+	{
+		if( ! strcmp( s->ascii(), a[c]->ascii() ) )
+		{
+			return c;
+		}
+	}
+	return -1;
 }
