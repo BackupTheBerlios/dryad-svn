@@ -63,6 +63,9 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* Use paranoid shutdown */
+#undef PARANOID_SHUTDOWN
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 

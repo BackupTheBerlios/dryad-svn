@@ -10,311 +10,433 @@ CONF_H	src/conf.h	21;"	d
 DARRAY_CPP	src/darray.cpp	21;"	d	file:
 DARRAY_H	src/darray.h	21;"	d
 DATABASE_H	src/database.h	21;"	d
-DBLIST_H	src/dblist.h	21;"	d
+DAnalyze	src/analyze.cpp	22;"	n	file:
+DAnalyze	src/analyze.h	35;"	n
+DArray	src/darray.cpp	25;"	n	file:
+DArray	src/darray.h	25;"	n
+DCache	src/cache.cpp	22;"	n	file:
+DCache	src/cache.h	34;"	n
+DConf	src/conf.cpp	22;"	n	file:
+DConf	src/conf.h	33;"	n
+DDatabase	src/database.cpp	22;"	n	file:
+DDatabase	src/database.h	36;"	n
+DError	src/dryerr.cpp	33;"	n	file:
+DError	src/dryerr.h	48;"	n
 DFILESTREAM_H	src/dfilestream.h	21;"	d
+DFileStream	src/dfilestream.cpp	22;"	n	file:
+DFileStream	src/dfilestream.h	34;"	n
+DFunctions	src/functions.cpp	21;"	n	file:
+DFunctions	src/functions.h	25;"	n
+DLRSP	src/lrsp-server.cpp	21;"	n	file:
+DLRSP	src/lrsp-server.h	35;"	n
 DQUEUE_CPP	src/dqueue.cpp	22;"	d	file:
 DQUEUE_H	src/dqueue.h	21;"	d
+DQueue	src/dqueue.cpp	25;"	n	file:
+DQueue	src/dqueue.h	26;"	n
 DRARRAY_H	src/drarray.h	21;"	d
 DRARRY_CPP	src/drarray.cpp	21;"	d	file:
+DRArray	src/drarray.cpp	25;"	n	file:
+DRArray	src/drarray.h	25;"	n
 DSTRING_H	src/dstring.h	21;"	d
+DString	src/dstring.cpp	22;"	n	file:
+DString	src/dstring.h	28;"	n
 FUNCTIONS_H	src/functions.h	21;"	d
+LRSP_SERVER_H	src/lrsp-server.h	21;"	d
+PLUGIN_H	src/plugins/plugin.h	21;"	d
+RFC3164	src/rfc3164.cpp	21;"	n	file:
+RFC3164	src/rfc3164.h	39;"	n
+RFC3164_DATE_LEN	src/lrsp-server.h	33;"	d
 RFC3164_DATE_LEN	src/rfc3164.h	25;"	d
 RFC3164_H	src/rfc3164.h	21;"	d
+RFC3164_PACKET_LENGTH	src/lrsp-server.h	32;"	d
 RFC3164_PACKET_LENGTH	src/rfc3164.h	24;"	d
 RFC3164_PORT	src/rfc3164.h	23;"	d
 SYSLOG_H	src/syslog.h	21;"	d
-a	src/drarray.h	78;"	m	class:drarray
-add	src/cache.cpp	59;"	f	class:cache
-add	src/cache.h	67;"	p	class:cache
-alert	src/analyze.h	66;"	m	class:analyze
-all	src/analyze.h	43;"	m	struct:severity
-analyze	src/analyze.cpp	22;"	f	class:analyze
-analyze	src/analyze.h	51;"	c
-analyze	src/analyze.h	54;"	p	class:analyze
-analyze_args	src/analyze.h	46;"	s
-analyze_build_args	src/analyze.cpp	416;"	f
-analyze_build_args	src/analyze.h	79;"	p
-analyze_launch_thread	src/analyze.cpp	399;"	f
-analyze_launch_thread	src/analyze.h	77;"	p
-ascii	src/dstring.cpp	217;"	f	class:dstring
-ascii	src/dstring.h	82;"	p	class:dstring
-at	src/drarray.cpp	112;"	f	class:drarray
-at	src/drarray.h	71;"	p	class:drarray
-autobalance	src/darray.h	97;"	m	class:darray
-c	src/analyze.h	47;"	m	struct:analyze_args
-c	src/rfc3164.h	54;"	m	class:rfc3164
-c	src/rfc3164.h	58;"	m	struct:rfc3164_args
-cache	src/cache.cpp	22;"	f	class:cache
-cache	src/cache.h	45;"	c
-cache	src/cache.h	52;"	p	class:cache
-cache_file	src/cache.h	85;"	m	class:cache
-cash	src/analyze.h	48;"	m	struct:analyze_args
-cfile	src/conf.h	50;"	m	class:conf
-cmdlineargs	src/dryad.cpp	40;"	s	file:
-conf	src/conf.cpp	22;"	f	class:conf
-conf	src/conf.h	37;"	c
-conf	src/conf.h	40;"	p	class:conf
-conffile	src/dryad.cpp	42;"	m	struct:cmdlineargs	file:
-content	src/dqueue.h	31;"	m	struct:queue
-count	src/cache.h	80;"	m	class:cache
-create_socket	src/rfc3164.cpp	85;"	f	class:rfc3164
-create_socket	src/rfc3164.h	51;"	p	class:rfc3164
-critical	src/analyze.h	67;"	m	class:analyze
-cstring	src/dstring.cpp	203;"	f	class:dstring
-cstring	src/dstring.h	75;"	p	class:dstring
-curr	src/database.h	107;"	m	class:database
-curr_pos	src/database.h	109;"	m	class:database
-daemon	src/database.cpp	239;"	f	class:database
-daemon	src/database.h	89;"	p	class:database
-daemon	src/dblist.h	30;"	m	struct:list
-daemon	src/syslog.h	32;"	m	struct:syslog_message
-darray	src/darray.cpp	26;"	f	class:darray
-darray	src/darray.h	37;"	c
-darray	src/darray.h	39;"	p	class:darray
-darray_p	src/darray.h	26;"	s
-database	src/database.cpp	22;"	f	class:database
-database	src/database.cpp	30;"	f	class:database
-database	src/database.h	45;"	c
-database	src/database.h	52;"	p	class:database
-database	src/database.h	59;"	p	class:database
-date	src/syslog.h	28;"	m	struct:syslog_message
-db	src/conf.cpp	90;"	f	class:conf
-db	src/conf.h	44;"	p	class:conf
-db_vec	src/analyze.h	74;"	m	class:analyze
-dbs	src/conf.h	53;"	m	class:conf
-debug	src/analyze.h	72;"	m	class:analyze
-del	src/darray.cpp	157;"	f	class:darray
-del	src/darray.h	90;"	p	class:darray
-dequeue	src/dqueue.cpp	72;"	f	class:dfifo
-dequeue	src/dqueue.h	43;"	p	class:dfifo
-dfifo	src/dqueue.cpp	26;"	f	class:dfifo
-dfifo	src/dqueue.h	37;"	c
-dfifo	src/dqueue.h	40;"	p	class:dfifo
-dfilestream	src/dfilestream.cpp	22;"	f	class:dfilestream
-dfilestream	src/dfilestream.cpp	29;"	f	class:dfilestream
-dfilestream	src/dfilestream.cpp	37;"	f	class:dfilestream
-dfilestream	src/dfilestream.h	35;"	c
-dfilestream	src/dfilestream.h	38;"	p	class:dfilestream
-dfilestream	src/dfilestream.h	46;"	p	class:dfilestream
-dfilestream	src/dfilestream.h	54;"	p	class:dfilestream
-drarray	src/drarray.cpp	26;"	f	class:drarray
-drarray	src/drarray.cpp	33;"	f	class:drarray
-drarray	src/drarray.h	28;"	c
-drarray	src/drarray.h	35;"	p	class:drarray
-drarray	src/drarray.h	40;"	p	class:drarray
-dstring	src/dstring.cpp	22;"	f	class:dstring
-dstring	src/dstring.cpp	30;"	f	class:dstring
-dstring	src/dstring.cpp	43;"	f	class:dstring
-dstring	src/dstring.cpp	56;"	f	class:dstring
-dstring	src/dstring.cpp	69;"	f	class:dstring
-dstring	src/dstring.h	33;"	c
-dstring	src/dstring.h	37;"	p	class:dstring
-dstring	src/dstring.h	43;"	p	class:dstring
-dstring	src/dstring.h	48;"	p	class:dstring
-dstring	src/dstring.h	55;"	p	class:dstring
-dstring	src/dstring.h	61;"	p	class:dstring
-dstrlist	src/cache.h	35;"	s
-dump	src/darray.cpp	182;"	f	class:darray
-dump	src/darray.h	93;"	p	class:darray
-dump	src/database.cpp	266;"	f	class:database
-dump	src/database.h	100;"	p	class:database
-emergency	src/analyze.h	65;"	m	class:analyze
-enqueue	src/dqueue.cpp	48;"	f	class:dfifo
-enqueue	src/dqueue.h	42;"	p	class:dfifo
-error	src/analyze.h	68;"	m	class:analyze
-exists	src/drarray.cpp	83;"	f	class:drarray
-exists	src/drarray.h	69;"	p	class:drarray
-facility	src/syslog.h	26;"	m	struct:syslog_message
-fh	src/dfilestream.h	102;"	m	class:dfilestream
-file_cache	src/cache.h	81;"	m	class:cache
-file_lock	src/cache.h	84;"	m	class:cache
-filemode	src/dfilestream.h	103;"	m	class:dfilestream
-filename	src/dfilestream.h	104;"	m	class:dfilestream
-following	src/dstring.cpp	264;"	f	class:dstring
-following	src/dstring.h	114;"	p	class:dstring
-get	src/cache.cpp	136;"	f	class:cache
-get	src/cache.h	74;"	p	class:cache
-get	src/conf.cpp	95;"	f	class:conf
-get	src/conf.h	46;"	p	class:conf
-get_at	src/darray.cpp	103;"	f	class:darray
-get_at	src/darray.h	69;"	p	class:darray
-get_autobalance	src/darray.cpp	47;"	f	class:darray
-get_autobalance	src/darray.h	48;"	p	class:darray
-get_filename	src/dfilestream.cpp	253;"	f	class:dfilestream
-get_filename	src/dfilestream.h	99;"	p	class:dfilestream
-get_size	src/cache.cpp	54;"	f	class:cache
-get_size	src/cache.h	59;"	p	class:cache
-head	src/cache.h	82;"	m	class:cache
-head	src/darray.h	99;"	m	class:darray
-head	src/dqueue.h	48;"	m	class:dfifo
-head_lock	src/cache.h	84;"	m	class:cache
-host	src/syslog.h	29;"	m	struct:syslog_message
-informational	src/analyze.h	71;"	m	class:analyze
-insert	src/darray.cpp	60;"	f	class:darray
-insert	src/darray.h	62;"	p	class:darray
-item	src/cache.h	36;"	m	struct:dstrlist
-item	src/darray.h	27;"	m	struct:darray_p
-itoa	src/functions.cpp	21;"	f
-itoa	src/functions.h	25;"	p
-l	src/dstring.h	131;"	m	class:dstring
-len	src/darray.h	98;"	m	class:darray
-len	src/drarray.h	77;"	m	class:drarray
-len	src/dstring.h	130;"	m	class:dstring
-length	src/darray.cpp	151;"	f	class:darray
-length	src/darray.h	83;"	p	class:darray
-length	src/dqueue.cpp	95;"	f	class:dfifo
-length	src/dqueue.h	45;"	p	class:dfifo
-length	src/drarray.cpp	46;"	f	class:drarray
-length	src/drarray.h	47;"	p	class:drarray
-length	src/dstring.cpp	92;"	f	class:dstring
-length	src/dstring.h	68;"	p	class:dstring
-level	src/analyze.h	35;"	m	struct:severity
-list	src/dblist.h	26;"	s
-listen	src/rfc3164.cpp	36;"	f	class:rfc3164
-listen	src/rfc3164.h	48;"	p	class:rfc3164
-load	src/analyze.cpp	304;"	f	class:analyze
-load	src/analyze.h	57;"	p	class:analyze
-load	src/database.cpp	103;"	f	class:database
-load	src/database.h	68;"	p	class:database
-load_disk_cache	src/cache.cpp	164;"	f	class:cache
-load_disk_cache	src/cache.h	78;"	p	class:cache
-lock	src/dqueue.h	51;"	m	class:dfifo
-mList	src/database.h	105;"	m	class:database
-main	src/dryad.cpp	49;"	f
-max	src/analyze.h	41;"	m	struct:severity
-max_pos	src/database.h	111;"	m	class:database
-message	src/syslog.h	30;"	m	struct:syslog_message
-name	src/conf.h	33;"	m	struct:variable
-next	src/cache.h	37;"	m	struct:dstrlist
-next	src/darray.h	28;"	m	struct:darray_p
-next	src/database.cpp	196;"	f	class:database
-next	src/database.h	74;"	p	class:database
-next	src/dblist.h	31;"	m	struct:list
-next	src/dqueue.h	32;"	m	struct:queue
-notice	src/analyze.h	70;"	m	class:analyze
-num_dbs	src/conf.cpp	85;"	f	class:conf
-num_dbs	src/conf.h	43;"	p	class:conf
-open	src/dfilestream.cpp	106;"	f	class:dfilestream
-open	src/dfilestream.cpp	50;"	f	class:dfilestream
-open	src/dfilestream.h	64;"	p	class:dfilestream
-open	src/dfilestream.h	72;"	p	class:dfilestream
-operator =	src/dstring.cpp	287;"	f	class:dstring
-operator =	src/dstring.cpp	305;"	f	class:dstring
-operator =	src/dstring.cpp	323;"	f	class:dstring
-operator =	src/dstring.h	116;"	p	class:dstring
-operator =	src/dstring.h	117;"	p	class:dstring
-operator =	src/dstring.h	118;"	p	class:dstring
-operator [	src/drarray.cpp	103;"	f	class:drarray
-operator [	src/drarray.cpp	94;"	f	class:drarray
-operator [	src/drarray.h	73;"	p	class:drarray
-operator [	src/drarray.h	74;"	p	class:drarray
-operator [	src/dstring.cpp	341;"	f	class:dstring
-operator [	src/dstring.cpp	353;"	f	class:dstring
-operator [	src/dstring.h	124;"	p	class:dstring
-operator [	src/dstring.h	125;"	p	class:dstring
-parse_commandline	src/dryad.cpp	101;"	f
-parse_commandline	src/dryad.cpp	47;"	p	file:
-parse_message	src/rfc3164.cpp	107;"	f	class:rfc3164
-parse_message	src/rfc3164.h	52;"	p	class:rfc3164
-port	src/rfc3164.h	59;"	m	struct:rfc3164_args
-prev	src/cache.h	38;"	m	struct:dstrlist
-prev	src/darray.h	29;"	m	struct:darray_p
-prev	src/database.cpp	211;"	f	class:database
-prev	src/database.h	79;"	p	class:database
-prev	src/dblist.h	32;"	m	struct:list
-prev	src/dqueue.h	33;"	m	struct:queue
-prior	src/dstring.cpp	242;"	f	class:dstring
-prior	src/dstring.h	113;"	p	class:dstring
-process	src/analyze.cpp	312;"	f	class:analyze
-process	src/analyze.h	59;"	p	class:analyze
-pushback	src/drarray.cpp	68;"	f	class:drarray
-pushback	src/drarray.h	61;"	p	class:drarray
-qlen	src/dqueue.h	50;"	m	class:dfifo
-queue	src/dqueue.h	29;"	s
-re	src/database.cpp	255;"	f	class:database
-re	src/database.h	91;"	p	class:database
-re	src/dblist.h	27;"	m	struct:list
-readconfig	src/conf.cpp	51;"	f	class:conf
-readconfig	src/conf.h	49;"	p	class:conf
-readline	src/dfilestream.cpp	163;"	f	class:dfilestream
-readline	src/dfilestream.h	79;"	p	class:dfilestream
-reg	src/analyze.cpp	337;"	f	class:analyze
-reg	src/analyze.h	62;"	p	class:analyze
-reload	src/conf.h	51;"	m	class:conf
-remove	src/dstring.cpp	125;"	f	class:dstring
-remove	src/dstring.cpp	164;"	f	class:dstring
-remove	src/dstring.h	102;"	p	class:dstring
-remove	src/dstring.h	93;"	p	class:dstring
-report	src/analyze.cpp	387;"	f	class:analyze
-report	src/analyze.h	37;"	m	struct:severity
-report	src/analyze.h	64;"	p	class:analyze
-report_once	src/analyze.cpp	382;"	f	class:analyze
-report_once	src/analyze.h	63;"	p	class:analyze
-reset	src/database.cpp	226;"	f	class:database
-reset	src/database.h	84;"	p	class:database
-resize	src/drarray.cpp	52;"	f	class:drarray
-resize	src/drarray.h	54;"	p	class:drarray
-resize	src/dstring.cpp	222;"	f	class:dstring
-resize	src/dstring.h	111;"	p	class:dstring
-rfc3164	src/rfc3164.cpp	21;"	f	class:rfc3164
-rfc3164	src/rfc3164.cpp	26;"	f	class:rfc3164
-rfc3164	src/rfc3164.h	41;"	c
-rfc3164	src/rfc3164.h	44;"	p	class:rfc3164
-rfc3164	src/rfc3164.h	45;"	p	class:rfc3164
-rfc3164_args	src/rfc3164.h	57;"	s
-rfc3164_build_args	src/rfc3164.cpp	232;"	f
-rfc3164_build_args	src/rfc3164.h	64;"	p
-rfc3164_launch_thread	src/rfc3164.cpp	216;"	f
-rfc3164_launch_thread	src/rfc3164.h	62;"	p
-rs	src/database.cpp	260;"	f	class:database
-rs	src/database.h	93;"	p	class:database
-rs	src/dblist.h	28;"	m	struct:list
-seen	src/analyze.h	73;"	m	class:analyze
-set_at	src/darray.cpp	121;"	f	class:darray
-set_at	src/darray.h	77;"	p	class:darray
-set_autobalance	src/darray.cpp	53;"	f	class:darray
-set_autobalance	src/darray.h	55;"	p	class:darray
-severity	src/analyze.h	33;"	s
-severity	src/syslog.h	27;"	m	struct:syslog_message
-size	src/cache.h	79;"	m	class:cache
-sock	src/rfc3164.h	53;"	m	class:rfc3164
-str	src/dblist.h	29;"	m	struct:list
-str	src/dstring.h	128;"	m	class:dstring
-string	src/database.cpp	247;"	f	class:database
-string	src/database.h	87;"	p	class:database
-syslog_message	src/syslog.h	25;"	s
-tail	src/cache.h	83;"	m	class:cache
-tail	src/darray.h	100;"	m	class:darray
-tail	src/dqueue.h	49;"	m	class:dfifo
-tail_lock	src/cache.h	84;"	m	class:cache
-tcp	src/dryad.cpp	43;"	m	struct:cmdlineargs	file:
-track	src/analyze.h	39;"	m	struct:severity
-udp	src/dryad.cpp	44;"	m	struct:cmdlineargs	file:
-value	src/conf.h	34;"	m	struct:variable
-variable	src/conf.h	32;"	s
-vars	src/conf.h	52;"	m	class:conf
-warning	src/analyze.h	69;"	m	class:analyze
-writeline	src/dfilestream.cpp	216;"	f	class:dfilestream
-writeline	src/dfilestream.cpp	233;"	f	class:dfilestream
-writeline	src/dfilestream.h	86;"	p	class:dfilestream
-writeline	src/dfilestream.h	93;"	p	class:dfilestream
-~analyze	src/analyze.cpp	290;"	f	class:analyze
-~analyze	src/analyze.h	55;"	p	class:analyze
-~cache	src/cache.cpp	39;"	f	class:cache
-~cache	src/cache.h	53;"	p	class:cache
-~conf	src/conf.cpp	46;"	f	class:conf
-~conf	src/conf.h	41;"	p	class:conf
-~darray	src/darray.cpp	35;"	f	class:darray
-~darray	src/darray.h	40;"	p	class:darray
-~database	src/database.cpp	173;"	f	class:database
-~database	src/database.h	61;"	p	class:database
-~dfifo	src/dqueue.cpp	35;"	f	class:dfifo
-~dfifo	src/dqueue.h	41;"	p	class:dfifo
-~dfilestream	src/dfilestream.cpp	45;"	f	class:dfilestream
-~dfilestream	src/dfilestream.h	55;"	p	class:dfilestream
-~drarray	src/drarray.cpp	40;"	f	class:drarray
-~drarray	src/drarray.h	41;"	p	class:drarray
-~dstring	src/dstring.cpp	82;"	f	class:dstring
-~dstring	src/dstring.h	62;"	p	class:dstring
-~rfc3164	src/rfc3164.cpp	31;"	f	class:rfc3164
-~rfc3164	src/rfc3164.h	46;"	p	class:rfc3164
+Syslog	src/syslog.h	25;"	n
+_DRYERR_H	src/dryerr.h	22;"	d
+a	src/drarray.h	88;"	m	class:DRArray::drarray
+add	src/cache.cpp	72;"	f	class:DCache::cache
+add	src/cache.h	75;"	p	class:DCache::cache
+alert	src/analyze.h	64;"	m	struct:DAnalyze::sev_group
+all	src/analyze.h	59;"	m	struct:DAnalyze::severity
+analyze	src/analyze.cpp	24;"	f	class:DAnalyze::analyze
+analyze	src/analyze.h	101;"	p	class:DAnalyze::analyze
+analyze	src/analyze.h	94;"	c	namespace:DAnalyze
+analyze_args	src/analyze.h	75;"	s	namespace:DAnalyze
+analyze_build_args	src/analyze.cpp	491;"	f	namespace:DAnalyze
+analyze_build_args	src/analyze.h	141;"	p	namespace:DAnalyze
+analyze_launch_thread	src/analyze.cpp	462;"	f	namespace:DAnalyze
+analyze_launch_thread	src/analyze.h	138;"	p	namespace:DAnalyze
+ascii	src/dstring.cpp	188;"	f	class:DString::dstring
+ascii	src/dstring.h	86;"	p	class:DString::dstring
+at	src/drarray.cpp	114;"	f	class:DRArray::drarray
+at	src/drarray.h	81;"	p	class:DRArray::drarray
+autobalance	src/darray.h	105;"	m	class:DArray::darray
+build_severity_struct	src/analyze.cpp	328;"	f	class:DAnalyze::analyze
+build_severity_struct	src/analyze.h	124;"	p	class:DAnalyze::analyze
+c	src/analyze.h	131;"	m	class:DAnalyze::analyze
+c	src/analyze.h	76;"	m	struct:DAnalyze::analyze_args
+c	src/lrsp-server.h	58;"	m	class:DLRSP::lrsp
+c	src/rfc3164.h	82;"	m	class:RFC3164::rfc3164
+c	src/rfc3164.h	86;"	m	struct:RFC3164::rfc3164_args
+cache	src/cache.cpp	24;"	f	class:DCache::cache
+cache	src/cache.h	53;"	c	namespace:DCache
+cache	src/cache.h	60;"	p	class:DCache::cache
+cache_file	src/cache.h	95;"	m	class:DCache::cache
+cash	src/analyze.h	77;"	m	struct:DAnalyze::analyze_args
+cat	src/dstring.cpp	258;"	f	class:DString::dstring
+cat	src/dstring.h	138;"	p	class:DString::dstring
+cfile	src/conf.h	117;"	m	class:DConf::conf
+cmdlineargs	src/dryad.cpp	47;"	s	file:
+conf	src/conf.cpp	24;"	f	class:DConf::conf
+conf	src/conf.h	57;"	c	namespace:DConf
+conf	src/conf.h	64;"	p	class:DConf::conf
+conffile	src/dryad.cpp	49;"	m	struct:cmdlineargs	file:
+content	src/dqueue.h	32;"	m	struct:DQueue::queue
+contents	src/conf.h	50;"	m	struct:DConf::daemon_section
+count	src/cache.h	89;"	m	class:DCache::cache
+create_socket	src/rfc3164.cpp	78;"	f	class:RFC3164::rfc3164
+create_socket	src/rfc3164.h	78;"	p	class:RFC3164::rfc3164
+critical	src/analyze.h	65;"	m	struct:DAnalyze::sev_group
+cstring	src/dstring.cpp	174;"	f	class:DString::dstring
+cstring	src/dstring.h	79;"	p	class:DString::dstring
+curr	src/database.h	128;"	m	class:DDatabase::database
+curr_pos	src/database.h	130;"	m	class:DDatabase::database
+daemon	src/database.cpp	181;"	f	class:DDatabase::database
+daemon	src/database.h	110;"	p	class:DDatabase::database
+daemon	src/database.h	49;"	m	struct:DDatabase::list
+daemon	src/plugins/plugin.h	47;"	m	struct:plugin::syslog_message
+daemon	src/syslog.h	36;"	m	struct:Syslog::syslog_message
+daemon_get	src/conf.cpp	161;"	f	class:DConf::conf
+daemon_get	src/conf.h	102;"	p	class:DConf::conf
+daemon_name	src/conf.cpp	190;"	f	class:DConf::conf
+daemon_name	src/conf.h	113;"	p	class:DConf::conf
+daemon_section	src/conf.h	48;"	s	namespace:DConf
+daemons	src/analyze.h	128;"	m	class:DAnalyze::analyze
+daemons	src/conf.h	121;"	m	class:DConf::conf
+darray	src/darray.cpp	28;"	f	class:DArray::darray
+darray	src/darray.h	40;"	c	namespace:DArray
+darray	src/darray.h	47;"	p	class:DArray::darray
+darray_p	src/darray.h	29;"	s	namespace:DArray
+database	src/database.cpp	24;"	f	class:DDatabase::database
+database	src/database.cpp	32;"	f	class:DDatabase::database
+database	src/database.h	66;"	c	namespace:DDatabase
+database	src/database.h	73;"	p	class:DDatabase::database
+database	src/database.h	80;"	p	class:DDatabase::database
+date	src/plugins/plugin.h	44;"	m	struct:plugin::syslog_message
+date	src/syslog.h	32;"	m	struct:Syslog::syslog_message
+db	src/conf.cpp	146;"	f	class:DConf::conf
+db	src/conf.h	78;"	p	class:DConf::conf
+db_vec	src/analyze.h	127;"	m	class:DAnalyze::analyze
+dbs	src/conf.h	120;"	m	class:DConf::conf
+debug	src/analyze.h	70;"	m	struct:DAnalyze::sev_group
+def	src/analyze.h	125;"	m	class:DAnalyze::analyze
+def_rep	src/analyze.h	130;"	m	class:DAnalyze::analyze
+del	src/darray.cpp	157;"	f	class:DArray::darray
+del	src/darray.h	98;"	p	class:DArray::darray
+dequeue	src/dqueue.cpp	74;"	f	class:DQueue::dfifo
+dequeue	src/dqueue.h	60;"	p	class:DQueue::dfifo
+dfifo	src/dqueue.cpp	28;"	f	class:DQueue::dfifo
+dfifo	src/dqueue.h	42;"	c	namespace:DQueue
+dfifo	src/dqueue.h	49;"	p	class:DQueue::dfifo
+dfilestream	src/dfilestream.cpp	24;"	f	class:DFileStream::dfilestream
+dfilestream	src/dfilestream.cpp	31;"	f	class:DFileStream::dfilestream
+dfilestream	src/dfilestream.cpp	39;"	f	class:DFileStream::dfilestream
+dfilestream	src/dfilestream.h	47;"	c	namespace:DFileStream
+dfilestream	src/dfilestream.h	50;"	p	class:DFileStream::dfilestream
+dfilestream	src/dfilestream.h	58;"	p	class:DFileStream::dfilestream
+dfilestream	src/dfilestream.h	66;"	p	class:DFileStream::dfilestream
+dlptr	src/analyze.h	91;"	m	struct:DAnalyze::reporter
+drarray	src/drarray.cpp	28;"	f	class:DRArray::drarray
+drarray	src/drarray.cpp	35;"	f	class:DRArray::drarray
+drarray	src/drarray.h	32;"	c	namespace:DRArray
+drarray	src/drarray.h	39;"	p	class:DRArray::drarray
+drarray	src/drarray.h	44;"	p	class:DRArray::drarray
+dryad_config	src/plugins/email.cpp	44;"	f
+dryad_config	src/plugins/file.cpp	29;"	f
+dryad_config	src/plugins/null.cpp	26;"	f
+dryad_many	src/plugins/email.cpp	103;"	f
+dryad_many	src/plugins/file.cpp	61;"	f
+dryad_many	src/plugins/null.cpp	42;"	f
+dryad_once	src/plugins/email.cpp	57;"	f
+dryad_once	src/plugins/file.cpp	45;"	f
+dryad_once	src/plugins/null.cpp	31;"	f
+dryerr	src/dryerr.cpp	36;"	f	namespace:DError
+dryerr	src/dryerr.h	60;"	p	namespace:DError
+dstring	src/dstring.cpp	24;"	f	class:DString::dstring
+dstring	src/dstring.cpp	32;"	f	class:DString::dstring
+dstring	src/dstring.cpp	45;"	f	class:DString::dstring
+dstring	src/dstring.cpp	58;"	f	class:DString::dstring
+dstring	src/dstring.cpp	71;"	f	class:DString::dstring
+dstring	src/dstring.h	37;"	c	namespace:DString
+dstring	src/dstring.h	41;"	p	class:DString::dstring
+dstring	src/dstring.h	47;"	p	class:DString::dstring
+dstring	src/dstring.h	52;"	p	class:DString::dstring
+dstring	src/dstring.h	59;"	p	class:DString::dstring
+dstring	src/dstring.h	65;"	p	class:DString::dstring
+dstrlist	src/cache.h	43;"	s	namespace:DCache
+dump	src/darray.cpp	195;"	f	class:DArray::darray
+dump	src/darray.h	101;"	p	class:DArray::darray
+dump	src/database.cpp	208;"	f	class:DDatabase::database
+dump	src/database.h	121;"	p	class:DDatabase::database
+email_plugin	src/plugins/email.cpp	32;"	n	file:
+emergency	src/analyze.h	63;"	m	struct:DAnalyze::sev_group
+enqueue	src/dqueue.cpp	50;"	f	class:DQueue::dfifo
+enqueue	src/dqueue.h	55;"	p	class:DQueue::dfifo
+err_cb	src/lrsp-server.cpp	192;"	f	namespace:DLRSP
+err_cb	src/lrsp-server.h	68;"	p	namespace:DLRSP
+error	src/analyze.h	66;"	m	struct:DAnalyze::sev_group
+error_callback	src/lrsp-server.cpp	54;"	f	class:DLRSP::lrsp
+error_callback	src/lrsp-server.h	53;"	p	class:DLRSP::lrsp
+exists	src/drarray.cpp	85;"	f	class:DRArray::drarray
+exists	src/drarray.h	73;"	p	class:DRArray::drarray
+facility	src/plugins/plugin.h	42;"	m	struct:plugin::syslog_message
+facility	src/syslog.h	30;"	m	struct:Syslog::syslog_message
+fh	src/dfilestream.h	114;"	m	class:DFileStream::dfilestream
+file_cache	src/cache.h	90;"	m	class:DCache::cache
+file_lock	src/cache.h	93;"	m	class:DCache::cache
+file_plugin	src/plugins/file.cpp	22;"	n	file:
+filemode	src/dfilestream.h	115;"	m	class:DFileStream::dfilestream
+filename	src/dfilestream.h	116;"	m	class:DFileStream::dfilestream
+following	src/dstring.cpp	235;"	f	class:DString::dstring
+following	src/dstring.h	131;"	p	class:DString::dstring
+from	src/plugins/email.cpp	39;"	v
+get	src/cache.cpp	147;"	f	class:DCache::cache
+get	src/cache.h	83;"	p	class:DCache::cache
+get	src/conf.cpp	151;"	f	class:DConf::conf
+get	src/conf.h	88;"	p	class:DConf::conf
+get_at	src/darray.cpp	105;"	f	class:DArray::darray
+get_at	src/darray.h	77;"	p	class:DArray::darray
+get_autobalance	src/darray.cpp	49;"	f	class:DArray::darray
+get_autobalance	src/darray.h	56;"	p	class:DArray::darray
+get_filename	src/dfilestream.cpp	215;"	f	class:DFileStream::dfilestream
+get_filename	src/dfilestream.h	111;"	p	class:DFileStream::dfilestream
+get_size	src/cache.cpp	67;"	f	class:DCache::cache
+get_size	src/cache.h	67;"	p	class:DCache::cache
+get_wait	src/cache.h	94;"	m	class:DCache::cache
+global	src/lrsp-server.cpp	23;"	v
+head	src/cache.h	91;"	m	class:DCache::cache
+head	src/darray.h	107;"	m	class:DArray::darray
+head	src/dqueue.h	69;"	m	class:DQueue::dfifo
+head_lock	src/cache.h	93;"	m	class:DCache::cache
+host	src/plugins/plugin.h	45;"	m	struct:plugin::syslog_message
+host	src/syslog.h	33;"	m	struct:Syslog::syslog_message
+informational	src/analyze.h	69;"	m	struct:DAnalyze::sev_group
+insert	src/darray.cpp	62;"	f	class:DArray::darray
+insert	src/darray.h	70;"	p	class:DArray::darray
+item	src/cache.h	44;"	m	struct:DCache::dstrlist
+item	src/darray.h	30;"	m	struct:DArray::darray_p
+itoa	src/functions.cpp	23;"	f	namespace:DFunctions
+itoa	src/functions.h	28;"	p	namespace:DFunctions
+l	src/dstring.h	155;"	m	class:DString::dstring
+len	src/darray.h	106;"	m	class:DArray::darray
+len	src/drarray.h	87;"	m	class:DRArray::drarray
+len	src/dstring.h	154;"	m	class:DString::dstring
+length	src/darray.cpp	151;"	f	class:DArray::darray
+length	src/darray.h	91;"	p	class:DArray::darray
+length	src/dqueue.cpp	97;"	f	class:DQueue::dfifo
+length	src/dqueue.h	66;"	p	class:DQueue::dfifo
+length	src/drarray.cpp	48;"	f	class:DRArray::drarray
+length	src/drarray.h	51;"	p	class:DRArray::drarray
+length	src/dstring.cpp	95;"	f	class:DString::dstring
+length	src/dstring.h	72;"	p	class:DString::dstring
+level	src/analyze.h	51;"	m	struct:DAnalyze::severity
+list	src/database.h	45;"	s	namespace:DDatabase
+listen	src/lrsp-server.cpp	47;"	f	class:DLRSP::lrsp
+listen	src/lrsp-server.h	51;"	p	class:DLRSP::lrsp
+listen	src/rfc3164.cpp	38;"	f	class:RFC3164::rfc3164
+listen	src/rfc3164.h	74;"	p	class:RFC3164::rfc3164
+load	src/analyze.cpp	164;"	f	class:DAnalyze::analyze
+load	src/analyze.h	109;"	p	class:DAnalyze::analyze
+load	src/database.cpp	41;"	f	class:DDatabase::database
+load	src/database.h	89;"	p	class:DDatabase::database
+load_disk_cache	src/cache.cpp	179;"	f	class:DCache::cache
+load_disk_cache	src/cache.h	87;"	p	class:DCache::cache
+lock	src/dqueue.h	72;"	m	class:DQueue::dfifo
+lrsp	src/lrsp-server.cpp	25;"	f	class:DLRSP::lrsp
+lrsp	src/lrsp-server.cpp	31;"	f	class:DLRSP::lrsp
+lrsp	src/lrsp-server.h	45;"	c	namespace:DLRSP
+lrsp	src/lrsp-server.h	47;"	p	class:DLRSP::lrsp
+lrsp	src/lrsp-server.h	48;"	p	class:DLRSP::lrsp
+lrsp_args	src/lrsp-server.h	62;"	s	namespace:DLRSP
+lrsp_launch_thread	src/lrsp-server.cpp	177;"	f	namespace:DLRSP
+lrsp_launch_thread	src/lrsp-server.h	72;"	p	namespace:DLRSP
+lrsp_setup	src/lrsp-server.cpp	197;"	f	namespace:DLRSP
+lrsp_setup	src/lrsp-server.h	66;"	p	namespace:DLRSP
+mList	src/database.h	126;"	m	class:DDatabase::database
+mailhost	src/plugins/email.cpp	40;"	v
+main	src/dryad.cpp	67;"	f
+many	src/analyze.h	90;"	m	struct:DAnalyze::reporter
+max	src/analyze.h	57;"	m	struct:DAnalyze::severity
+max_pos	src/database.h	132;"	m	class:DDatabase::database
+message	src/plugins/plugin.h	46;"	m	struct:plugin::syslog_message
+message	src/syslog.h	34;"	m	struct:Syslog::syslog_message
+message_callback	src/lrsp-server.cpp	62;"	f	class:DLRSP::lrsp
+message_callback	src/lrsp-server.h	54;"	p	class:DLRSP::lrsp
+msg_cb	src/lrsp-server.cpp	187;"	f	namespace:DLRSP
+msg_cb	src/lrsp-server.h	70;"	p	namespace:DLRSP
+name	src/analyze.h	71;"	m	struct:DAnalyze::sev_group
+name	src/analyze.h	88;"	m	struct:DAnalyze::reporter
+name	src/conf.h	43;"	m	struct:DConf::variable
+name	src/conf.h	49;"	m	struct:DConf::daemon_section
+next	src/cache.h	45;"	m	struct:DCache::dstrlist
+next	src/darray.h	31;"	m	struct:DArray::darray_p
+next	src/database.cpp	138;"	f	class:DDatabase::database
+next	src/database.h	50;"	m	struct:DDatabase::list
+next	src/database.h	95;"	p	class:DDatabase::database
+next	src/dqueue.h	33;"	m	struct:DQueue::queue
+notice	src/analyze.h	68;"	m	struct:DAnalyze::sev_group
+null_plugin	src/plugins/null.cpp	22;"	n	file:
+num_daemons	src/conf.cpp	180;"	f	class:DConf::conf
+num_daemons	src/conf.h	107;"	p	class:DConf::conf
+num_dbs	src/conf.cpp	141;"	f	class:DConf::conf
+num_dbs	src/conf.h	71;"	p	class:DConf::conf
+obj	src/lrsp-server.h	63;"	m	struct:DLRSP::lrsp_args
+once	src/analyze.h	89;"	m	struct:DAnalyze::reporter
+open	src/dfilestream.cpp	52;"	f	class:DFileStream::dfilestream
+open	src/dfilestream.cpp	60;"	f	class:DFileStream::dfilestream
+open	src/dfilestream.h	76;"	p	class:DFileStream::dfilestream
+open	src/dfilestream.h	84;"	p	class:DFileStream::dfilestream
+operator =	src/dstring.cpp	278;"	f	class:DString::dstring
+operator =	src/dstring.cpp	296;"	f	class:DString::dstring
+operator =	src/dstring.cpp	314;"	f	class:DString::dstring
+operator =	src/dstring.h	140;"	p	class:DString::dstring
+operator =	src/dstring.h	141;"	p	class:DString::dstring
+operator =	src/dstring.h	142;"	p	class:DString::dstring
+operator [	src/drarray.cpp	105;"	f	class:DRArray::drarray
+operator [	src/drarray.cpp	96;"	f	class:DRArray::drarray
+operator [	src/drarray.h	83;"	p	class:DRArray::drarray
+operator [	src/drarray.h	84;"	p	class:DRArray::drarray
+operator [	src/dstring.cpp	332;"	f	class:DString::dstring
+operator [	src/dstring.cpp	344;"	f	class:DString::dstring
+operator [	src/dstring.h	148;"	p	class:DString::dstring
+operator [	src/dstring.h	149;"	p	class:DString::dstring
+parse_commandline	src/dryad.cpp	151;"	f
+parse_commandline	src/dryad.cpp	55;"	p	file:
+parse_message	src/lrsp-server.cpp	68;"	f	class:DLRSP::lrsp
+parse_message	src/lrsp-server.h	57;"	p	class:DLRSP::lrsp
+parse_message	src/rfc3164.cpp	101;"	f	class:RFC3164::rfc3164
+parse_message	src/rfc3164.h	80;"	p	class:RFC3164::rfc3164
+path	src/plugins/file.cpp	27;"	v
+plugin	src/plugins/plugin.h	29;"	n
+port	src/rfc3164.h	87;"	m	struct:RFC3164::rfc3164_args
+prev	src/cache.h	46;"	m	struct:DCache::dstrlist
+prev	src/darray.h	32;"	m	struct:DArray::darray_p
+prev	src/database.cpp	153;"	f	class:DDatabase::database
+prev	src/database.h	100;"	p	class:DDatabase::database
+prev	src/database.h	51;"	m	struct:DDatabase::list
+prev	src/dqueue.h	34;"	m	struct:DQueue::queue
+prior	src/dstring.cpp	213;"	f	class:DString::dstring
+prior	src/dstring.h	124;"	p	class:DString::dstring
+process	src/analyze.cpp	172;"	f	class:DAnalyze::analyze
+process	src/analyze.h	116;"	p	class:DAnalyze::analyze
+pushback	src/drarray.cpp	70;"	f	class:DRArray::drarray
+pushback	src/drarray.h	65;"	p	class:DRArray::drarray
+qlen	src/dqueue.h	71;"	m	class:DQueue::dfifo
+queue	src/dqueue.h	30;"	s	namespace:DQueue
+re	src/database.cpp	197;"	f	class:DDatabase::database
+re	src/database.h	112;"	p	class:DDatabase::database
+re	src/database.h	46;"	m	struct:DDatabase::list
+readconfig	src/conf.cpp	62;"	f	class:DConf::conf
+readconfig	src/conf.h	116;"	p	class:DConf::conf
+readline	src/dfilestream.cpp	118;"	f	class:DFileStream::dfilestream
+readline	src/dfilestream.h	91;"	p	class:DFileStream::dfilestream
+reg	src/analyze.cpp	196;"	f	class:DAnalyze::analyze
+reg	src/analyze.h	120;"	p	class:DAnalyze::analyze
+reload	src/conf.h	118;"	m	class:DConf::conf
+remove	src/dstring.cpp	128;"	f	class:DString::dstring
+remove	src/dstring.cpp	135;"	f	class:DString::dstring
+remove	src/dstring.h	106;"	p	class:DString::dstring
+remove	src/dstring.h	97;"	p	class:DString::dstring
+report	src/analyze.cpp	271;"	f	class:DAnalyze::analyze
+report	src/analyze.h	122;"	p	class:DAnalyze::analyze
+report	src/analyze.h	53;"	m	struct:DAnalyze::severity
+report_once	src/analyze.cpp	256;"	f	class:DAnalyze::analyze
+report_once	src/analyze.h	121;"	p	class:DAnalyze::analyze
+reporter	src/analyze.h	87;"	s	namespace:DAnalyze
+reporter_config	src/analyze.h	85;"	t	namespace:DAnalyze
+reporter_many	src/analyze.h	83;"	t	namespace:DAnalyze
+reporter_once	src/analyze.h	81;"	t	namespace:DAnalyze
+reports	src/analyze.h	129;"	m	class:DAnalyze::analyze
+reset	src/database.cpp	168;"	f	class:DDatabase::database
+reset	src/database.h	105;"	p	class:DDatabase::database
+resize	src/drarray.cpp	54;"	f	class:DRArray::drarray
+resize	src/drarray.h	58;"	p	class:DRArray::drarray
+resize	src/dstring.cpp	193;"	f	class:DString::dstring
+resize	src/dstring.h	115;"	p	class:DString::dstring
+rfc3164	src/rfc3164.cpp	23;"	f	class:RFC3164::rfc3164
+rfc3164	src/rfc3164.cpp	28;"	f	class:RFC3164::rfc3164
+rfc3164	src/rfc3164.h	53;"	c	namespace:RFC3164
+rfc3164	src/rfc3164.h	61;"	p	class:RFC3164::rfc3164
+rfc3164	src/rfc3164.h	67;"	p	class:RFC3164::rfc3164
+rfc3164_args	src/rfc3164.h	85;"	s	namespace:RFC3164
+rfc3164_build_args	src/rfc3164.cpp	227;"	f	namespace:RFC3164
+rfc3164_build_args	src/rfc3164.h	92;"	p	namespace:RFC3164
+rfc3164_launch_thread	src/rfc3164.cpp	211;"	f	namespace:RFC3164
+rfc3164_launch_thread	src/rfc3164.h	90;"	p	namespace:RFC3164
+rs	src/database.cpp	202;"	f	class:DDatabase::database
+rs	src/database.h	114;"	p	class:DDatabase::database
+rs	src/database.h	47;"	m	struct:DDatabase::list
+seen	src/analyze.h	126;"	m	class:DAnalyze::analyze
+sekret	src/dryad.cpp	52;"	m	struct:cmdlineargs	file:
+send_message	src/plugins/email.cpp	148;"	f
+send_message	src/plugins/email.cpp	42;"	p	file:
+set_at	src/darray.cpp	121;"	f	class:DArray::darray
+set_at	src/darray.h	85;"	p	class:DArray::darray
+set_autobalance	src/darray.cpp	55;"	f	class:DArray::darray
+set_autobalance	src/darray.h	63;"	p	class:DArray::darray
+sev_group	src/analyze.h	62;"	s	namespace:DAnalyze
+severity	src/analyze.h	49;"	s	namespace:DAnalyze
+severity	src/plugins/plugin.h	43;"	m	struct:plugin::syslog_message
+severity	src/syslog.h	31;"	m	struct:Syslog::syslog_message
+siggy	src/dryad.cpp	214;"	f
+siggy	src/dryad.cpp	57;"	p	file:
+size	src/cache.h	88;"	m	class:DCache::cache
+sock	src/rfc3164.h	81;"	m	class:RFC3164::rfc3164
+str	src/database.h	48;"	m	struct:DDatabase::list
+str	src/dstring.h	152;"	m	class:DString::dstring
+string	src/database.cpp	189;"	f	class:DDatabase::database
+string	src/database.h	108;"	p	class:DDatabase::database
+syslog_message	src/plugins/plugin.h	41;"	s	namespace:plugin
+syslog_message	src/syslog.h	29;"	s	namespace:Syslog
+tail	src/cache.h	92;"	m	class:DCache::cache
+tail	src/darray.h	108;"	m	class:DArray::darray
+tail	src/dqueue.h	70;"	m	class:DQueue::dfifo
+tail_lock	src/cache.h	93;"	m	class:DCache::cache
+tcp	src/dryad.cpp	50;"	m	struct:cmdlineargs	file:
+to	src/plugins/email.cpp	38;"	v
+track	src/analyze.h	55;"	m	struct:DAnalyze::severity
+udp	src/dryad.cpp	51;"	m	struct:cmdlineargs	file:
+usage	src/dryad.cpp	204;"	f
+usage	src/dryad.cpp	56;"	p	file:
+value	src/conf.h	44;"	m	struct:DConf::variable
+variable	src/conf.h	42;"	s	namespace:DConf
+vars	src/conf.h	119;"	m	class:DConf::conf
+warning	src/analyze.h	67;"	m	struct:DAnalyze::sev_group
+writeline	src/dfilestream.cpp	178;"	f	class:DFileStream::dfilestream
+writeline	src/dfilestream.cpp	195;"	f	class:DFileStream::dfilestream
+writeline	src/dfilestream.h	105;"	p	class:DFileStream::dfilestream
+writeline	src/dfilestream.h	98;"	p	class:DFileStream::dfilestream
+writer	src/plugins/file.cpp	28;"	v
+~analyze	src/analyze.cpp	149;"	f	class:DAnalyze::analyze
+~analyze	src/analyze.h	102;"	p	class:DAnalyze::analyze
+~cache	src/cache.cpp	47;"	f	class:DCache::cache
+~cache	src/cache.h	61;"	p	class:DCache::cache
+~conf	src/conf.cpp	52;"	f	class:DConf::conf
+~conf	src/conf.h	65;"	p	class:DConf::conf
+~darray	src/darray.cpp	37;"	f	class:DArray::darray
+~darray	src/darray.h	48;"	p	class:DArray::darray
+~database	src/database.cpp	115;"	f	class:DDatabase::database
+~database	src/database.h	82;"	p	class:DDatabase::database
+~dfifo	src/dqueue.cpp	37;"	f	class:DQueue::dfifo
+~dfifo	src/dqueue.h	50;"	p	class:DQueue::dfifo
+~dfilestream	src/dfilestream.cpp	47;"	f	class:DFileStream::dfilestream
+~dfilestream	src/dfilestream.h	67;"	p	class:DFileStream::dfilestream
+~drarray	src/drarray.cpp	42;"	f	class:DRArray::drarray
+~drarray	src/drarray.h	45;"	p	class:DRArray::drarray
+~dstring	src/dstring.cpp	84;"	f	class:DString::dstring
+~dstring	src/dstring.h	66;"	p	class:DString::dstring
+~lrsp	src/lrsp-server.cpp	42;"	f	class:DLRSP::lrsp
+~lrsp	src/lrsp-server.h	49;"	p	class:DLRSP::lrsp
+~rfc3164	src/rfc3164.cpp	33;"	f	class:RFC3164::rfc3164
+~rfc3164	src/rfc3164.h	68;"	p	class:RFC3164::rfc3164

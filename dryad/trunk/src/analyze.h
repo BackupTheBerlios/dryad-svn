@@ -75,6 +75,7 @@ struct sev_group {
 struct analyze_args {
 	conf *c;
 	cache *cash;
+	pthread_mutex_t *stopper;
 };
 
 //! In reality, the arg is a syslog_message*
@@ -138,7 +139,7 @@ private:
 void *analyze_launch_thread(void *args);
 
 //! Builds a struct analyze_args.
-struct analyze_args *analyze_build_args(conf *c, cache *cash);
+struct analyze_args *analyze_build_args(conf *c, cache *cash, pthread_mutex_t *stopper);
 
 }
 

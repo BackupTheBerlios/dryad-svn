@@ -69,9 +69,10 @@ public:
 	
 	//! Starts the listening process
 	/*!
+		\param stopper Lock this to get the thread to end.
 		This call does not return, but it also should not be directly called. Instead use rfc3164_launch_thread.
 	*/
-	void listen();
+	void listen(pthread_mutex_t *stopper);
 
 private:
 	//! Creates the socket, used by both constructors
@@ -85,11 +86,12 @@ private:
 struct rfc3164_args {
 	cache *c;
 	int port;
+	pthread_mutex_t *stopper;
 };
 
 void *rfc3164_launch_thread(void *arg);
 
-struct rfc3164_args *rfc3164_build_args( cache *c, int port );
+struct rfc3164_args *rfc3164_build_args( cache *c, int port, pthread_mutex_t *stopper );
 
 }
 #endif

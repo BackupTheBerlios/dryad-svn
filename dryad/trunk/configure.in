@@ -1,5 +1,7 @@
 AC_INIT([dryad], [M2], [dryad-bugs@rtlad.org])
 
+AC_ARG_ENABLE([paranoid-shutdown], [AC_HELP_STRING([--enable-paranoid-shutdown], [force the signal handler to wait for the analysis core to exit before quiting.])], [AC_DEFINE([PARANOID_SHUTDOWN], [1], [Use paranoid shutdown])])
+
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 

@@ -35,6 +35,7 @@
 
 #include <pthread.h>
 #include <iostream>
+#include <signal.h>
 
 using namespace std;
 using DConf::conf;
@@ -53,7 +54,12 @@ struct cmdlineargs
 
 struct cmdlineargs *parse_commandline(int argc, char *argv[]);
 void usage(char **argv);
+void siggy(int sig);
 
+pthread_mutex_t *udp_stop;
+pthread_mutex_t *core_stop;
+
+pthread_t *udp_t, *tcp_t, *core;
 
 //! Welcome to the dryad documentation!
 /*!
@@ -69,11 +75,31 @@ int main(int argc, char *argv[])
 	int cs;
 	cache *cash;
 	struct cmdlineargs *args;
-	pthread_t *udp_t, *tcp_t, *core;
+	struct sigaction *sig;
 	
 	udp_t = NULL;
 	tcp_t = NULL;
 	core = NULL;
+	
+	sig = (struct sigaction*)malloc(sizeof(struct sigaction));
+	memset(sig, '\0', sizeof(struct sigaction));
+	sig->sa_handler = SIG_IGN;
+	if( -1 == sigaction(SIGPIPE, sig, NULL) )
+	{
+		dryerr(1, 1, "Failed to set SIGPIPE to SIG_IGN. Continuing anyway, but you may experience crashes.\n");
+		free(sig);
+	}
+	sig = (struct sigaction*)malloc(sizeof(struct sigaction));
+	memset(sig, '\0', sizeof(struct sigaction));
+	sig->sa_handler = siggy;
+	if( -1 == sigaction(SIGTERM, sig, NULL) )
+	{
+		dryerr(1, 1, "Failed to set SIGTERM to our signal handler. Continuing, but you may experience odd behavior.\n");
+	}
+	if( -1 == sigaction(SIGINT, sig, NULL) )
+	{
+		dryerr(1, 1, "Failed to set SIGINT to our signal handler. Continuing, but you may experience odd behavior.\n");
+	}
 	
 	args = parse_commandline(argc, argv);
 	
@@ -95,7 +121,9 @@ int main(int argc, char *argv[])
 	if( args->udp > -1 )
 	{
 		udp_t = (pthread_t*)malloc(sizeof(pthread_t));
-		pthread_create(udp_t, NULL, RFC3164::rfc3164_launch_thread, RFC3164::rfc3164_build_args(cash, args->udp) );
+		udp_stop = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+		pthread_mutex_init(udp_stop, NULL);
+		pthread_create(udp_t, NULL, RFC3164::rfc3164_launch_thread, RFC3164::rfc3164_build_args(cash, args->udp, udp_stop) );
 	}
 	if( args->tcp > -1 )
 	{
@@ -108,7 +136,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	core = (pthread_t*)malloc(sizeof(pthread_t));
-	pthread_create(core, NULL, DAnalyze::analyze_launch_thread, DAnalyze::analyze_build_args(cnf, cash));
+	core_stop = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(core_stop, NULL);
+	pthread_create(core, NULL, DAnalyze::analyze_launch_thread, DAnalyze::analyze_build_args(cnf, cash, core_stop));
 	if( args->sekret == 1 )
 	{
 		// I am well aware that there is a race condition here, if there are invalid config options or whatnot. But whatevar. Enough of the error will more than likely get outputted to bork the tests, and if it doesn't, it'll get caught in the next stage when we don't use the sekret flag
@@ -186,4 +216,29 @@ void usage(char **argv)
 	cout << "-t [port]      Specifies that the TCP network module should be started.\n\tIf a port is specified, it will bind to that port, otherwise the\n\tRFC specified port will be used. NYI.\n";
 	cout << "-u [port]      Specifies that the UDP network module should be started.\n\tIf a port is specified, it will bind to that port, otherwise the\n\tRFC specified port will be used.\n";
 	cout << "NB: It is valid to specify both -t and -u.\n";
+}
+
+void siggy(int sig)
+{
+	switch( sig )
+	{
+		case SIGTERM:
+			//we want to fall through
+		case SIGINT:
+			pthread_mutex_lock(udp_stop);
+			DLRSP::lrsp_stop();
+			if( NULL != udp_t )
+				pthread_join(*udp_t, NULL);
+			if( NULL != tcp_t )
+				pthread_join(*tcp_t, NULL);
+			pthread_mutex_lock(core_stop);
+			#ifdef PARANOID_SHUTDOWN
+			pthread_join(*core, NULL);
+			#endif
+			exit(0);
+			break;
+		default:
+			//we do nothing!
+			break;
+	}
 }

@@ -466,10 +466,12 @@ void *analyze_launch_thread(void *args)
 	struct syslog_message *m;
 	cache *c;
 	database *loader;
+	pthread_mutex_t *stopper;
 	
 	a = (struct analyze_args*)args;
 	c = a->cash;
 	an = new analyze(a->c);
+	stopper = a->stopper;
 	
 	for( int b = 0; b < a->c->num_dbs(); b++ )
 	{
@@ -477,9 +479,21 @@ void *analyze_launch_thread(void *args)
 		an->load(loader);
 		loader = NULL;
 	}
+
+	free(a);
+	a = NULL;
+	args = NULL;
 	
 	while( true )
 	{
+		if( 0 == pthread_mutex_trylock(stopper) )
+		{
+			pthread_mutex_unlock(stopper);
+		}
+		else
+		{
+			pthread_exit(NULL);
+		}
 		m = c->get();
 		if( ! an->process(m) )
 		{
@@ -488,12 +502,13 @@ void *analyze_launch_thread(void *args)
 	}
 }
 
-struct analyze_args *analyze_build_args(conf *c, cache *cash)
+struct analyze_args *analyze_build_args(conf *c, cache *cash, pthread_mutex_t *stopper)
 {
 	struct analyze_args *n;
 	n = (struct analyze_args*)malloc(sizeof(struct analyze_args));
 	n->c = c;
 	n->cash = cash;
+	n->stopper = stopper;
 	return n;
 }
 

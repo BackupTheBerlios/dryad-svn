@@ -16,4 +16,9 @@
 <para>This document is aimed at implementors of Dryad installations. While it may be interesting to other people, its primary purpose is to explain how to work with Dryad as a user.</para>
 </sect1>
 
+<sect1>
+<title>Copying</title>
+<para>This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike License. To view a copy of this license, visit <ulink url="http://creativecommons.org/licenses/by-nc-sa/1.0/">http://creativecommons.org/licenses/by-nc-sa/1.0/</ulink> or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.</para>
+</sect1>
+
 </chapter>

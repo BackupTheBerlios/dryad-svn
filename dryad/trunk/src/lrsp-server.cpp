@@ -203,5 +203,10 @@ struct lrsp_args *lrsp_setup(int port, cache *c)
 	return ret;
 }
 
+void lrsp_stop()
+{
+	lrsp_server_free();
+}
+
 }
 

@@ -35,7 +35,7 @@ rfc3164::~rfc3164()
 	close(sock);
 }
 	
-void rfc3164::listen()
+void rfc3164::listen(pthread_mutex_t *stopper)
 {
 	char *buf;
 	int ret, len;
@@ -49,6 +49,15 @@ void rfc3164::listen()
 	while(1)
 	{
 		/* I *think* it's safe to no longer use MSG_TRUNC here. The Linux documentation only says "sometimes the remander of the message will be truncated if you don't grab it all. The Microsoft Winsock2 documentation (I know, but whatever, they actually know how to properly document their stuff) states that for UDP sockets, if you do not get it all, the rest shall be discarded. I'm hazarding a guess that this is a consistent behavior. */
+		if( 0 == pthread_mutex_trylock(stopper) )
+		{
+			pthread_mutex_unlock(stopper);
+		}
+		else
+		{
+			close(sock);
+			pthread_exit(NULL);
+		}
 		memset(buf, '\0', RFC3164_PACKET_LENGTH);
 		ret = recvfrom(sock, buf, RFC3164_PACKET_LENGTH, 0, (struct sockaddr*)host, (socklen_t*)&len);
 		if( -1 == ret )
@@ -211,25 +220,28 @@ struct syslog_message *rfc3164::parse_message(char *message)
 void *rfc3164_launch_thread(void *arg)
 {
 	struct rfc3164_args *a;
+	pthread_mutex_t *stopper;
 	a = (struct rfc3164_args*)arg;
 	rfc3164 *obj;
 	if( a->port != 0 )
 		obj = new rfc3164(a->port, a->c);
 	else
 		obj = new rfc3164(a->c);
+	stopper = a->stopper;
 	free(arg);
 	arg = NULL;
 	a = NULL;
-	obj->listen();
+	obj->listen(stopper);
 	return NULL;
 }
 
-struct rfc3164_args *rfc3164_build_args( cache *c, int port )
+struct rfc3164_args *rfc3164_build_args( cache *c, int port, pthread_mutex_t *stopper )
 {
 	struct rfc3164_args *n;
 	n = (struct rfc3164_args*)malloc(sizeof(struct rfc3164_args));
 	n->c = c;
 	n->port = port;
+	n->stopper = stopper;
 	return n;
 }
 }

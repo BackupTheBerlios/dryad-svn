@@ -71,6 +71,8 @@ void msg_cb(char *msg);
 
 void *lrsp_launch_thread(void *arg);
 
+void lrsp_stop();
+
 
 }
 

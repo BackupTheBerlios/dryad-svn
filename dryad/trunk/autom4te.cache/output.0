@@ -1026,6 +1026,9 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-paranoid-shutdown 
+                          force the signal handler to wait for the analysis
+                          core to exit before quiting.
   --disable-dependency-tracking Speeds up one-time builds
   --enable-dependency-tracking  Do not reject slow dependency extractors
   --enable-shared@<:@=PKGS@:>@ 
@@ -1505,6 +1508,16 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+# Check whether --enable-paranoid-shutdown or --disable-paranoid-shutdown was given.
+if test "${enable_paranoid_shutdown+set}" = set; then
+  enableval="$enable_paranoid_shutdown"
+  
+cat >>confdefs.h <<\_ACEOF
+@%:@define PARANOID_SHUTDOWN 1
+_ACEOF
+
+fi; 
 
 # Add the stamp file to the list of files AC keeps track of,
 # along with our hook.
