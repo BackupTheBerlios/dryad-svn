@@ -320,12 +320,12 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		build = new dstring(level);
 		build->cat("_track");
 		tmp = c->get(build->ascii());
-		delete build;
 		if( tmp == NULL )
 		{
 			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
 			exit(1);
 		}
+		delete build;
 		if( ! atoi(tmp->ascii()) )
 		{
 			ret->track = 0;

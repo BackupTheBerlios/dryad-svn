@@ -440,28 +440,28 @@ aclocal.m4:884: AC_PROG_LIBTOOL is expanded from...
 aclocal.m4:6747: AM_PROG_LIBTOOL is expanded from...
 configure.in:8: the top level])
 m4trace:configure.in:8: -1- AC_SUBST([LIBTOOL])
-m4trace:configure.in:10: -1- AC_CHECK_LIB([pcre], [pcre_exec])
-m4trace:configure.in:10: -1- AH_OUTPUT([HAVE_LIBPCRE], [/* Define to 1 if you have the `pcre\' library (-lpcre). */
+m4trace:configure.in:17: -1- AC_CHECK_LIB([pcre], [pcre_exec], [], [AC_MSG_FAILURE([Dryad requires libpcre!])])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_LIBPCRE], [/* Define to 1 if you have the `pcre\' library (-lpcre). */
 #undef HAVE_LIBPCRE])
-m4trace:configure.in:10: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPCRE])
-m4trace:configure.in:11: -1- AC_CHECK_LIB([pthread], [pthread_mutex_lock])
-m4trace:configure.in:11: -1- AH_OUTPUT([HAVE_LIBPTHREAD], [/* Define to 1 if you have the `pthread\' library (-lpthread). */
+m4trace:configure.in:17: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPCRE])
+m4trace:configure.in:18: -1- AC_CHECK_LIB([pthread], [pthread_mutex_lock], [], [AC_MSG_FAILURE([Dryad requires pthreads!])])
+m4trace:configure.in:18: -1- AH_OUTPUT([HAVE_LIBPTHREAD], [/* Define to 1 if you have the `pthread\' library (-lpthread). */
 #undef HAVE_LIBPTHREAD])
-m4trace:configure.in:11: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPTHREAD])
-m4trace:configure.in:12: -1- AC_CHECK_LIB([dl], [dlopen])
-m4trace:configure.in:12: -1- AH_OUTPUT([HAVE_LIBDL], [/* Define to 1 if you have the `dl\' library (-ldl). */
+m4trace:configure.in:18: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPTHREAD])
+m4trace:configure.in:19: -1- AC_CHECK_LIB([dl], [dlopen], [], [AC_MSG_FAILURE([Dryad requires POSIX defined dl*()!])])
+m4trace:configure.in:19: -1- AH_OUTPUT([HAVE_LIBDL], [/* Define to 1 if you have the `dl\' library (-ldl). */
 #undef HAVE_LIBDL])
-m4trace:configure.in:12: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBDL])
-m4trace:configure.in:13: -1- AC_CHECK_LIB([esmtp], [smtp_errno])
-m4trace:configure.in:13: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
+m4trace:configure.in:19: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBDL])
+m4trace:configure.in:20: -1- AC_CHECK_LIB([esmtp], [smtp_errno], [], [AC_MSG_FAILURE([Dryad requires libesmtp!])])
+m4trace:configure.in:20: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
 #undef HAVE_LIBESMTP])
-m4trace:configure.in:13: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBESMTP])
-m4trace:configure.in:15: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
-m4trace:configure.in:15: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:20: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBESMTP])
+m4trace:configure.in:22: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
+m4trace:configure.in:22: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:15: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:15: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:15: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:22: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:22: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:22: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:15: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:22: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])

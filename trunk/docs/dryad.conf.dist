@@ -78,7 +78,7 @@ notice_all 0
 
 informational_track 0
 
-debug_report 0
+debug_track 0
 
 # lib_handler specifies the module to use for reporting syslog messages.
 # Currently, the only one offered with the default distribution is libemail.

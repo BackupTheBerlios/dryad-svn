@@ -12,13 +12,13 @@
     </keywords>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description/>
+    <description></description>
     <ignoreparts/>
     <secondaryLanguages/>
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>src/plugins/libemail.la</activetarget>
+      <activetarget>src/dryad</activetarget>
       <useconfiguration>debug</useconfiguration>
     </general>
     <run>
@@ -48,14 +48,14 @@
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
         <cxxflags>-O0 -g3</cxxflags>
-        <topsourcedir/>
-        <cppflags>-DDEBUG</cppflags>
+        <topsourcedir></topsourcedir>
+        <cppflags>-DDEBUG -fstack-protector</cppflags>
         <ldflags>-rdynamic</ldflags>
-        <ccompilerbinary/>
-        <cxxcompilerbinary/>
-        <f77compilerbinary/>
-        <cflags/>
-        <f77flags/>
+        <ccompilerbinary></ccompilerbinary>
+        <cxxcompilerbinary></cxxcompilerbinary>
+        <f77compilerbinary></f77compilerbinary>
+        <cflags></cflags>
+        <f77flags></f77flags>
       </debug>
     </configurations>
     <make>
@@ -175,12 +175,12 @@
   </kdevcppsupport>
   <kdevdebugger>
     <general>
-      <programargs/>
-      <gdbpath/>
+      <programargs></programargs>
+      <gdbpath></gdbpath>
       <dbgshell>libtool</dbgshell>
-      <configGdbScript/>
-      <runShellScript/>
-      <runGdbScript/>
+      <configGdbScript></configGdbScript>
+      <runShellScript></runShellScript>
+      <runGdbScript></runGdbScript>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>

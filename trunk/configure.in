@@ -7,9 +7,16 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
-AC_CHECK_LIB([pcre], [pcre_exec])
-AC_CHECK_LIB([pthread], [pthread_mutex_lock])
-AC_CHECK_LIB([dl], [dlopen])
-AC_CHECK_LIB([esmtp], [smtp_errno])
+AC_MSG_CHECKING([if $CXX accepts -fstack-protector])
+oldcflags=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -fstack-protector"
+worked=no
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>],[fprintf(stderr, "Hello, World!\n")])],[worked=[yes]],[CXXFLAGS=$oldcflags])
+AC_MSG_RESULT([$worked])
+
+AC_CHECK_LIB([pcre], [pcre_exec],, [AC_MSG_FAILURE([Dryad requires libpcre!])])
+AC_CHECK_LIB([pthread], [pthread_mutex_lock],, [AC_MSG_FAILURE([Dryad requires pthreads!])])
+AC_CHECK_LIB([dl], [dlopen],, [AC_MSG_FAILURE([Dryad requires POSIX defined dl*()!])])
+AC_CHECK_LIB([esmtp], [smtp_errno],, [AC_MSG_FAILURE([Dryad requires libesmtp!])])
 
 AC_OUTPUT(Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile)

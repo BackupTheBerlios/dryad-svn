@@ -19187,6 +19187,59 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
        
 
 
+echo "$as_me:$LINENO: checking if $CXX accepts -fstack-protector" >&5
+echo $ECHO_N "checking if $CXX accepts -fstack-protector... $ECHO_C" >&6
+oldcflags=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -fstack-protector"
+worked=no
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <stdio.h>
+int
+main ()
+{
+fprintf(stderr, "Hello, World!\n")
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  worked=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+CXXFLAGS=$oldcflags
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+echo "$as_me:$LINENO: result: $worked" >&5
+echo "${ECHO_T}$worked" >&6
+
 
 echo "$as_me:$LINENO: checking for pcre_exec in -lpcre" >&5
 echo $ECHO_N "checking for pcre_exec in -lpcre... $ECHO_C" >&6
@@ -19259,6 +19312,12 @@ _ACEOF
 
   LIBS="-lpcre $LIBS"
 
+else
+  { { echo "$as_me:$LINENO: error: Dryad requires libpcre!
+See \`config.log' for more details." >&5
+echo "$as_me: error: Dryad requires libpcre!
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 
@@ -19333,6 +19392,12 @@ _ACEOF
 
   LIBS="-lpthread $LIBS"
 
+else
+  { { echo "$as_me:$LINENO: error: Dryad requires pthreads!
+See \`config.log' for more details." >&5
+echo "$as_me: error: Dryad requires pthreads!
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 
@@ -19407,6 +19472,12 @@ _ACEOF
 
   LIBS="-ldl $LIBS"
 
+else
+  { { echo "$as_me:$LINENO: error: Dryad requires POSIX defined dl*()!
+See \`config.log' for more details." >&5
+echo "$as_me: error: Dryad requires POSIX defined dl*()!
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 
@@ -19481,6 +19552,12 @@ _ACEOF
 
   LIBS="-lesmtp $LIBS"
 
+else
+  { { echo "$as_me:$LINENO: error: Dryad requires libesmtp!
+See \`config.log' for more details." >&5
+echo "$as_me: error: Dryad requires libesmtp!
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
 
