@@ -291,7 +291,8 @@ void dsarray::dump()
 {
 	for( int c = 0; c < num_items; c++ )
 	{
-		cerr << a[c]->str;
+		cerr << a[c]->str->ascii();
+		cerr << "(" << a[c]->str << ")";
 		cerr << " # ";
 		cerr << a[c]->count;
 		cerr << endl;

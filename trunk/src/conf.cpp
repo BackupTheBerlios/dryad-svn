@@ -171,7 +171,7 @@ int conf::checkconfig()
 	}
 }
 
-struct daemon *conf::get_daemon(char *name)
+struct daemon *conf::get_daemon(char *name) const
 {
 	struct daemon *d; //only used if they want default settings.
 	if( name == NULL )
@@ -194,7 +194,7 @@ struct daemon *conf::get_daemon(char *name)
 	return NULL;
 }
 
-struct daemon *conf::get_daemon(dstring *name)
+struct daemon *conf::get_daemon(dstring *name) const
 {
 	struct daemon *d; //only used if they want default settings.
 	if( name == NULL )

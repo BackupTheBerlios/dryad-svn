@@ -272,7 +272,7 @@ void database::dump()
 	temp = mList;
 	for( int c = 0; c < max_pos; c++ )
 	{
-		cerr << temp->str->ascii() << " - " << temp->daemon->ascii() << endl;
+		cerr << temp->str->ascii() << "(" << temp->str << ")" << " - " << temp->daemon->ascii() << endl;
 		cerr << temp->re << " - " << temp->rs << endl;
 		temp = temp->next;
 	}

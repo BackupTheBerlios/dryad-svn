@@ -153,7 +153,7 @@ dstring *dfilestream::readline()
 			delete b;
 			b = NULL;
 		}
-		free(b);
+		free(buf);
 	}
 	return b;
 }
