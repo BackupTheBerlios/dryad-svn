@@ -53,15 +53,15 @@ int cache::get_size() const
 	return size;
 }
 
-int cache::add(dstring *item)
+int cache::add(struct syslog_message *m)
 {
 	dfilestream *writer;
-	int str_size;
+	int msg_size;
 	
 	if( item == NULL )
 		return -1;
 	
-	str_size = (sizeof(char) * item->length()) + sizeof(dstring);
+	msg_size = (sizeof(struct syslog_message)) + (sizeof(dstring)*3) + (sizeof(int)*2) + (sizeof(char)*(m->date->length() + m->host->length() + m->message->length()));
 	if( (count+str_size) <=  size )
 	{
 		pthread_mutex_lock(&tail_lock);
@@ -71,7 +71,12 @@ int cache::add(dstring *item)
 			head = (struct dstrlist*)malloc(sizeof(struct dstrlist));
 			head->prev = NULL;
 			head->next = NULL;
-			head->item = new dstring((char*)(item->ascii()));
+			head->item = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+			head->item->date = m->date;
+			head->item->facility = m->facility;
+			head->item->host = m->host
+			head->item->message = m->message;
+			head->item->severity = m->severity;
 			tail = head;
 			pthread_mutex_unlock(&head_lock);
 		}
@@ -81,9 +86,14 @@ int cache::add(dstring *item)
 			tail->next->prev = tail;
 			tail = tail->next;
 			tail->next = NULL;
-			tail->item = new dstring((char*)(item->ascii()));
+			tail->item = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+			tail->item->date = m->date;
+			tail->item->facility = m->facility;
+			tail->item->host = m->host
+			tail->item->message = m->message;
+			tail->item->severity = m->severity;
 		}
-		count += str_size;
+		count += msg_size;
 		pthread_mutex_unlock(&tail_lock);
 	}
 	else

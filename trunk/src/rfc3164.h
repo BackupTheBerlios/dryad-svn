@@ -17,63 +17,40 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CACHE_H
-#define CACHE_H
+#ifndef RFC3164_H
+#define RFC3164_H
 
-#include "dstring.h"
-#include "dfilestream.h"
+#define RFC3164_PORT 514
+#define RFC3164_PACKET_LENGTH 1024
+#define RFC3164_DATE_LEN 15
+
+#include "cache.h"
 #include "syslog.h"
 
-#include <pthread.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
 
-struct dstrlist {
-	struct syslog_message *item;
-	dstrlist *next;
-	dstrlist *prev;
-};
-
-//! The caching class
+//! This class provides an RFC3164 compliant interface.
 /*!
-	This class handles the storage of dstrings. First it stores n in memory, then it starts writing them to disk as needed. It has very finely granulated mutex locking, so it is very thread safe.
+	RFC3164 sets forth the semantics for syslog communication via UDP. It is a very simple scheme, and this class handles all aspects of it, from setting up the networking, to passing the log strings off to the caching module.
 */
-class cache {
+class rfc3164
+{
 public:
-	//! Init the cache
-	/*!
-		\param s The number of bytes of to use as in memory storage
-	*/
-	cache( int s, dstring *fname );
-	~cache();
+	rfc3164( cache *s );
+	rfc3164(int port, cache *s );
+	~rfc3164();
 	
-	//! Gets the max size of the cache
-	/*!
-		\return the size of the cache
-	*/
-	int get_size() const;
-	
-	//! Adds item to the cache
-	/*!
-		\param item The dstring to add.
-		\return True if it's cached to memory, False if it's sent to disk. It prolly won't return if you're out of disk space... :p
-		A copy of item is what get's stored to the cache. Remember to deallocate the space if you don't need it anymore!
-	*/
-	int add( struct syslog_message *m );
-	
-	//! Gets the next item awaiting processing.
-	/*!
-		\return A pointer to the dstring.
-	*/
-	dstring *get();
+	void listen();
 
 private:
-	int size;
-	int count;
-	struct dstrlist *head;
-	struct dstrlist *tail;
-	pthread_mutex_t head_lock, tail_lock;
-	dstring *cache_file;
+	void create_socket(int port);
+	struct syslog_message *parse_message(char *message);
+	int sock;
+	cache *c;
 };
+
 #endif

@@ -17,63 +17,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CACHE_H
-#define CACHE_H
+#ifndef SYSLOG_H
+#define SYSLOG_H
 
 #include "dstring.h"
-#include "dfilestream.h"
-#include "syslog.h"
 
-#include <pthread.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-struct dstrlist {
-	struct syslog_message *item;
-	dstrlist *next;
-	dstrlist *prev;
-};
-
-//! The caching class
-/*!
-	This class handles the storage of dstrings. First it stores n in memory, then it starts writing them to disk as needed. It has very finely granulated mutex locking, so it is very thread safe.
-*/
-class cache {
-public:
-	//! Init the cache
-	/*!
-		\param s The number of bytes of to use as in memory storage
-	*/
-	cache( int s, dstring *fname );
-	~cache();
-	
-	//! Gets the max size of the cache
-	/*!
-		\return the size of the cache
-	*/
-	int get_size() const;
-	
-	//! Adds item to the cache
-	/*!
-		\param item The dstring to add.
-		\return True if it's cached to memory, False if it's sent to disk. It prolly won't return if you're out of disk space... :p
-		A copy of item is what get's stored to the cache. Remember to deallocate the space if you don't need it anymore!
-	*/
-	int add( struct syslog_message *m );
-	
-	//! Gets the next item awaiting processing.
-	/*!
-		\return A pointer to the dstring.
-	*/
-	dstring *get();
-
-private:
-	int size;
-	int count;
-	struct dstrlist *head;
-	struct dstrlist *tail;
-	pthread_mutex_t head_lock, tail_lock;
-	dstring *cache_file;
+struct syslog_message {
+	int facility;
+	int severity;
+	dstring *date;
+	dstring *host;
+	dstring *message;
 };
 #endif
