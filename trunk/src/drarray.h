@@ -20,6 +20,8 @@
 #ifndef DRARRAY_H
 #define DRARRAY_H
 
+#include <stdlib.h>
+
 //! The "real" array class
 /*!
 	Unlike darray, this array class uses a true array, rather than a linked list, to store it's elements.

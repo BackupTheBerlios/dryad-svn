@@ -64,8 +64,8 @@ struct analyze_args {
 	cache *cash;
 };
 
-typedef int (*reporter_once)(struct syslog_message* m);
-typedef int (*reporter_many)(drarray<struct syslog_message*> *m);
+typedef void* (*reporter_once)(void *args);
+typedef void* (*reporter_many)(void *args);
 //! This struct is used to store report options for each daemon
 struct reporter {
 	dstring *name;

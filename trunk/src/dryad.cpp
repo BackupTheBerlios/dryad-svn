@@ -31,10 +31,6 @@
 #include "cache.h"
 #include <pthread.h>
 
-
-#include <iostream>
-#include <cstdlib>
-
 using namespace std;
 
 struct cmdlineargs

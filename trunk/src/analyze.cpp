@@ -243,28 +243,58 @@ void analyze::reg( struct syslog_message *m )
 
 void analyze::report_once( struct syslog_message *m )
 {
+	pthread_t launch;
 	//do stuff to report the single message, involving email, python, perl, whatevar.
 	for( int q = 0; q < reports->length(); q++ )
 	{
 		if( ! strcmp(reports->at(q)->name->ascii(), m->daemon->ascii()) )
 		{
-			(*reports->at(q)->once)(m);
+			pthread_create(&launch, NULL, reports->at(q)->once, m);
 			return;
 		}
 	}
-	(*def_rep->once)(m);
+	pthread_create(&launch, NULL, def_rep->once, m);
 }
 
 void analyze::report( struct syslog_message *m, int all )
 {
+	pthread_t launch;
+	drarray<struct syslog_message*> *args;
+	args = new drarray<struct syslog_message*>;
 	if( all )
 	{
 		//get all messages of this daemon, at any severity
+		args->pushback(m);
+		for( int q = 0; q < seen->length(); q++ )
+		{
+			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) )
+			{
+				args->pushback(seen->get_at(q));
+				seen->del(q);
+			}
+		}
 	}
 	else
 	{
 		//get all messages of this daemon, at this severity
+		for( int q = 0; q < seen->length(); q++ )
+		{
+			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) && (m->severity == seen->get_at(q)->severity) )
+			{
+				args->pushback(seen->get_at(q));
+				seen->del(q);
+			}
+		}
 	}
+	for( int q = 0; q < reports->length(); q++ )
+	{
+		if( ! strcmp(reports->at(q)->name->ascii(), m->daemon->ascii()) )
+		{
+			pthread_create(&launch, NULL, reports->at(q)->many, args);
+			return;
+		}
+	}
+	pthread_create(&launch, NULL, def_rep->many, args);
 }
 
 struct severity *analyze::build_severity_struct(const char *daemon, char *level)
@@ -357,7 +387,6 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 			ret->report = 0;
 			return ret;
 		}
-		delete tmp;
 		ret->track = 1;
 		
 		build = new dstring(level);
@@ -398,6 +427,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		ret->level = 0;
 		return ret;
 	}
+	return NULL;
 }
 
 void *analyze_launch_thread(void *args)

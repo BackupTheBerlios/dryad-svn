@@ -19,16 +19,27 @@
  ***************************************************************************/
 #include "plugin.h"
 
-extern "C" {
+/*
+	This is a very simple example reporter plugin. When it gets called, if sends a dump of the contents of the syslog messages to a compile tiem defined email address.
+*/
 
-	int dryad_once(struct syslog *m)
-	{
+extern "C" {
 	
+	// The function used to report a single incident must be called dryad_once. Before it returns, it should also free() the passed syslog_message
+	int dryad_once(struct syslog_message *m)
+	{
+		cerr << "dryad_once called!\n";
+		free(m);
 	}
 	
-	int dryad_many(drarray<struct syslog*> *m)
+	//! Before it returns, we need to free() all messages in m, and delete m itself.
+	int dryad_many(drarray<struct syslog_message*> *m)
 	{
-	
+		for( int c = 0; c < m->length(); c++ )
+		{
+			free(m->at(c));
+		}
+		delete m;
 	}
 
 }
