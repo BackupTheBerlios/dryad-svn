@@ -1,0 +1,101 @@
+# The dbfile option specifies what database to draw patterns from. Currently,
+#the only options are those that came with LogSentry, and while it did specify
+# a number of different platforms, I have the sneaking feeling that they're all
+#the same. But, regardless, they're all available:
+# linux.logsentry.db
+# bsdos.logsentry.db
+# freebsd.logsentry.db
+# generic.logsentry.db
+# hpux.logsentry.db
+# sun.logsentry.db
+# You can use any number of dbfile options, and each will be loaded and
+# referenced, however at this time, doing so would be kinda pointless.
+# USAGE: dbfile /path/to/db
+dbfile /etc/dryad/generic.logsentry.db
+
+# cache_size specifies the size of the in memory cache of messages. Messages
+# are stored here upon being recieved and before the processing unit gets them.
+# Unless you get a *very* large deluge of log entries, items will most likely
+# be remove from the cache as soon as they enter it. However, in case they are
+# not, the ability to cache exists. A fairly small number here is quite fine, as
+# each syslog message may not be more than 1 kilobyte. If you do not specify
+# a number here, it defaults to 8 megabytes.
+# USAGE: cache_size number-of-bytes
+# cache_size 4096
+
+# A basic set of options and levels must be defined for all the possible syslog
+# severity levels. Those levels are:
+# emergency
+# alert
+# error
+# warning
+# notice
+# informational
+# debug
+# Within each level, there are four different variables that can be set:
+# track - If set to 1, messages of this level are tracked. If this is 0, all
+#   further options are ignored, and may be ommited.
+#
+# The following three options are only applied if there is a matching pattern
+# in one of the databases.
+# 
+# report - If set to 1, as soon as message of this severity is recieved,
+#   provided there is a match for it, it is reported via the 'report_once'
+#   function. If it is set to 1, the max option may be ommited.
+# max - Set this to the number of messages that must be recieved before
+#   taking action on them.
+# all - If this is 1, when a specific level is triggered, either via max being
+#   reached, or via a report = 1, all messages from that same database group
+#   will be reported.
+
+emergency_track 1
+emergency_report 1
+emergency_all 0
+
+alert_track 1
+alert_report 1
+alert_all 0
+
+critical_track 1
+critical_report 0
+critical_max 3
+critical_all 0
+
+error_track 1
+error_report 0
+error_max 10
+error_all 0
+
+warning_track 1
+warning_report 0
+warning_max 25
+warning_all 0
+
+notice_track 1
+notice_report 0
+notice_max 50
+notice_all 0
+
+informational_track 0
+
+debug_report 0
+
+# lib_handler specifies the module to use for reporting syslog messages.
+# Currently, the only one offered with the default distribution is libemail.
+# USAGE: lib_handler libname.so
+lib_handler libemail.so
+
+# BEGINs have other uses, but for this first milestone, this is really the only
+# thing they're useful for.
+
+# This block specifies the config options for libemail
+BEGIN libemail_module
+# Set who to send email to
+to admin@mail.example.com
+# Set the address it is to come from
+from dryad@logserver.example.com
+# Set the smtp server to use
+# NOTE: the :25 is *VERY* important, as libESMTP, the library we use for smtp
+# work is... 'special'
+mailhost smtp.example.com:25
+END
