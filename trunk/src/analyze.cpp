@@ -22,7 +22,9 @@
 analyze::analyze(conf *c)
 {
 	struct sev_group *tmp;
-	dstring *dname;
+	dstring *dname, *t;
+	struct reporter *rpt;
+	char *error;
 	if( c == NULL )
 	{
 		cerr << "Invalid conf passed to analyze!\nAborting!\n";
@@ -51,7 +53,7 @@ analyze::analyze(conf *c)
 		tmp = (struct sev_group*)malloc(sizeof(struct sev_group));
 		tmp->emergency = this->build_severity_struct(dname->ascii(), "emergency");
 		tmp->alert = this->build_severity_struct(dname->ascii(), "alert");
-		/*tmp->critical = this->build_severity_struct(dname->ascii(), "critical");
+		tmp->critical = this->build_severity_struct(dname->ascii(), "critical");
 		tmp->error = this->build_severity_struct(dname->ascii(), "error");
 		tmp->warning = this->build_severity_struct(dname->ascii(), "warning");
 		tmp->notice = this->build_severity_struct(dname->ascii(), "notice");
@@ -59,7 +61,72 @@ analyze::analyze(conf *c)
 		tmp->debug = this->build_severity_struct(dname->ascii(), "debug");
 		tmp->name = dname;
 		daemons->pushback(tmp);
-		tmp = NULL;*/
+		tmp = NULL;
+	}
+	
+	reports = new drarray<struct reporter*>;
+	
+	for( int q = 0; q < c->num_daemons(); q++ )
+	{
+		rpt = (struct reporter*)malloc(sizeof(struct reporter));
+		t = c->daemon_get(c->daemon_name(q)->ascii(), "lib_handler");
+		if( t == NULL )
+		{
+			free(rpt);
+			continue;
+		}
+		rpt->dlptr = dlopen( t->ascii() , RTLD_LAZY);
+		if(!rpt->dlptr)
+		{
+			cerr << "Failed to open " << c->daemon_get(c->daemon_name(q)->ascii(), "lib_handler") << "!\n";
+			free(rpt);
+			continue;
+		}
+		dlerror();
+		rpt->once = (reporter_once)dlsym(rpt->dlptr, "dryad_once");
+		if( (error = dlerror()) )
+		{
+			cerr << "Failed to export symbol dryad_once!\n" << error << endl;
+			free(rpt);
+			continue;
+		}
+		rpt->many = (reporter_many)dlsym(rpt->dlptr, "dryad_many");
+		if( (error = dlerror()) )
+		{
+			cerr << "Failed to export symbol dryad_many!\n" << error << endl;
+			free(rpt);
+			continue;
+		}
+		reports->pushback(rpt);
+		rpt = NULL;
+	}
+	
+	def_rep = (struct reporter*)malloc(sizeof(struct reporter));
+	def_rep->name = NULL;
+	t = c->get("lib_handler");
+	if( t == NULL )
+	{
+		cerr << "A default lib_handler has not been specified!\nAborting!\n";
+		exit(1);
+	}
+	def_rep->dlptr = dlopen( t->ascii(), RTLD_LAZY );
+	if( def_rep->dlptr == NULL )
+	{
+		cerr << "Failed to dlopen() the default lib_handler (" << t->ascii() << "):\n" << dlerror() << "\nAborting!\n";
+		exit(1);
+	}
+	dlerror();
+	def_rep->once = (reporter_once)dlsym(def_rep->dlptr, "dryad_once");
+	if( (error = dlerror()) )
+	{
+		cerr << "Failed to resolve symbol dryad_once in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
+		exit(1);
+	}
+	def_rep->many = (reporter_many)dlsym(def_rep->dlptr, "dryad_many");
+	if( (error = dlerror()) )
+	{
+		cerr << "Failed to resolve symbol dryad_many in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
+		exit(1);
 	}
 	
 	seen = new darray<struct syslog_message*>;
@@ -158,23 +225,34 @@ void analyze::reg( struct syslog_message *m )
 	}
 	if( ! useme->track )
 		return;
-	seen->insert(m);
-	if( useme->report )
-	{
-		this->report_once(m);
-	}
-	useme->level++;
-	if( useme->level >= useme->max && useme->max > 0 )
+	if( (useme->level >= useme->max && useme->max > 0) || (useme->report && useme->all) )
 	{
 		useme->level = 0;
 		this->report(m, useme->all);
+	}
+	else if( useme->report )
+	{
+		this->report_once(m);
+	}
+	else
+	{
+		useme->level++;
+		seen->insert(m);
 	}
 }
 
 void analyze::report_once( struct syslog_message *m )
 {
 	//do stuff to report the single message, involving email, python, perl, whatevar.
-	
+	for( int q = 0; q < reports->length(); q++ )
+	{
+		if( ! strcmp(reports->at(q)->name->ascii(), m->daemon->ascii()) )
+		{
+			(*reports->at(q)->once)(m);
+			return;
+		}
+	}
+	(*def_rep->once)(m);
 }
 
 void analyze::report( struct syslog_message *m, int all )

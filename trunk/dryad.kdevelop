@@ -50,7 +50,7 @@
         <cxxflags>-O0 -g3</cxxflags>
         <topsourcedir/>
         <cppflags>-DDEBUG</cppflags>
-        <ldflags/>
+        <ldflags>-rdynamic</ldflags>
         <ccompilerbinary/>
         <cxxcompilerbinary/>
         <f77compilerbinary/>

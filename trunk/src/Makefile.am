@@ -7,6 +7,9 @@ INCLUDES = $(all_includes)
 # the library search path.
 dryad_LDFLAGS = $(all_libraries) 
 noinst_HEADERS = database.h dblist.h analyze.h dstring.h dfilestream.h conf.h dqueue.h cache.h darray.h drarray.h rfc3164.h syslog.h functions.h
-dryad_LDADD = -lpthread -lpcre
+dryad_LDADD = -ldl -lpthread -lpcre
 
 AM_CXXFLAGS = -Wno-deprecated
+
+
+SUBDIRS =  plugins

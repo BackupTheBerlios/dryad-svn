@@ -440,7 +440,7 @@ aclocal.m4:884: AC_PROG_LIBTOOL is expanded from...
 aclocal.m4:6747: AM_PROG_LIBTOOL is expanded from...
 configure.in:8: the top level])
 m4trace:configure.in:8: -1- AC_SUBST([LIBTOOL])
-m4trace:configure.in:10: -1- AC_CONFIG_FILES([Makefile src/Makefile])
+m4trace:configure.in:10: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile])
 m4trace:configure.in:10: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
 m4trace:configure.in:10: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])

@@ -28,6 +28,7 @@
 #include "database.h"
 #include "cache.h"
 
+#include <dlfcn.h>
 #include <iostream.h>
 #include <pcre.h>
 
@@ -61,6 +62,16 @@ struct sev_group {
 struct analyze_args {
 	conf *c;
 	cache *cash;
+};
+
+typedef int (*reporter_once)(struct syslog_message* m);
+typedef int (*reporter_many)(drarray<struct syslog_message*> *m);
+//! This struct is used to store report options for each daemon
+struct reporter {
+	dstring *name;
+	reporter_once once;
+	reporter_many many;
+	void *dlptr;
 };
 
 class analyze
@@ -98,6 +109,8 @@ private:
 	darray<struct syslog_message*> *seen;
 	drarray<database*> *db_vec;
 	drarray<struct sev_group*> *daemons;
+	drarray<struct reporter*> *reports;
+	struct reporter *def_rep;
 	conf *c;
 };
 
