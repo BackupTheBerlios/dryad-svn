@@ -74,6 +74,10 @@ public:
 		\sa get_daemon(dstring *name)
 	*/
 	struct daemon *get_daemon(char *name) const;
+	
+	#ifdef DEBUG
+	void dump();
+	#endif
 
 private:
 	//! This is the actual funtion that loads the config file

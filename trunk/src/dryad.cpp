@@ -23,9 +23,10 @@
 #endif
 
 //#include "database.h"
-#include "analyze.h"
+//#include "analyze.h"
 //#include "dstring.h"
 //#include "dfilestream.h"
+#include "conf.h"
 
 
 #include <iostream>
@@ -34,19 +35,13 @@
 using namespace std;
 
 int main(int argc, char *argv[])
-{
-	analyze *a;
-	database *b;
-	dstring *c, *d;
-	c = new dstring("/home/peter/tmp/database.test");
-	d = new dstring("This is string1");
-	b = new database(c, 1);
-	a = new analyze();
-	a->load(b);
+{	
+	dstring *c;
+	conf *a;
+	c = new dstring("/home/peter/tmp/config.test");
+	a = new conf(c);
 	a->dump();
-	a->process(d);
-	cerr << "POST PROCESS: " << endl;
-	a->dump();
+	
 
   return EXIT_SUCCESS;
 }

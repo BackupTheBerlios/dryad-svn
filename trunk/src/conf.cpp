@@ -131,7 +131,7 @@ int conf::checkconfig()
 		cerr << "Invalid warn_level: " << warn_level << ".\nAborting.\n";
 		exit(1);
 	}
-	if( clear_on_warn != 1 || clear_on_warn != 0 )
+	if( clear_on_warn != 1 && clear_on_warn != 0 )
 	{
 		cerr << "Invalid clear_on_warn: " << clear_on_warn << ".\nAborting.\n";
 		exit(1);
@@ -141,7 +141,7 @@ int conf::checkconfig()
 		cerr << "Invalid error_level: " << error_level << ".\nAborting.\n";
 		exit(1);
 	}
-	if( clear_on_error != 1 || clear_on_error != 0 )
+	if( clear_on_error != 1 && clear_on_error != 0 )
 	{
 		cerr << "Invalid clear_on_error: " << clear_on_error << ".\nAborting.\n";
 		exit(1);
@@ -153,7 +153,7 @@ int conf::checkconfig()
 			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid warn_level: " << daemons[c]->warn_level  <<".\nAborting.\n";
 			exit(1);
 		}
-		if( daemons[c]->clear_on_warn != 1 || daemons[c]->clear_on_warn != 0 )
+		if( daemons[c]->clear_on_warn != 1 && daemons[c]->clear_on_warn != 0 )
 		{
 			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid clear_on_warn: " << daemons[c]->clear_on_warn << ".\nAborting.\n";
 			exit(1);
@@ -163,7 +163,7 @@ int conf::checkconfig()
 			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid error_level: " << daemons[c]->error_level << ".\nAborting.\n";
 			exit(1);
 		}
-		if( daemons[c]->clear_on_error != 1 || daemons[c]->clear_on_error != 0 )
+		if( daemons[c]->clear_on_error != 1 && daemons[c]->clear_on_error != 0 )
 		{
 			cerr << "In daemon \"" << daemons[c]->name->ascii() << "\"\nInvalid clear_on_error: " << daemons[c]->clear_on_error << ".\nAborting.\n";
 			exit(1);
@@ -216,4 +216,20 @@ struct daemon *conf::get_daemon(dstring *name) const
 	}
 	return NULL;
 }
+
+#ifdef DEBUG
+void conf::dump()
+{
+	cerr << "warn_level " << warn_level << "\nclear_on_warn " << clear_on_warn << "\nerror_level " << error_level << "\nclear_on_error " << clear_on_error << endl;
+	for( int c = 0; c < num_daemons; c++ )
+	{
+		cerr << "BEGIN " << daemons[c]->name->ascii() << endl;
+		cerr << "warn_level " << daemons[c]->warn_level << endl;
+		cerr << "clear_on_warn " << daemons[c]->clear_on_warn << endl;
+		cerr << "error_level " << daemons[c]->error_level << endl;
+		cerr << "clear_on_error " << daemons[c]->clear_on_error << endl;
+		cerr << "END\n";
+	}
+}
+#endif
 

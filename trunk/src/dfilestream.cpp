@@ -66,7 +66,8 @@ dfilestream::~dfilestream()
 
 int dfilestream::open( dstring *path )
 {
-	fclose(fh);
+	if( fh != NULL )
+		fclose(fh);
 	struct stat *buf;
 	
 	buf = (struct stat*)malloc( sizeof(struct stat) );
@@ -86,7 +87,8 @@ int dfilestream::open( dstring *path )
 
 int dfilestream::open( char *path )
 {
-	fclose(fh);
+	if( fh != NULL )
+		fclose(fh);
 	struct stat *buf;
 	
 	buf = (struct stat*)malloc( sizeof(struct stat) );
