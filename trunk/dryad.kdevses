@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="12" >
+ <DocsAndViews NumberOfDocuments="11" >
   <Doc0 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dryad.cpp" >
    <View0 line="60" Type="???" >
     <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
@@ -47,21 +47,16 @@
     <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
    </View0>
   </Doc8>
-  <Doc9 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dqueue.cpp" >
-   <View0 line="58" Type="???" >
+  <Doc9 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/network.cpp" >
+   <View0 line="103" Type="???" >
     <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
    </View0>
   </Doc9>
-  <Doc10 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/network.cpp" >
-   <View0 line="25" Type="???" >
+  <Doc10 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/network.h" >
+   <View0 line="82" Type="???" >
     <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
    </View0>
   </Doc10>
-  <Doc11 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/network.h" >
-   <View0 line="49" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="724" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc11>
  </DocsAndViews>
  <pluginList>
   <kdevbookmarks>

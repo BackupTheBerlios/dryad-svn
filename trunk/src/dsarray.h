@@ -22,6 +22,8 @@
 
 #include "dstring.h"
 
+#warning The dsarray class is officially retired in favour of darray and drarray.
+
 struct dsastruct
 {
 	dstring *str;

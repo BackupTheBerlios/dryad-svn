@@ -27,8 +27,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-//template class dfifo<int>;
-
+//! The network object
+/*!
+	This is the class that controls the network portion of dryad. It sets up the listening sockets and proceeds to listen until it can accept no more, for whatever reason. It also starts the network helper threads. Once you start listening here, the function does not return, thus it should be started as a thread of it's own.
+*/
 class network {
 public:
 	//! Constructor
@@ -50,7 +52,35 @@ private:
 	dfifo<int> *sockets;
 	cache *mqueue;
 	int nthreads;
+	pthread_t t;
 	int port;
 };
+
+//! This is the class that actually deals with connections, once they've been accept()ed and enqueued.
+class network_helper {
+public:
+	//! Basic constructor
+	/*!
+		\param q The queue that it is to process on.
+	*/
+	network_helper( dfifo<int> *q, cache *c );
+	~network_helper();
+	//! Starts the process
+	/*!
+		This method does not return.
+	*/
+	void do_your_thing();
+private:
+	dfifo<int> *f;
+	cache *mqueue;
+};
+
+struct netargs {
+	dfifo<int> *q;
+	cache *c;
+};
+
+void *threads_network_start(void* args);
+struct netargs* threads_network_buildargs(dfifo<int> *q, cache *c);
 
 #endif

@@ -21,11 +21,14 @@
 #define ANALYZE_H
 
 #include "database.h"
-#include "dsarray.h"
+#include "darray.h"
 #include "conf.h"
 #include <pcre.h>
 
-
+struct dstrint {
+	dstring *str;
+	int count;
+};
 
 //! Performs analysis of strings
 /*!
@@ -108,7 +111,7 @@ private:
 	//! The current count of points
 	int points;
 	//! the register of already seen log strings
-	dsarray *seen;
+	darray<dstrint*> *seen;
 	//! A pointer to the config file
 	conf *cnf;
 	

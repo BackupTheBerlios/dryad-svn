@@ -24,7 +24,7 @@ analyze::analyze()
 	points = 0;
 	num_db = 0;
 	db_vec = NULL;
-	seen = new dsarray();
+	seen = new darray<dstrint*>;
 	cnf = NULL;
 }
 
@@ -33,7 +33,7 @@ analyze::analyze( conf *c )
 	points = 0;
 	num_db = 0;
 	db_vec = NULL;
-	seen = new dsarray();
+	seen = new darray<dstrint*>;
 	cnf = c;
 }
 
@@ -106,16 +106,28 @@ int analyze::process( dstring *str )
 
 int analyze::reg( dstring *str, int level )
 {
-	int i;
+	int i, found;
 	dstring *n;
-	if( (i = seen->exists(str)) != -1 )
+	dstrint *inc;
+	found = false;
+	for( int c = 0; c < seen->length(); c++ )
 	{
-		seen->increment(i);
+		inc = seen->get_at(c);
+		if( strcmp( inc->str->ascii(), str->ascii() ) )
+		{
+			inc->count++;
+			seen->set_at(c,inc);
+			found = true;
+			break;
+		}
 	}
-	else
+	if( ! found )
 	{
 		n = new dstring(str);
-		seen->pushback(n);
+		inc = (dstrint*)malloc(sizeof(dstrint));
+		inc->str = n;
+		inc->count = 1;
+		seen->insert(inc);
 	}
 	points = points + level;
 	this->report();

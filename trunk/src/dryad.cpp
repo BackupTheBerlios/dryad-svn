@@ -27,6 +27,7 @@
 #include "dstring.h"
 #include "conf.h"
 #include "dqueue.h"
+#include "network.h"
 #include <pthread.h>
 
 
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
 	dstring *cfile;
 	analyze *core;
 	database *loader;
+	network *net;
 	
 	if( argc > 1 )
 	{
@@ -60,6 +62,9 @@ int main(int argc, char *argv[])
 		core->load(loader);
 		loader = NULL;
 	}
+	
+	net = new network(5674, NULL, 5);
+	net->start_listening();
 	
   return EXIT_SUCCESS;
 }

@@ -22,9 +22,15 @@
 network::network(int p, cache *queue, int threads)
 {
 	threads > 0 ? nthreads = threads : nthreads = 1;
+	//t = (pthread_t **)malloc(sizeof(pthread_t) * nthreads);
 	mqueue = queue;
 	sockets = new dfifo<int>;
 	port = p;
+}
+
+network::~network()
+{
+	
 }
 
 void network::start_listening()
@@ -32,7 +38,7 @@ void network::start_listening()
 	int sock, aid, l;
 	struct sockaddr_in info, remote_info;
 	
-	sock = socket(PF_INET, SOCK_DGRAM, 0);
+	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if( -1 == sock )
 	{
 		cerr << "Failed to create socket!\nAborting!\n";
@@ -49,16 +55,63 @@ void network::start_listening()
 		exit(1);
 	}
 	
-	if( -1 == listen(sock, nthreads * 5) )
+	if( -1 == listen(sock, nthreads *2) )
 	{
 		cerr << "Unable to listen on port " << port << ".\nAborting!\n";
 		exit(1);
+	}
+	for( int c = 0; c < nthreads; c++ )
+	{
+		pthread_create(&t, NULL, threads_network_start, threads_network_buildargs(sockets, mqueue) );
 	}
 	l = sizeof( struct sockaddr );
 	while( -1 != ( aid = accept( sock, (struct sockaddr*)&remote_info, (socklen_t*)&l ) ) )
 	{
 		sockets->enqueue(aid);
+		//we should also check here to ensure that all our threads are running, and if not, restart them
 	}
 	cerr << "accept() failed!\nAborting!\n";
 	exit(1);
+}
+
+// Here begins the network_helper class
+network_helper::network_helper( dfifo<int> *q, cache *c )
+{
+	f = q;
+	mqueue = c;
+}
+
+network_helper::~network_helper()
+{
+
+}
+
+void network_helper::do_your_thing()
+{
+	int sock;
+	while(true)
+	{
+		sock = f->dequeue();
+		// I don't think sleep is thread safe, this should get changed at some point, but for the time being it works
+		if( sock == NULL )
+			sleep(1);
+		//do the actualy syslog() protocol stuff here that I am far to lazy to write.
+	}
+}
+
+void *threads_network_start(void* args)
+{
+	struct netargs *a = (struct netargs*)args;
+	network_helper *h;
+	h = new network_helper( a->q, a->c );
+	h->do_your_thing();
+}
+struct netargs* threads_network_buildargs(dfifo<int> *q, cache *c)
+{
+	struct netargs *ret;
+	
+	ret = (struct netargs*)malloc(sizeof(struct netargs));
+	ret->c = c;
+	ret->q = q;
+	return ret;
 }
