@@ -21,6 +21,7 @@
  *   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR *
  *   OTHER DEALINGS IN THE SOFTWARE.                                       *
  ***************************************************************************/
+#include "../config.h"
 #include "lrsp.h"
 
 #include <stdio.h>
@@ -28,6 +29,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
 
 #ifdef HAVE_PTHREADS
 #include <pthread.h>
@@ -36,6 +38,7 @@ pthread_t *send_thread;
 #endif
 
 int lrsp_start_convo(char m);
+int lrsp_go(char *msg);
 
 char *s;
 int p;
@@ -45,7 +48,7 @@ int sock;
 
 int lrsp_init(char *server, int port, char mode)
 {
-	struct sockaddr_in me, him;
+	struct sockaddr_in me;
 
 	#ifdef HAVE_PTHREADS
 	send_thread = malloc(sizeof(pthread_t));
@@ -62,10 +65,6 @@ int lrsp_init(char *server, int port, char mode)
 		m = LRSP_SINGLE;
 	if( -1 == (sock = socket(AF_INET, SOCK_STREAM, 0)) )
 	{
-		#ifdef HAVE_PTHREADS
-		free(send_thread);
-		#endif
-		free(s);
 		return -1;
 	}
 	me.sin_family = AF_INET;
@@ -74,33 +73,13 @@ int lrsp_init(char *server, int port, char mode)
 	memset(&(me.sin_zero), '\0', 8);
 	if( -1 == bind(sock, (struct sockaddr*)&me, sizeof(struct sockaddr)) )
 	{
-		#ifdef HAVE_PTHREADS
-		free(send_thread);
-		#endif
-		free(s);
 		return -2;
 	}
 	if( m == LRSP_PERSISTANT )
 	{
-		him.sin_family = AF_INET;
-		him.sin_port = p;
-		him.sin_addr.s_addr = inet_addr(s);
-		memset(&(me.sin_zero), '\0', 8);
-		if( -1 == connect(sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
-		{
-			#ifdef HAVE_PTHREADS
-			free(send_thread);
-			#endif
-			free(s);
-			return -3;
-		}
 		if( ! lrsp_start_convo(LRSP_PERSISTANT) )
 		{
-			#ifdef HAVE_PTHREADS
-			free(send_thread);
-			#endif
-			free(s);
-			return -4;
+			return -3;
 		}
 	}
 	inited = 1;
@@ -111,6 +90,7 @@ int lrsp_free()
 {
 	if( 0 == inited )
 		return 0;
+	close(sock);
 	#ifdef HAVE_PTHREADS
 	free(send_thread);
 	#endif
@@ -121,19 +101,56 @@ int lrsp_free()
 
 int lrsp_send_message(char *msg)
 {
+	#ifdef HAVE_PTHREADS
+	return pthread_create(send_thread, NULL, (void*)lrsp_go, msg);
+	#endif
+	return lrsp_go(msg);
+}
 
+int lrsp_go(char *msg)
+{
+	int sent, c;
+	char *try;
+	
+	sent = 0;
+	try = msg;
+
+	if( m == LRSP_SINGLE )
+	{
+		if( 0 > lrsp_start_convo(LRSP_SINGLE) )
+			return -4;
+	}
+		
+	while( sent < (strlen(try) + sizeof(char)) )
+	{
+		if( -1 == (sent = send(sock, try, strlen(try) + sizeof(char), 0)) )
+			return -5;
+		for( c = 0; c <= (sent/sizeof(char)); c++ )
+			try = try + sizeof(char);
+	}
+	return 1;
 }
 
 int lrsp_start_convo(char m)
 {
 	char *msg;
 	int t;
+	struct sockaddr_in him;
+
+	him.sin_family = AF_INET;
+	him.sin_port = p;
+	him.sin_addr.s_addr = inet_addr(s);
+	memset(&(him.sin_zero), '\0', 8);
+	if( -1 == connect(sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
+	{
+		return -6;
+	}
 	
 	msg = malloc(sizeof(char)*1);
 	msg[0] = m;
 	if( -1 == send(sock, msg, 1*sizeof(char), 0) )
 	{
-		return -1;
+		return -7;
 	}
 	free(msg);
 	msg = malloc(sizeof(char)*3);
@@ -141,12 +158,47 @@ int lrsp_start_convo(char m)
 	if( t == 0 || t == -1 )
 	{
 		free(msg);
-		return -2;
+		return -8;
 	}
 	msg[2] = '\0'; /* so we can strcmp */
 	if( strcmp(msg, "OK") )
 	{
 		free(msg);
-		return -3;
+		return -9;
+	}
+	return 1;
+}
+
+char *lrsp_error_message(int err)
+{
+	switch(err)
+	{
+		case -1:
+			return "Failed to create a socket in lrsp_create.\n";
+			break;
+		case -2:
+			return "Failed to bind a socket in lrsp_create.\n";
+			break;
+		case -3:
+			return "Failed to start the persistant connection in lrsp_create.\n";
+			break;
+		case -4:
+			return "Failed to start the single connection in lrsp_send_message.\n";
+			break;
+		case -5:
+			return "Failed to send the message in lrsp_send_message.\n";
+			break;
+		case -6:
+			return "Failed to connect the socket in lrsp_start_convo.\n";
+			break;
+		case -7:
+			return "Failed to send mode character in lrsp_start_convo.\n";
+			break;
+		case -8:
+			return "Failed to get OK from server in lrsp_start_convo.\n";
+			break;
+		case -9:
+			return "Failed to get OK from server in lrsp_start_convo.\n";
+			break;
 	}
 }

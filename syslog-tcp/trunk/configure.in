@@ -7,6 +7,6 @@ AC_LANG_C
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
-AC_CHECK_LIB([pthread], [pthread_mutex_lock], [AC_DEFINE([HAVE_PTHREADS],,[Define this symbol if your platform has pthreads])],)
+AC_CHECK_LIB([pthread], [pthread_mutex_lock], [AC_DEFINE([HAVE_PTHREADS],[1],[Define this symbol if your platform has pthreads]) LIBS="$LIBS -lpthread"],)
 
 AC_OUTPUT(Makefile src/Makefile)

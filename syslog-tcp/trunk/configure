@@ -19254,9 +19254,9 @@ echo "${ECHO_T}$ac_cv_lib_pthread_pthread_mutex_lock" >&6
 if test $ac_cv_lib_pthread_pthread_mutex_lock = yes; then
 
 cat >>confdefs.h <<\_ACEOF
-#define HAVE_PTHREADS
+#define HAVE_PTHREADS 1
 _ACEOF
-
+ LIBS="$LIBS -lpthread"
 fi
 
 

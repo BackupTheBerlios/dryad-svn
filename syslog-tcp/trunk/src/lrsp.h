@@ -24,9 +24,6 @@
 #ifndef _LRSP_H
 #define _LRSP_H
 
-#define MAJOR_VERSION 0
-#define MINOR_VERSION 1
-
 #define LRSP_PORT 1234
 #define LRSP_PERSISTANT 'P'
 #define LRSP_SINGLE 'S'
@@ -53,6 +50,8 @@ int lrsp_free();
 	This will send the message to syslog server.
 */
 int lrsp_send_message(char *msg);
+
+char *lrsp_error_message(int err);
 
 #ifdef __cplusplus
 }
