@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------
+r71 | peter | 2004-06-01 02:16:41 -0500 (Tue, 01 Jun 2004) | 6 lines
+
+configure/Makefile.am: Reworked and extended the configure script *alot.* All in all it's much nicer
+conf.[cpp|h]: Extended daemon_get to allow it to get all entries with a given name, rather than just the first, it's still backwards compatible though
+README: Added some content *gasp*
+TODO: Added an item
+python.cpp: Started work on the python plugin
+
+------------------------------------------------------------------------
 r70 | peter | 2004-05-31 02:41:07 -0500 (Mon, 31 May 2004) | 9 lines
 
 file.cpp: cleaned up a bit, now free's everything properly

@@ -99,23 +99,19 @@ noinst_HEADERS = plugin.h
 pkglib_LTLIBRARIES = @PKGLIBS@
 EXTRA_LTLIBRARIES = libemail.la libnull.la libfile.la libexternal.la libpython.la
 
-@EMAILPLUG_TRUE@libemail_la_LDFLAGS = -module 
+@EMAILPLUG_TRUE@libemail_la_LDFLAGS = -module -rpath '$(pkglibdir)'
 @EMAILPLUG_TRUE@libemail_la_SOURCES = email.cpp
 
-# pkglib_LTLIBRARIES += libemail.la
-@NULLPLUG_TRUE@libnull_la_LDFLAGS = -module 
+@NULLPLUG_TRUE@libnull_la_LDFLAGS = -module -rpath '$(pkglibdir)'
 @NULLPLUG_TRUE@libnull_la_SOURCES = null.cpp
 
-# pkglib_LTLIBRARIES += libnull.la
-@FILEPLUG_TRUE@libfile_la_LDFLAGS = -module
+@FILEPLUG_TRUE@libfile_la_LDFLAGS = -module -rpath '$(pkglibdir)'
 @FILEPLUG_TRUE@libfile_la_SOURCES = file.cpp
 
-# pkglib_LTLIBRARIES += libfile.la
-@EXTERNALPLUG_TRUE@libexternal_la_LDFLAGS = -module 
+@EXTERNALPLUG_TRUE@libexternal_la_LDFLAGS = -module -rpath '$(pkglibdir)'
 @EXTERNALPLUG_TRUE@libexternal_la_SOURCES = external.cpp
 
-# pkglib_LTLIBRARIES += libexternal.la
-@PYTHONPLUG_TRUE@libpython_la_LDFLAGS = -module 
+@PYTHONPLUG_TRUE@libpython_la_LDFLAGS = -module -rpath '$(pkglibdir)'
 @PYTHONPLUG_TRUE@libpython_la_SOURCES = python.cpp
 subdir = src/plugins
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs

@@ -21325,6 +21325,9 @@ See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+if  "$pythonplug" = "true" ; then
+LDFLAGS="$LDFLAGS `python-config`"
+fi
 
 if  "$pythonplug" = "true" ; then
 CPPFLAGS="$CPPFLAGS -I$pythonincl"

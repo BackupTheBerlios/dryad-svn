@@ -94,6 +94,9 @@ if [ "$emailplug" = "true" ]; then
 AC_CHECK_LIB([esmtp], [smtp_errno],, [AC_MSG_FAILURE([The libemail libhandler requires libesmtp!])])
 fi
 AC_CHECK_LIB([lrsp], [lrsp_client_free],, [AC_MSG_FAILURE([Dryad requires liblrsp!])])
+if [ "$pythonplug" = "true" ]; then
+LDFLAGS="$LDFLAGS `python-config`"
+fi
 
 if [ "$pythonplug" = "true" ]; then
 CPPFLAGS="$CPPFLAGS -I$pythonincl"

@@ -569,32 +569,32 @@ m4trace:configure.in:96: -1- AC_CHECK_LIB([lrsp], [lrsp_client_free], [], [AC_MS
 m4trace:configure.in:96: -1- AH_OUTPUT([HAVE_LIBLRSP], [/* Define to 1 if you have the `lrsp\' library (-llrsp). */
 #undef HAVE_LIBLRSP])
 m4trace:configure.in:96: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLRSP])
-m4trace:configure.in:103: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:106: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile])
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:103: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:103: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"EMAILPLUG\" was never defined.
+m4trace:configure.in:106: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:106: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"EMAILPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"EMAILPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"EMAILPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"NULLPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"NULLPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"NULLPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"NULLPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"FILEPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"FILEPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"FILEPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"FILEPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"EXTERNALPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"EXTERNALPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"EXTERNALPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"EXTERNALPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"PYTHONPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"PYTHONPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"PYTHONPLUG\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"PYTHONPLUG\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:103: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:106: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])

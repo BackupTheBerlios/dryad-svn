@@ -141,6 +141,13 @@ analyze::analyze(conf *c)
 		dryerr(1, 5, "Failed to resolve symbol dryad_many in default lib_handler (", t->ascii(), "):\n", error, "\nAborting!\n");
 		exit(1);
 	}
+	cnf = (reporter_config)lt_dlsym(def_rep->dlptr, "dryad_config");
+	if( error = lt_dlerror() )
+	{
+		dryerr(1, 5, "Failed to resolve symbol dryad_config in default lib_handler(", t->ascii(), "):\n", error, "\nAborting!\n");
+		exit(1);
+	}
+	(*cnf)(c);
 	
 	seen = new darray<struct syslog_message*>;
 	db_vec = new drarray<database*>;
