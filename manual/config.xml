@@ -125,6 +125,7 @@
 				<listitem><para>max -- This may be set to any integer between 0 and (2^32)/2 - 1. This is the number of messages matching rules that must accumulate before reporting them.</para></listitem>
 			</itemizedlist>
 		</para>
+		<para>Notes: The rule inside a configuration block work a bit differently due to how a message gets associated with the block. The track rule in the global scope is first consulted to determine if a message of that severity should be tracked, if it should be, it is compared against the regular expressions. If it matches one, it is associated with that block, and the rules for that block are consulted to see what should be done with it.</para>
 		<para>Example:
 			<programlisting>
 				# when a message with an emergency severity is matched, report it immediatly
@@ -169,6 +170,20 @@
 			</programlisting>
 		</para>
 	</sect2>
+</sect1>
+
+<sect1>
+<title>Regular expression database files</title>
+	<para>Like the main <command>dryad.conf</command> file, the database files are divided up into blocks. However, they differ in that there is no global scope, and the role of the blocks is a bit different. When a syslog message is matched by a regular expression, it is associated with the block that the regex is in, and then the rules for that configuration block from dryad.conf are applied to the message.</para>
+	<para>The order that expressions are tried is dictated by the order in which dbfiles are specified in dryad.conf, and then the order they appear in the file.</para>
+	<para>Example database block:
+		<programlisting>
+			BEGIN block_name
+			/somepattern/
+			/anotherpattern/
+			END
+		</programlisting>
+	</para>
 </sect1>
 
 </chapter>
