@@ -185,6 +185,7 @@ dstring *dfilestream::readline()
 			if( buf == (char*)EOF )
 			{
 				again = false;
+				free(buf);
 				break;
 			}
 			for( c = 0; c < 80; c++ )

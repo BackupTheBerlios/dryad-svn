@@ -85,7 +85,7 @@ void rfc3164::listen()
 void rfc3164::create_socket(int port)
 {
 	struct sockaddr_in *mine;
-
+	
 	sock = socket( AF_INET, SOCK_DGRAM, 0 );
 	if( -1 == sock )
 	{

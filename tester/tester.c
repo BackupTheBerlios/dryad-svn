@@ -26,11 +26,12 @@ int main( int argc, char *argv[] )
 
 	mine.sin_family = AF_INET;
 	mine.sin_port = htons(0);
-	mine.sin_addr.s_addr = htonl(INADDR_ANY);
+	mine.sin_addr.s_addr = inet_addr("127.0.0.1");
 	memset(&(mine.sin_zero), '\0', 8);
 	bind(sock, (struct sockaddr*)&mine, sizeof(struct sockaddr));
 
 	his.sin_family = AF_INET;
+	fprintf( stderr, "Using port %d.\n", dport );
 	his.sin_port = htons(dport);
 	his.sin_addr.s_addr = inet_addr("127.0.0.1");
 	memset(&(his.sin_zero), '\0', 8);
