@@ -3,6 +3,7 @@
 [ <!ENTITY intro SYSTEM "intro.xml">
 	<!ENTITY install SYSTEM "install.xml">
 	<!ENTITY security SYSTEM "security.xml">
+	<!ENTITY config SYSTEM "config.xml">
 ]>
 
 <book>
@@ -15,6 +16,7 @@
 </bookinfo>
 &intro;
 &install;
+&config;
 &security;
 </book>
 

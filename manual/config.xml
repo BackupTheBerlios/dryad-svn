@@ -1,0 +1,174 @@
+<chapter>
+<title>Configuration</title>
+
+<sect1>
+<title>Overview</title>
+	<para>Dryad has two basic configuration file groups. The first is the main configuration file, stored in <command>/etc/dryad/dryad.conf</command> by default. The second is the set of regular expressions used to determine what log messages need attention. These are stored in <command>/etc/dryad/databases/</command> and its subdirectories by default.</para>
+	<para>Both of these locations are configurable, the first by way of the <option>-c path</option> option of the main Dryad executable, and the second by the contents of the main configuration file itself.</para>
+</sect1>
+
+<sect1>
+<title>dryad.conf</title>
+	<para>dryad.conf is the main configuration file to control the behavior of Dryad. It consists of a set of variable name/value pairs, in the form
+		<programlisting>varname value</programlisting>
+	</para>
+	<para>The config file is divided into blocks of variable/value pairs by use of the <command>BEGIN blockname</command> and <command>END</command> commands. The default block, however, does not have such tags, or rather, they are implied.</para>
+	<sect2>
+	<title>Global only variables</title>
+		<para>These variables are ones that effect the overall operation of Dryad, and as such, may not appear inside any block.</para>
+		<sect3>
+		<title>dbfile</title>
+			<para>Description: Provides the path to a valid regular expression database file.</para>
+			<para>Notes: This variable may be used multiple times, and the file specified with each occurence will be loaded and used.</para>
+			<para>Example:
+				<programlisting>
+					dbfile /etc/dryad/databases/critical.db
+					dbfile /etc/dryad/databases/custom.db
+				</programlisting>
+			</para>
+		</sect3>
+		<sect3>
+		<title>cache_size</title>
+			<para>Description: Sets the size of the in memory cache of messages waiting processing, in bytes. Once this limit is reached, messages will be cached to disk. (Later, there may be an option to discard messages after a point.)</para>
+			<para>Notes: If this option is not set, it will default to 8 megabytes. Also, remember that you don't really need much memory, as each message will be, at most, a bit larger than 1024 bytes. If there are multiple assignments, the first will be used.</para>
+			<para>Example:
+				<programlisting>
+					cache_size 4096
+				</programlisting>
+			</para>
+		</sect3>
+	</sect2>
+	<sect2>
+	<title>Block and global variables</title>
+		<para>These variables may appear in either the global scope, or a specific block.</para>
+		<sect3>
+		<title>lib_handler</title>
+			<para>Description: Defines the response module to use when events are reported.</para>
+			<para>Notes: The lib_handler defined in the global scope is used as the fallback if no lib_handler is defined in the scope of a particular block.</para>
+		</sect3>
+	</sect2>
+	<sect2>
+	<title>On blocks</title>
+		<para>There are two basic types of blocks, module configuration blocks and daemon configuration blocks. They are exactly the same in form, however the internal options are different.</para>
+		<para>The basic layout:
+			<programlisting>
+				BEGIN block_name
+				.
+				.
+				.
+				END
+			</programlisting>
+			Note: Tabs are not currently allowed within a block.
+		</para>
+		<sect3>
+		<title>Module blocks</title>
+			<para>The internal variables for module blocks are set by the specific modules, so all we can document are the options for the ones we ship.</para>
+			<sect4>
+			<title>libemail</title>
+				<sect5>
+				<title>to</title>
+					<para>Description: Specifies who is to recieve the emails.</para>
+					<para>Notes: If you have multiple admins who should recieve the message, you may want to set up a mailing list for this purpose.</para>
+					<para>Example:
+						<programlisting>
+							to admin@host.example.com
+						</programlisting>
+					</para>
+				</sect5>
+				<sect5>
+				<title>from</title>
+					<para>Description: Sets the from line for the emails.</para>
+					<para>Example:
+						<programlisting>
+							from dryad@logserver.example.com
+						</programlisting>
+					</para>
+				</sect5>
+				<sect5>
+				<title>mailhost</title>
+					<para>Description: The machine to send mail via.</para>
+					<para>Notes: Obviously, this machine must be running an <acronym>SMTP</acronym> server. Also, it is <emphasis>very important</emphasis> that the server name be suffixed with the port the <acronym>SMTP</acronym> server listens on.</para>
+					<para>Example:
+						<programlisting>
+							mailhost smtp.example.com:25
+						</programlisting>
+					</para>
+				</sect5>
+			</sect4>
+		</sect3>
+		<sect3>
+		<title>Daemon blocks</title>
+			<para>Daemon blocks may contain lib_handler assignments, as well as level assignments (see the next section). Any ommited level definition falls back to the global definition.</para>
+			<para>The classification of messages in daemon classes does not happen, as might be expected, at the time the message is parsed for information, but rather at the time it is matched against a regular expression. See the section on regular expression databases for more information.</para>
+		</sect3>
+	</sect2>
+	<sect2>
+	<title>Level definitions</title>
+		<para>Level definitions are the core configuration options of Dryad. They specify what messages levels of messages get ignored, which get compared to the regular expression lists, and what happens if they match.</para>
+		<para>There are eight different levels of severity:
+			<itemizedlist mark="bullet">
+				<listitem><para>emergency</para></listitem>
+				<listitem><para>alert</para></listitem>
+				<listitem><para>error</para></listitem>
+				<listitem><para>warning</para></listitem>
+				<listitem><para>notice</para></listitem>
+				<listitem><para>informational</para></listitem>
+				<listitem><para>debug</para></listitem>
+			</itemizedlist>
+			What severity a given message has is determined by the program that generates the log message.
+		</para>
+		<para>For each severity level, there are four different attributes that must be set:
+			<itemizedlist mark="bullet">
+				<listitem><para>track -- This may be set to either 0 or 1. If it is set to 0, messages of this severity are simply discarded. Again, if it is set to 0, none of the following options need be set, and if they are, they will be ignored.</para></listitem>
+				<listitem><para>report -- This may be set to either 0 or 1. If it is set to 1, any message of this severity that matches a rule is immediatly reported. Again, if this is 1, the max option may be ignored.</para></listitem>
+				<listitem><para>all -- This may be set to either 0 or 1. If it is set to 1, when a particular severity level is triggered for reporting (either because of having report set to 1, or reaching max) all messages of that severity and higher, and in that daemon group, will be reported. Note that this holds true even when the all flag is defined in the global scope.</para></listitem>
+				<listitem><para>max -- This may be set to any integer between 0 and (2^32)/2 - 1. This is the number of messages matching rules that must accumulate before reporting them.</para></listitem>
+			</itemizedlist>
+		</para>
+		<para>Example:
+			<programlisting>
+				# when a message with an emergency severity is matched, report it immediatly
+				emergency_track 1
+				emergency_report 1
+				emergency_all 0
+				
+				# when a message with an alert severity is matched, report it immediatly
+				alert_track 1
+				alert_report 1
+				alert_all 0
+				
+				# when a message of critical severity is matched, note it. If it's the third since the last report, report it
+				critical_track 1
+				critical_report 0
+				critical_max 3
+				critical_all 0
+
+				# much like critical, except it takes 10 messages before a report is generated
+				error_track 1
+				error_report 0
+				error_max 10
+				error_all 0
+
+				# much like error and critical, only it takes 25
+				warning_track 1
+				warning_report 0
+				warning_max 25
+				warning_all 0
+
+				# again, like the above, but with 50
+				notice_track 1
+				notice_report 0
+				notice_max 50
+				notice_all 0
+
+				# pay no attention to informational messages, even if they match
+				informational_track 0
+
+				# same for debug
+				debug_track 0
+			</programlisting>
+		</para>
+	</sect2>
+</sect1>
+
+</chapter>
