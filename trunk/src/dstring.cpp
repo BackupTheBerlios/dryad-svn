@@ -294,13 +294,15 @@ void dstring::cat(char *c)
 	{
 		n[q] = str[q];
 	}
-	q++;
-	for( int a = q; q < (len + strlen(c)); q++ )
+	//q++;
+	for( int a = q; a < (len + strlen(c)); a++ )
 	{
-		n[q] = c[q-len];
+		n[a] = c[a-len];
 	}
 	len += strlen(c);
 	n[len] = '\0';
+	free(str);
+	str = n;
 }
 
 const dstring & dstring::operator = ( const dstring & s )

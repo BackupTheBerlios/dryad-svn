@@ -21,7 +21,8 @@
 
 analyze::analyze(conf *c)
 {
-	dstring *tmp;
+	struct sev_group *tmp;
+	dstring *dname;
 	if( c == NULL )
 	{
 		cerr << "Invalid conf passed to analyze!\nAborting!\n";
@@ -30,14 +31,36 @@ analyze::analyze(conf *c)
 	
 	this->c = c;
 	
-	emergency = this->build_severity_struct(NULL, "emergency");
-	alert = this->build_severity_struct(NULL, "alert");
-	critical = this->build_severity_struct(NULL, "critical");
-	error = this->build_severity_struct(NULL, "error");
-	warning = this->build_severity_struct(NULL, "warning");
-	notice = this->build_severity_struct(NULL, "notice");
-	informational = this->build_severity_struct(NULL, "informational");
-	debug = this->build_severity_struct(NULL, "debug");
+	def = (struct sev_group*)malloc(sizeof(struct sev_group));
+	
+	def->emergency = this->build_severity_struct(NULL, "emergency");
+	def->alert = this->build_severity_struct(NULL, "alert");
+	def->critical = this->build_severity_struct(NULL, "critical");
+	def->error = this->build_severity_struct(NULL, "error");
+	def->warning = this->build_severity_struct(NULL, "warning");
+	def->notice = this->build_severity_struct(NULL, "notice");
+	def->informational = this->build_severity_struct(NULL, "informational");
+	def->debug = this->build_severity_struct(NULL, "debug");
+	def->name = NULL;
+	
+	daemons = new drarray<struct sev_group*>;
+	
+	for( int q = 0; q < c->num_daemons(); q++ )
+	{
+		dname = c->daemon_name(q);
+		tmp = (struct sev_group*)malloc(sizeof(struct sev_group));
+		tmp->emergency = this->build_severity_struct(dname->ascii(), "emergency");
+		tmp->alert = this->build_severity_struct(dname->ascii(), "alert");
+		tmp->critical = this->build_severity_struct(dname->ascii(), "critical");
+		tmp->error = this->build_severity_struct(dname->ascii(), "error");
+		tmp->warning = this->build_severity_struct(dname->ascii(), "warning");
+		tmp->notice = this->build_severity_struct(dname->ascii(), "notice");
+		tmp->informational = this->build_severity_struct(dname->ascii(), "informational");
+		tmp->debug = this->build_severity_struct(dname->ascii(), "debug");
+		tmp->name = dname;
+		daemons->pushback(tmp);
+		tmp = NULL;
+	}
 	
 	seen = new darray<struct syslog_message*>;
 	db_vec = new drarray<database*>;
@@ -45,14 +68,15 @@ analyze::analyze(conf *c)
 
 analyze::~analyze()
 {
-	free(emergency);
-	free(alert);
-	free(critical);
-	free(error);
-	free(warning);
-	free(notice);
-	free(informational);
-	free(debug);
+	free(def->emergency);
+	free(def->alert);
+	free(def->critical);
+	free(def->error);
+	free(def->warning);
+	free(def->notice);
+	free(def->informational);
+	free(def->debug);
+	free(def);
 	delete seen;
 	delete db_vec;
 }
@@ -96,28 +120,28 @@ void analyze::reg( struct syslog_message *m )
 	switch(m->severity)
 	{
 		case(0):
-			useme = emergency;
+			useme = def->emergency;
 			break;
 		case(1):
-			useme = alert;
+			useme = def->alert;
 			break;
 		case(2):
-			useme = critical;
+			useme = def->critical;
 			break;
 		case(3):
-			useme = error;
+			useme = def->error;
 			break;
 		case(4):
-			useme = warning;
+			useme = def->warning;
 			break;
 		case(5):
-			useme = notice;
+			useme = def->notice;
 			break;
 		case(6):
-			useme = informational;
+			useme = def->informational;
 			break;
 		case(7):
-			useme = debug;
+			useme = def->debug;
 			break;
 	}
 	if( ! useme->track )
@@ -152,7 +176,7 @@ void analyze::report( struct syslog_message *m, int all )
 	}
 }
 
-struct severity *analyze::build_severity_struct(char *daemon, char *level)
+struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 {
 	struct severity *ret;
 	dstring *tmp, *build;
@@ -165,6 +189,11 @@ struct severity *analyze::build_severity_struct(char *daemon, char *level)
 		build->cat("_track");
 		tmp = c->get(build->ascii());
 		delete build;
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			exit(1);
+		}
 		if( ! atoi(tmp->ascii()) )
 		{
 			ret->track = 0;
@@ -180,6 +209,11 @@ struct severity *analyze::build_severity_struct(char *daemon, char *level)
 		build = new dstring(level);
 		build->cat("_all");
 		tmp = c->get(build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			exit(1);
+		}
 		ret->all = atoi(tmp->ascii());
 		delete tmp;
 		delete build;
@@ -187,6 +221,11 @@ struct severity *analyze::build_severity_struct(char *daemon, char *level)
 		build = new dstring(level);
 		build->cat("_report");
 		tmp = c->get(build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			exit(1);
+		}
 		delete build;
 		if( atoi(tmp->ascii()) )
 		{
@@ -201,6 +240,78 @@ struct severity *analyze::build_severity_struct(char *daemon, char *level)
 		build = new dstring(level);
 		build->cat("_max");
 		tmp = c->get(build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			exit(1);
+		}
+		ret->max = atoi(tmp->ascii());
+		ret->level = 0;
+		return ret;
+	}
+	//daemon specified
+	else
+	{
+		build = new dstring(level);
+		build->cat("_track");
+		tmp = c->daemon_get(daemon, build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << " for daemon " << daemon << "!\nAborting!\n";
+			exit(1);
+		}
+		delete build;
+		if( ! atoi(tmp->ascii()) )
+		{
+			ret->track = 0;
+			ret->all = 0;
+			ret->level = 0;
+			ret->max = 0;
+			ret->report = 0;
+			return ret;
+		}
+		delete tmp;
+		ret->track = 1;
+		
+		build = new dstring(level);
+		build->cat("_all");
+		tmp = c->daemon_get(daemon, build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << " for daemon " << daemon << "!\nAborting!\n";
+			exit(1);
+		}
+		ret->all = atoi(tmp->ascii());
+		delete tmp;
+		delete build;
+		
+		build = new dstring(level);
+		build->cat("_report");
+		tmp = c->daemon_get(daemon, build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << " for daemon " << daemon << "!\nAborting!\n";
+			exit(1);
+		}
+		delete build;
+		if( atoi(tmp->ascii()) )
+		{
+			ret->report = 1;
+			ret->level = 0;
+			ret->max = 0;
+			return ret;
+		}
+		delete tmp;
+		ret->report = 0;
+		
+		build = new dstring(level);
+		build->cat("_max");
+		tmp = c->daemon_get(daemon, build->ascii());
+		if( tmp == NULL )
+		{
+			cerr << "Failed to get " << build->ascii() << " for daemon " << daemon << "!\nAborting!\n";
+			exit(1);
+		}
 		ret->max = atoi(tmp->ascii());
 		ret->level = 0;
 		return ret;

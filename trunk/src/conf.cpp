@@ -73,6 +73,7 @@ void conf::readconfig(dfilestream *fs)
 		else if( !strncmp(tmp->ascii(), "BEGIN ", 6 ) && tmp->length() > 6 )
 		{
 			d = (struct daemon_section*)malloc(sizeof(struct daemon_section));
+			d->contents = new drarray<variable*>;
 			d->name = tmp->remove("BEGIN ");
 		}
 		else if( !strncmp(tmp->ascii(), "END", 3 ) )
@@ -80,7 +81,6 @@ void conf::readconfig(dfilestream *fs)
 			if( d != NULL )
 			{
 				daemons->pushback(d);
-				daemons->at(daemons->length() - 1)->contents = new drarray<variable*>;
 				d = NULL;
 			}
 		}
@@ -150,4 +150,22 @@ dstring *conf::daemon_get(const char *daemon, const char *name)
 			return NULL;
 		}
 	}
+	return NULL;
+}
+
+int conf::num_daemons() const
+{
+	int ret;
+	if( daemons != NULL )
+		ret = daemons->length();
+	else
+		ret = 0;
+	return ret;
+}
+
+dstring *conf::daemon_name(int k)
+{
+	if( k < 0 || k > daemons->length() )
+		return NULL;
+	return daemons->at(k)->name;
 }

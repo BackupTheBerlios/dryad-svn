@@ -45,6 +45,18 @@ struct severity {
 	int all;
 };
 
+struct sev_group {
+	struct severity *emergency;
+	struct severity *alert;
+	struct severity *critical;
+	struct severity *error;
+	struct severity *warning;
+	struct severity *notice;
+	struct severity *informational;
+	struct severity *debug;
+	dstring *name;
+};
+
 //! This struct is used to pass arguments for the purpose of thread starting.
 struct analyze_args {
 	conf *c;
@@ -81,17 +93,11 @@ private:
 	void report_once( struct syslog_message *m );
 	void report( struct syslog_message *m, int all );
 	//! use daemon = null to get top levels
-	struct severity *build_severity_struct(char *daemon, char *level);
-	struct severity *emergency;
-	struct severity *alert;
-	struct severity *critical;
-	struct severity *error;
-	struct severity *warning;
-	struct severity *notice;
-	struct severity *informational;
-	struct severity *debug;
+	struct severity *build_severity_struct(const char *daemon, char *level);
+	struct sev_group *def;
 	darray<struct syslog_message*> *seen;
 	drarray<database*> *db_vec;
+	drarray<struct sev_group*> *daemons;
 	conf *c;
 };
 

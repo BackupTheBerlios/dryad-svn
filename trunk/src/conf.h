@@ -52,6 +52,8 @@ public:
 	
 	dstring *get(const char *name);
 	dstring *daemon_get(const char *daemon, const char *name);
+	int num_daemons() const;
+	dstring *daemon_name(int k);
 
 private:
 	void readconfig( dfilestream *fs );
