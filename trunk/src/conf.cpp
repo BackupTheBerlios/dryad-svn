@@ -46,6 +46,7 @@ conf::conf(dstring *cf)
 conf::~conf()
 {
 	pthread_mutex_destroy(reload);
+	free(reload);
 }
 
 void conf::readconfig(dfilestream *fs)

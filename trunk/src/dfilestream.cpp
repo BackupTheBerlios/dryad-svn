@@ -186,6 +186,9 @@ dstring *dfilestream::readline()
 			{
 				again = false;
 				free(buf);
+				buf = NULL;
+				delete b;
+				b = NULL;
 				break;
 			}
 			for( c = 0; c < 80; c++ )
@@ -210,7 +213,10 @@ dstring *dfilestream::readline()
 			b = NULL;
 		}
 		free(buf);
+		buf = NULL;
 	}
+	if( NULL != buf )
+		free(buf);
 	return b;
 }
 

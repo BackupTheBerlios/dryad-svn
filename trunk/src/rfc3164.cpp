@@ -102,6 +102,7 @@ void rfc3164::create_socket(int port)
 		cerr << "Unable to bind port " << port << " in rfc3164!\nAborting!\n";
 		exit(1);
 	}
+	free(mine);
 }
 
 struct syslog_message *rfc3164::parse_message(char *message)

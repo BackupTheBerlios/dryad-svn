@@ -87,6 +87,7 @@ dstring::~dstring()
 		str = NULL;
 	}
 	pthread_mutex_destroy(l);
+	free(l);
 }
 
 int dstring::length() const

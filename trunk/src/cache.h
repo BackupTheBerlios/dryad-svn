@@ -81,8 +81,8 @@ private:
 	int file_cache;
 	struct dstrlist *head;
 	struct dstrlist *tail;
-	pthread_mutex_t head_lock, tail_lock, file_lock;
-	pthread_cond_t get_wait;
+	pthread_mutex_t *head_lock, *tail_lock, *file_lock;
+	pthread_cond_t *get_wait;
 	dstring *cache_file;
 };
 #endif
