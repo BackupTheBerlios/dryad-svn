@@ -108,8 +108,11 @@ int dfilestream::open( char *path )
 dstring *dfilestream::readline()
 {
 	dstring *b;
-	int c;
+	int c, olen;
 	char *buf;
+	int again;
+	
+	again = true;
 
 	if( fh == NULL )
 	{
@@ -117,25 +120,40 @@ dstring *dfilestream::readline()
 		return b;
 	}
 	
-	buf = (char*)malloc( sizeof(char) * 80 );
-	if(buf = fgets(buf, 80, fh))
+	b = new dstring(0);
+	while( again )
 	{
-		for( c = 0; c < 80; c++ )
+		buf = (char*)malloc( sizeof(char) * 80 );
+		if(buf = fgets(buf, 80, fh))
 		{
-			if( buf[c] == '\n' )
+			//this check is *probablly* unneeded, but it's possible that EOF might, somewhere, sometime, not be 0/NULL/false
+			if( buf == (char*)EOF )
 			{
+				again = false;
 				break;
 			}
+			for( c = 0; c < 80; c++ )
+			{
+				if( buf[c] == '\n' )
+				{
+					again = false;
+					break;
+				}
+			}
+			olen = b->length();
+			b->resize( olen + c );
+			for( int a = olen; a < b->length(); a++ )
+			{
+				(*b)[a] = buf[a];
+			}
 		}
-		b = new dstring(c);
-		for( int a = 0; a < c; a++ )
+		else
 		{
-			(*b)[a] = buf[a];
+			again = false;
+			delete b;
+			b = NULL;
 		}
-	}
-	else
-	{
-		b = NULL;
+		free(b);
 	}
 	return b;
 }
