@@ -33,7 +33,18 @@ struct daemon {
 
 //! The config class
 /*!
-	The basic purpose of this class is to load and store config information.
+	The basic purpose of this class is to load and store config information.\n\n
+	
+	Document structure:\n
+	Configuration for a specific daemon is set of in a block, denoted by BEGIN and END tags. The BEGIN tag must specifiy the name of the daemon:\n
+	BEGIN daemonname\n
+	END tags do not need any additional content, though they may have them, should you so desire\n
+	Between the BEGIN and END tags go the parameters for the given daemon. Currently the valid params are:\n
+	- warn_level -- [0-2^32] The point value to initiate the warning procedure for that daemon
+	- clear_on_warn -- [0-1] Should the register of seens strings be cleared of all entries for that daemon when warn_level is reached
+	- error_level -- [0-2^32] The point value to initiate the error procedure for that daemon
+	- clear_on_error -- [0-1] Should the register of seen strings be cleared of all entries for the daemon when error_level is reached (1 is recommended strongly)
+	In order to set global setting, simply place the params outside of any daemon block.
 */
 class conf {
 public:

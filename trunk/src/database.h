@@ -33,13 +33,13 @@
 
 //! Stores log strings
 /*!
-	Basically, this class is used to index, in memory, all the known log strings.
-	It includes information on what daemon produces the log, as well as the severity of that message.
-	File Structure:
-	Files are to be organised by daemon type. To begin a block of daemon output, use the BEGIN /type/ tag.
-	Eg, the apache block begins:
-	BEGIN apache
-	Blocks do not need to be ended, but may be if so desired, with the END /type/ tag, where /type/ is totally optional.
+	Basically, this class is used to index, in memory, all the known log strings.\n
+	It includes information on what daemon produces the log, as well as the severity of that message.\n
+	File Structure:\n
+	Files are to be organised by daemon type. To begin a block of daemon output, use the BEGIN /type/ tag.\n
+	Eg, the apache block begins:\n
+	BEGIN apache\n
+	Blocks do not need to be ended, but may be if so desired, with the END /type/ tag, where /type/ is totally optional.\n
 	Following the BEGIN tag, there should be one possible log output per line. All sorts of regex syntax may be used, as the string will be pattern matched by the pcre library.
 */
 class database {

@@ -40,7 +40,6 @@ public:
 	//! The complex constructor
 	/*!
 		\param db_list An array of database objects to use to analyze strings
-		\param count The number of elements in db_list
 		While this does work as a way to get database objects in, it is not the prefered way. Unless you really need to, please use load() instead.
 		\sa load()
 	*/
@@ -59,9 +58,7 @@ public:
 	/*!
 		\param str The string to process
 		\return The level of severity of the string, 0 if not found. -1 if not databases are load()ed
-		This function also increments the warning level, if needed, and performs other appropriate actions
-		
-		
+		This function also increments the warning level, if needed, and performs other appropriate actions\n\n
 		Please Note: IF process decides that str must be registered in the database, it will make a copy of str. Thus, it is safe to free() str once process returns.
 		\sa register()
 	*/

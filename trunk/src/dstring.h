@@ -26,8 +26,8 @@
 
 //! Dryad-string
 /*!
-	This the basic string class used by dryad.
-	NOTE: There will always be one cell beyond len with a \0 in it.
+	This the basic string class used by dryad.\n
+	NOTE: There will always be one cell beyond len with a \\0 in it.
 */
 class dstring {
 
@@ -103,7 +103,7 @@ public:
 	//! Resize the string to this size
 	/*!
 		\param s The new size
-		If expanding the string, all the new characters will be \0.
+		If expanding the string, all the new characters will be \\0.
 		
 		If contracting it, characters will be truncated from high to low
 	*/
@@ -115,7 +115,7 @@ public:
 	
 	//! The indexing operator
 	/*!
-		If i is out of range, \0 will be returned isntead.
+		If i is out of range, \\0 will be returned isntead.
 	*/
 	char operator[ ]( int i ) const;
 	char & operator[ ]( int i );

@@ -129,7 +129,7 @@ public:
 	
 	//! Increments the index at i
 	/*!
-		\param The location to increment
+		\param i The location to increment
 		\return the new value at that position, or FALSE if i is out of bounds
 	*/
 	int increment(int i);
