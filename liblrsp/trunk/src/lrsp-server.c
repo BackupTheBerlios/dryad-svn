@@ -321,3 +321,10 @@ char *lrsp_server_error_message(int err)
 	}
 	return NULL;
 }
+
+void lrsp_server_join()
+{
+	#ifdef HAVE_PTHREADS
+	pthread_join(*lrsp_server_thread, NULL);
+	#endif
+}

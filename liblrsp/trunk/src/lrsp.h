@@ -130,6 +130,11 @@ int lrsp_server_listen();
 */
 char *lrsp_server_error_message(int err);
 
+/*! \brief Joins the listening thread to the calling thread
+	If your version of liblrsp is not built with pthreads, this function does precisely nothing.
+*/
+void lrsp_server_join();
+
 #ifdef __cplusplus
 }
 #endif
