@@ -7,92 +7,133 @@
 ANALYZE_H	src/analyze.h	21;"	d
 DATABASE_H	src/database.h	21;"	d
 DBLIST_H	src/dblist.h	21;"	d
-DBV	src/analyze.h	28;"	t
+DFILESTREAM_H	src/dfilestream.h	21;"	d
+DSARRAY_H	src/dsarray.h	21;"	d
 DSTRING_H	src/dstring.h	21;"	d
+a	src/analyze.h	99;"	m	class:analyze
+a	src/dsarray.h	68;"	m	class:dsarray
 analyze	src/analyze.cpp	22;"	f	class:analyze
-analyze	src/analyze.cpp	28;"	f	class:analyze
-analyze	src/analyze.h	34;"	c
-analyze	src/analyze.h	40;"	p	class:analyze
-analyze	src/analyze.h	48;"	p	class:analyze
-ascii	src/dstring.cpp	164;"	f	class:dstring
-ascii	src/dstring.h	77;"	p	class:dstring
-cstring	src/dstring.cpp	159;"	f	class:dstring
-cstring	src/dstring.h	71;"	p	class:dstring
-curr	src/database.h	109;"	m	class:database
-curr_pos	src/database.h	111;"	m	class:database
-daemon	src/database.cpp	215;"	f	class:database
-daemon	src/database.h	95;"	p	class:database
-daemon	src/dblist.h	27;"	m	struct:list
+analyze	src/analyze.cpp	29;"	f	class:analyze
+analyze	src/analyze.h	32;"	c
+analyze	src/analyze.h	38;"	p	class:analyze
+analyze	src/analyze.h	46;"	p	class:analyze
+ascii	src/dstring.cpp	190;"	f	class:dstring
+ascii	src/dstring.h	81;"	p	class:dstring
+cstring	src/dstring.cpp	178;"	f	class:dstring
+cstring	src/dstring.h	74;"	p	class:dstring
+curr	src/database.h	112;"	m	class:database
+curr_pos	src/database.h	114;"	m	class:database
+daemon	src/database.cpp	242;"	f	class:database
+daemon	src/database.h	94;"	p	class:database
+daemon	src/dblist.h	30;"	m	struct:list
 database	src/database.cpp	22;"	f	class:database
 database	src/database.cpp	30;"	f	class:database
-database	src/database.h	46;"	c
-database	src/database.h	53;"	p	class:database
-database	src/database.h	61;"	p	class:database
-db_vec	src/analyze.h	96;"	m	class:analyze
+database	src/database.h	45;"	c
+database	src/database.h	52;"	p	class:database
+database	src/database.h	60;"	p	class:database
+db_vec	src/analyze.h	94;"	m	class:analyze
+dfilestream	src/dfilestream.cpp	22;"	f	class:dfilestream
+dfilestream	src/dfilestream.cpp	27;"	f	class:dfilestream
+dfilestream	src/dfilestream.cpp	44;"	f	class:dfilestream
+dfilestream	src/dfilestream.h	33;"	c
+dfilestream	src/dfilestream.h	36;"	p	class:dfilestream
+dfilestream	src/dfilestream.h	43;"	p	class:dfilestream
+dfilestream	src/dfilestream.h	50;"	p	class:dfilestream
+dsarray	src/dsarray.cpp	22;"	f	class:dsarray
+dsarray	src/dsarray.cpp	28;"	f	class:dsarray
+dsarray	src/dsarray.cpp	34;"	f	class:dsarray
+dsarray	src/dsarray.h	27;"	c
+dsarray	src/dsarray.h	30;"	p	class:dsarray
+dsarray	src/dsarray.h	35;"	p	class:dsarray
+dsarray	src/dsarray.h	41;"	p	class:dsarray
 dstring	src/dstring.cpp	22;"	f	class:dstring
 dstring	src/dstring.cpp	28;"	f	class:dstring
 dstring	src/dstring.cpp	38;"	f	class:dstring
 dstring	src/dstring.cpp	49;"	f	class:dstring
 dstring	src/dstring.cpp	60;"	f	class:dstring
-dstring	src/dstring.h	31;"	c
-dstring	src/dstring.h	34;"	p	class:dstring
-dstring	src/dstring.h	40;"	p	class:dstring
-dstring	src/dstring.h	45;"	p	class:dstring
-dstring	src/dstring.h	52;"	p	class:dstring
-dstring	src/dstring.h	58;"	p	class:dstring
-dump	src/database.cpp	232;"	f	class:database
-dump	src/database.h	102;"	p	class:database
-flush_register	src/analyze.h	86;"	p	class:analyze
-len	src/dstring.h	122;"	m	class:dstring
+dstring	src/dstring.h	32;"	c
+dstring	src/dstring.h	36;"	p	class:dstring
+dstring	src/dstring.h	42;"	p	class:dstring
+dstring	src/dstring.h	47;"	p	class:dstring
+dstring	src/dstring.h	54;"	p	class:dstring
+dstring	src/dstring.h	60;"	p	class:dstring
+dump	src/database.cpp	269;"	f	class:database
+dump	src/database.h	105;"	p	class:database
+fh	src/dfilestream.h	76;"	m	class:dfilestream
+flush_register	src/analyze.h	84;"	p	class:analyze
+len	src/dstring.h	126;"	m	class:dstring
+length	src/dsarray.h	48;"	p	class:dsarray
 length	src/dstring.cpp	80;"	f	class:dstring
-length	src/dstring.h	65;"	p	class:dstring
-level	src/database.cpp	167;"	f	class:database
-level	src/database.h	74;"	p	class:database
-list	src/dblist.h	25;"	s
-load	src/analyze.cpp	46;"	f	class:analyze
-load	src/analyze.h	57;"	p	class:analyze
-load	src/database.cpp	112;"	f	class:database
-load	src/database.h	71;"	p	class:database
-mList	src/database.h	107;"	m	class:database
-main	src/dryad.cpp	34;"	f
-max_pos	src/database.h	113;"	m	class:database
-mlevel	src/database.h	115;"	m	class:database
-next	src/database.cpp	172;"	f	class:database
-next	src/database.h	80;"	p	class:database
-next	src/dblist.h	28;"	m	struct:list
-operator =	src/dstring.cpp	187;"	f	class:dstring
-operator =	src/dstring.cpp	203;"	f	class:dstring
-operator =	src/dstring.cpp	219;"	f	class:dstring
-operator =	src/dstring.h	108;"	p	class:dstring
-operator =	src/dstring.h	109;"	p	class:dstring
-operator =	src/dstring.h	110;"	p	class:dstring
-operator [	src/dstring.cpp	235;"	f
-operator [	src/dstring.cpp	247;"	f
-operator [	src/dstring.h	116;"	p	class:dstring
-operator [	src/dstring.h	117;"	p	class:dstring
-points	src/analyze.h	98;"	m	class:analyze
-prev	src/database.cpp	187;"	f	class:database
-prev	src/database.h	85;"	p	class:database
-prev	src/dblist.h	29;"	m	struct:list
-process	src/analyze.cpp	61;"	f	class:analyze
-process	src/analyze.h	66;"	p	class:analyze
-reg	src/analyze.h	77;"	p	class:analyze
-remove	src/dstring.cpp	122;"	f	class:dstring
-remove	src/dstring.cpp	85;"	f	class:dstring
-remove	src/dstring.h	88;"	p	class:dstring
-remove	src/dstring.h	97;"	p	class:dstring
-report	src/analyze.h	93;"	p	class:analyze
-reset	src/database.cpp	202;"	f	class:database
-reset	src/database.h	90;"	p	class:database
-resize	src/dstring.cpp	169;"	f	class:dstring
-resize	src/dstring.h	106;"	p	class:dstring
-str	src/dblist.h	26;"	m	struct:list
-str	src/dstring.h	120;"	m	class:dstring
-string	src/database.cpp	223;"	f	class:database
-string	src/database.h	93;"	p	class:database
-~analyze	src/analyze.cpp	41;"	f	class:analyze
-~analyze	src/analyze.h	49;"	p	class:analyze
-~database	src/database.cpp	89;"	f	class:database
-~database	src/database.h	63;"	p	class:database
+length	src/dstring.h	67;"	p	class:dstring
+level	src/database.cpp	194;"	f	class:database
+level	src/database.h	73;"	p	class:database
+list	src/dblist.h	26;"	s
+load	src/analyze.cpp	50;"	f	class:analyze
+load	src/analyze.h	55;"	p	class:analyze
+load	src/database.cpp	100;"	f	class:database
+load	src/database.h	70;"	p	class:database
+mList	src/database.h	110;"	m	class:database
+main	src/dryad.cpp	36;"	f
+max_pos	src/database.h	116;"	m	class:database
+mlevel	src/database.h	118;"	m	class:database
+next	src/database.cpp	199;"	f	class:database
+next	src/database.h	79;"	p	class:database
+next	src/dblist.h	31;"	m	struct:list
+num_db	src/analyze.h	95;"	m	class:analyze
+num_items	src/dsarray.h	70;"	m	class:dsarray
+open	src/dfilestream.cpp	67;"	f	class:dfilestream
+open	src/dfilestream.cpp	87;"	f	class:dfilestream
+open	src/dfilestream.h	59;"	p	class:dfilestream
+open	src/dfilestream.h	66;"	p	class:dfilestream
+operator =	src/dstring.cpp	213;"	f	class:dstring
+operator =	src/dstring.cpp	229;"	f	class:dstring
+operator =	src/dstring.cpp	245;"	f	class:dstring
+operator =	src/dstring.h	112;"	p	class:dstring
+operator =	src/dstring.h	113;"	p	class:dstring
+operator =	src/dstring.h	114;"	p	class:dstring
+operator [	src/dsarray.h	64;"	p	class:dsarray
+operator [	src/dsarray.h	65;"	p	class:dsarray
+operator [	src/dstring.cpp	261;"	f	class:dstring
+operator [	src/dstring.cpp	273;"	f	class:dstring
+operator [	src/dstring.h	120;"	p	class:dstring
+operator [	src/dstring.h	121;"	p	class:dstring
+points	src/analyze.h	97;"	m	class:analyze
+prev	src/database.cpp	214;"	f	class:database
+prev	src/database.h	84;"	p	class:database
+prev	src/dblist.h	32;"	m	struct:list
+process	src/analyze.cpp	76;"	f	class:analyze
+process	src/analyze.h	64;"	p	class:analyze
+pushback	src/dsarray.h	62;"	p	class:dsarray
+re	src/database.cpp	258;"	f	class:database
+re	src/database.h	96;"	p	class:database
+re	src/dblist.h	27;"	m	struct:list
+readline	src/dfilestream.cpp	108;"	f	class:dfilestream
+readline	src/dfilestream.h	73;"	p	class:dfilestream
+reg	src/analyze.cpp	103;"	f
+reg	src/analyze.h	75;"	p	class:analyze
+remove	src/dstring.cpp	109;"	f	class:dstring
+remove	src/dstring.cpp	143;"	f	class:dstring
+remove	src/dstring.h	101;"	p	class:dstring
+remove	src/dstring.h	92;"	p	class:dstring
+report	src/analyze.h	91;"	p	class:analyze
+reset	src/database.cpp	229;"	f	class:database
+reset	src/database.h	89;"	p	class:database
+resize	src/dsarray.h	56;"	p	class:dsarray
+resize	src/dstring.cpp	195;"	f	class:dstring
+resize	src/dstring.h	110;"	p	class:dstring
+rs	src/database.cpp	263;"	f	class:database
+rs	src/database.h	98;"	p	class:database
+rs	src/dblist.h	28;"	m	struct:list
+str	src/dblist.h	29;"	m	struct:list
+str	src/dstring.h	124;"	m	class:dstring
+string	src/database.cpp	250;"	f	class:database
+string	src/database.h	92;"	p	class:database
+~analyze	src/analyze.cpp	43;"	f	class:analyze
+~analyze	src/analyze.h	47;"	p	class:analyze
+~database	src/database.cpp	171;"	f	class:database
+~database	src/database.h	62;"	p	class:database
+~dfilestream	src/dfilestream.cpp	62;"	f	class:dfilestream
+~dfilestream	src/dfilestream.h	51;"	p	class:dfilestream
+~dsarray	src/dsarray.h	42;"	p	class:dsarray
 ~dstring	src/dstring.cpp	71;"	f	class:dstring
-~dstring	src/dstring.h	59;"	p	class:dstring
+~dstring	src/dstring.h	61;"	p	class:dstring

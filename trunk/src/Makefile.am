@@ -1,5 +1,5 @@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp dsarray.cpp
 
 # set the include path found by configure
 INCLUDES= $(all_includes)

@@ -100,7 +100,7 @@ int analyze::process( dstring *str )
 	}
 }
 
-int reg( dstring *str, int level )
+int analyze::reg( dstring *str, int level )
 {
 
 }

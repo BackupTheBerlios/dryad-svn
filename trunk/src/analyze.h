@@ -21,6 +21,7 @@
 #define ANALYZE_H
 
 #include "database.h"
+#include "dsarray.h"
 #include <pcre.h>
 
 
