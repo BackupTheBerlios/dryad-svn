@@ -68,6 +68,12 @@ public:
 	*/
 	int exists(T item);
 	
+	//! Access the contents at i.
+	/*!
+		\param i The index
+		\return The item
+		This is here because the operator []()s were giving me weird crap...
+	*/
 	T at(int i);
 	
 	T & operator[ ]( int i );

@@ -69,7 +69,8 @@ public:
 	//! Gets the next item awaiting processing.
 	/*!
 		\return A pointer to a syslog_message.
-		This call will also move n items out of the on disk cache, if it exists. n being a number that brings the in memory cache to it's limit.
+		This call will also move n items out of the on disk cache, if it exists. n being a number that brings the in memory cache to it's limit.\n
+		IF there are no elements in the queue, this call will block until there are.
 	*/
 	struct syslog_message *get();
 

@@ -110,9 +110,27 @@ public:
 	*/
 	void resize( int s );
 	
+	//! Gets the contents prior to a given character
+	/*!
+		\param t The character to split on
+		\return A new dstring containing the substring
+		EG:\n
+		You have the string "hi there" (w/o quotes). You split on ' '. You get "hi" back.
+	*/
 	dstring *prior(char t);
+	//! Gets the contents following the given character
+	/*!
+		\param t The character to split on
+		\return A new dstring containing the substring
+		This functions much like prior(), except it returns the other half.
+	*/
 	dstring *following(char t);
 	
+	//! Append to the string
+	/*!
+		\param c The string to appened
+		This tacks c onto the end of the string.
+	*/
 	void cat(char *c);
 	
 	const dstring & operator = ( const dstring & s );

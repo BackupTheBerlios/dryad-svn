@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 
+//! The reverse of atoi
 char *itoa(int i);
 
 #endif

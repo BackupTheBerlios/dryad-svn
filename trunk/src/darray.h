@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 
+//! The struct used to create darrays.
 template <class T>
 struct darray_p {
 	T item;
@@ -36,6 +37,11 @@ struct darray_p {
 template <class T>
 class darray {
 public:
+	//! The basic constructor
+	/*!
+		I suppose it might make sense to create a size based constructor, but since the pushback() method is *very* fast, it's not really needed. Just add elements as you need them.
+		\sa pushback();
+	*/
 	darray();
 	~darray();
 	

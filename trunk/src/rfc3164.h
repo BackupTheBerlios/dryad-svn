@@ -41,14 +41,30 @@
 class rfc3164
 {
 public:
+	//! The basic constructor
+	/*!
+		\param s The cache object to use. This MUST be a valid object! It is integral to things working!
+		If this constructor is used, the default syslog will be used.
+	*/
 	rfc3164( cache *s );
+	//! Another constructor
+	/*!
+		\param port The port to bind, if you want to use a non default one
+		\param s The cache object to use. MUST NOT be NULL!
+	*/
 	rfc3164(int port, cache *s );
 	~rfc3164();
 	
+	//! Starts the listening process
+	/*!
+		This call does not return, but it also should not be directly called. Instead use rfc3164_launch_thread.
+	*/
 	void listen();
 
 private:
+	//! Creates the socket, used by both constructors
 	void create_socket(int port);
+	//! Used to parse the message.
 	struct syslog_message *parse_message(char *message);
 	int sock;
 	cache *c;

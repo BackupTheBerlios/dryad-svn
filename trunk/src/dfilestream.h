@@ -30,7 +30,7 @@
 
 //! A very basic file stream class
 /*!
-	This class implements a very simple method by which to access a file. It's read only, and a line by line basis.
+	This class implements a line based file i/o scheme. It can read dstrings from files, or write dstrings (and ints, btw) to files.
 */
 class dfilestream {
 public:

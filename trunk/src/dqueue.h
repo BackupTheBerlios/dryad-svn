@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+//! The basic struct type
 template <class ItemType>
 struct queue
 {
@@ -33,15 +34,35 @@ struct queue
 	queue<ItemType> *prev;
 };
 
+//! A basic fifo class
+/*!
+	Provides a basic first in, first out structure for any given data type.
+*/
 template <class T>
 class dfifo
 {
 public:
+	//! Basic constructor.
+	/*!
+		Creates an empty queue.
+	*/
 	dfifo();
 	~dfifo();
+	//! Add an item
+	/*!
+		\param item The item to add. It is copied into memory, however if you're using this to store pointers to ADTs, remember, it's the pointer getting stored.
+	*/
 	void enqueue( T item );
+	//! Dequeue an item.
+	/*!
+		\return The first item in the queue, or null if there isn't one.
+	*/
  	T dequeue();
 	
+	//! Returns the length of the queue
+	/*!
+		\return The number of items in the queue.
+	*/
 	int length() const;
 
 private:
