@@ -92,7 +92,7 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 bin_PROGRAMS = dryad
-dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp dqueue.cpp darray.cpp drarray.cpp cache.cpp rfc3164.cpp functions.cpp lrsp-server.cpp
+dryad_SOURCES = dryad.cpp database.cpp analyze.cpp dstring.cpp dfilestream.cpp conf.cpp dqueue.cpp darray.cpp drarray.cpp cache.cpp rfc3164.cpp functions.cpp lrsp-server.cpp dryerr.cpp
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
@@ -113,7 +113,7 @@ am_dryad_OBJECTS = dryad.$(OBJEXT) database.$(OBJEXT) analyze.$(OBJEXT) \
 	dstring.$(OBJEXT) dfilestream.$(OBJEXT) conf.$(OBJEXT) \
 	dqueue.$(OBJEXT) darray.$(OBJEXT) drarray.$(OBJEXT) \
 	cache.$(OBJEXT) rfc3164.$(OBJEXT) functions.$(OBJEXT) \
-	lrsp-server.$(OBJEXT)
+	lrsp-server.$(OBJEXT) dryerr.$(OBJEXT)
 dryad_OBJECTS = $(am_dryad_OBJECTS)
 dryad_LDADD = $(LDADD)
 dryad_DEPENDENCIES =
@@ -129,9 +129,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/conf.Po ./$(DEPDIR)/darray.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/database.Po ./$(DEPDIR)/dfilestream.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/dqueue.Po ./$(DEPDIR)/drarray.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dstring.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/functions.Po ./$(DEPDIR)/lrsp-server.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rfc3164.Po
+@AMDEP_TRUE@	./$(DEPDIR)/dryad.Po ./$(DEPDIR)/dryerr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dstring.Po ./$(DEPDIR)/functions.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/lrsp-server.Po ./$(DEPDIR)/rfc3164.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -210,6 +210,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dqueue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drarray.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dryad.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dryerr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lrsp-server.Po@am__quote@
