@@ -135,7 +135,8 @@ dstring *dstring::remove( dstring *r )
 				}
 			}
 		}
-		tmp++;
+		// yes, it's nitpicky to use sizeof(char) rather than ++, but Tod made me :(
+		tmp += sizeof(char);
 	}
 	return n;
 }
