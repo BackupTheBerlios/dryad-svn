@@ -28,7 +28,7 @@
 #include "database.h"
 #include "cache.h"
 
-#include <dlfcn.h>
+#include <ltdl.h>
 #include <iostream>
 #include <pcre.h>
 
@@ -87,7 +87,7 @@ struct reporter {
 	dstring *name;
 	reporter_once once;
 	reporter_many many;
-	void *dlptr;
+	lt_dlhandle dlptr;
 };
 
 class analyze

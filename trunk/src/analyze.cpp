@@ -26,7 +26,7 @@ analyze::analyze(conf *c)
 	struct sev_group *tmp;
 	dstring *dname, *t;
 	struct reporter *rpt;
-	char *error;
+	const char *error;
 	reporter_config cnf;
 	if( c == NULL )
 	{
@@ -69,6 +69,8 @@ analyze::analyze(conf *c)
 	
 	reports = new drarray<struct reporter*>;
 	
+	lt_dlinit();
+	
 	for( int q = 0; q < c->num_daemons(); q++ )
 	{
 		rpt = (struct reporter*)malloc(sizeof(struct reporter));
@@ -78,30 +80,30 @@ analyze::analyze(conf *c)
 			free(rpt);
 			continue;
 		}
-		rpt->dlptr = dlopen( t->ascii() , RTLD_LAZY);
+		rpt->dlptr = lt_dlopen( t->ascii() );
 		if(!rpt->dlptr)
 		{
 			cerr << "Failed to open " << c->daemon_get(c->daemon_name(q)->ascii(), "lib_handler") << "!\n";
 			free(rpt);
 			continue;
 		}
-		dlerror();
-		rpt->once = (reporter_once)dlsym(rpt->dlptr, "dryad_once");
-		if( (error = dlerror()) )
+		lt_dlerror();
+		rpt->once = (reporter_once)lt_dlsym(rpt->dlptr, "dryad_once");
+		if( (error = lt_dlerror()) )
 		{
 			cerr << "Failed to export symbol dryad_once!\n" << error << endl;
 			free(rpt);
 			continue;
 		}
-		rpt->many = (reporter_many)dlsym(rpt->dlptr, "dryad_many");
-		if( (error = dlerror()) )
+		rpt->many = (reporter_many)lt_dlsym(rpt->dlptr, "dryad_many");
+		if( (error = lt_dlerror()) )
 		{
 			cerr << "Failed to export symbol dryad_many!\n" << error << endl;
 			free(rpt);
 			continue;
 		}
-		cnf = (reporter_config)dlsym(rpt->dlptr, "dryad_config");
-		if( (error = dlerror()) )
+		cnf = (reporter_config)lt_dlsym(rpt->dlptr, "dryad_config");
+		if( (error = lt_dlerror()) )
 		{
 			cerr << "Failed to export symbol dryad_config!\n" << error << endl;
 			free(rpt);
@@ -120,21 +122,21 @@ analyze::analyze(conf *c)
 		cerr << "A default lib_handler has not been specified!\nAborting!\n";
 		exit(1);
 	}
-	def_rep->dlptr = dlopen( t->ascii(), RTLD_LAZY );
+	def_rep->dlptr = lt_dlopen( t->ascii() );
 	if( def_rep->dlptr == NULL )
 	{
-		cerr << "Failed to dlopen() the default lib_handler (" << t->ascii() << "):\n" << dlerror() << "\nAborting!\n";
+		cerr << "Failed to lt_dlopen() the default lib_handler (" << t->ascii() << "):\n" << lt_dlerror() << "\nAborting!\n";
 		exit(1);
 	}
-	dlerror();
-	def_rep->once = (reporter_once)dlsym(def_rep->dlptr, "dryad_once");
-	if( (error = dlerror()) )
+	lt_dlerror();
+	def_rep->once = (reporter_once)lt_dlsym(def_rep->dlptr, "dryad_once");
+	if( (error = lt_dlerror()) )
 	{
 		cerr << "Failed to resolve symbol dryad_once in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
 		exit(1);
 	}
-	def_rep->many = (reporter_many)dlsym(def_rep->dlptr, "dryad_many");
-	if( (error = dlerror()) )
+	def_rep->many = (reporter_many)lt_dlsym(def_rep->dlptr, "dryad_many");
+	if( (error = lt_dlerror()) )
 	{
 		cerr << "Failed to resolve symbol dryad_many in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
 		exit(1);

@@ -19401,13 +19401,13 @@ See \`config.log' for more details." >&2;}
 fi
 
 
-echo "$as_me:$LINENO: checking for dlopen in -ldl" >&5
-echo $ECHO_N "checking for dlopen in -ldl... $ECHO_C" >&6
-if test "${ac_cv_lib_dl_dlopen+set}" = set; then
+echo "$as_me:$LINENO: checking for lt_dlopen in -lltdl" >&5
+echo $ECHO_N "checking for lt_dlopen in -lltdl... $ECHO_C" >&6
+if test "${ac_cv_lib_ltdl_lt_dlopen+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-ldl  $LIBS"
+LIBS="-lltdl  $LIBS"
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -19421,11 +19421,11 @@ extern "C"
 #endif
 /* We use char because int might match the return type of a gcc2
    builtin and then its argument prototype would still apply.  */
-char dlopen ();
+char lt_dlopen ();
 int
 main ()
 {
-dlopen ();
+lt_dlopen ();
   ;
   return 0;
 }
@@ -19452,30 +19452,30 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-  ac_cv_lib_dl_dlopen=yes
+  ac_cv_lib_ltdl_lt_dlopen=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-ac_cv_lib_dl_dlopen=no
+ac_cv_lib_ltdl_lt_dlopen=no
 fi
 rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-echo "$as_me:$LINENO: result: $ac_cv_lib_dl_dlopen" >&5
-echo "${ECHO_T}$ac_cv_lib_dl_dlopen" >&6
-if test $ac_cv_lib_dl_dlopen = yes; then
+echo "$as_me:$LINENO: result: $ac_cv_lib_ltdl_lt_dlopen" >&5
+echo "${ECHO_T}$ac_cv_lib_ltdl_lt_dlopen" >&6
+if test $ac_cv_lib_ltdl_lt_dlopen = yes; then
   cat >>confdefs.h <<_ACEOF
-@%:@define HAVE_LIBDL 1
+@%:@define HAVE_LIBLTDL 1
 _ACEOF
 
-  LIBS="-ldl $LIBS"
+  LIBS="-lltdl $LIBS"
 
 else
-  { { echo "$as_me:$LINENO: error: Dryad requires POSIX defined dl*()!
+  { { echo "$as_me:$LINENO: error: Dryad requires Libtool's libtld!
 See \`config.log' for more details." >&5
-echo "$as_me: error: Dryad requires POSIX defined dl*()!
+echo "$as_me: error: Dryad requires Libtool's libtld!
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 fi

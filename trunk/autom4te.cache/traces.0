@@ -448,10 +448,10 @@ m4trace:configure.in:18: -1- AC_CHECK_LIB([pthread], [pthread_mutex_lock], [], [
 m4trace:configure.in:18: -1- AH_OUTPUT([HAVE_LIBPTHREAD], [/* Define to 1 if you have the `pthread\' library (-lpthread). */
 #undef HAVE_LIBPTHREAD])
 m4trace:configure.in:18: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBPTHREAD])
-m4trace:configure.in:19: -1- AC_CHECK_LIB([dl], [dlopen], [], [AC_MSG_FAILURE([Dryad requires POSIX defined dl*()!])])
-m4trace:configure.in:19: -1- AH_OUTPUT([HAVE_LIBDL], [/* Define to 1 if you have the `dl\' library (-ldl). */
-#undef HAVE_LIBDL])
-m4trace:configure.in:19: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBDL])
+m4trace:configure.in:19: -1- AC_CHECK_LIB([ltdl], [lt_dlopen], [], [AC_MSG_FAILURE([Dryad requires Libtool's libtld!])])
+m4trace:configure.in:19: -1- AH_OUTPUT([HAVE_LIBLTDL], [/* Define to 1 if you have the `ltdl\' library (-lltdl). */
+#undef HAVE_LIBLTDL])
+m4trace:configure.in:19: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBLTDL])
 m4trace:configure.in:20: -1- AC_CHECK_LIB([esmtp], [smtp_errno], [], [AC_MSG_FAILURE([Dryad requires libesmtp!])])
 m4trace:configure.in:20: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
 #undef HAVE_LIBESMTP])
