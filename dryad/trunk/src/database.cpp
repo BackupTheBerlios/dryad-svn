@@ -47,7 +47,7 @@ database::database( dstring *path )
 	buf = (struct stat*)malloc( sizeof(struct stat) );
 	if( -1 == stat( path->ascii(), buf ) )
 	{
-		cerr << "In database::database( dstring *path, int level) -- Unable to stat path (" << path->ascii() << ")! Aborting.\n";
+		dryerr(1,strcat(strcat("In database::database( dstring *path, int level) -- Unable to stat path (",path->ascii()),")! Aborting.\n"));
 		exit(1);
 	}
 	free(buf);
@@ -72,7 +72,7 @@ database::database( dstring *path )
 			re = pcre_compile( tmp->ascii(), 0, &error, &eoffset, NULL );
 			if( ! re )
 			{
-				cerr << "Unable to compile the regex \"" << tmp->ascii() << "\"!\nFailure at offset " << eoffset << ":" << error << endl;
+				dryerr(1,strcat(strcat(strcat(strcat(strcat("Unable to compile the regex \"",tmp->ascii()),"\"!\nFailure at offset "),eoffset),":"),error),endl));
 			}
 			else
 			{
@@ -118,7 +118,7 @@ int database::load( dstring *path )
 	buf = (struct stat*)malloc( sizeof(struct stat) );
 	if( -1 == stat( path->ascii(), buf ) )
 	{
-		cerr << "In database::database( dstring *path, int level) -- Unable to stat path (" << path->ascii() << ")! Aborting.\n";
+		dryerr(1,strcat(strcat("In database::database( dstring *path, int level) -- Unable to stat path (",path->ascii()),")! Aborting.\n"));
 		exit(1);
 	}
 	free(buf);
@@ -143,7 +143,7 @@ int database::load( dstring *path )
 			re = pcre_compile( tmp->ascii(), 0, &error, &eoffset, NULL );
 			if( ! re )
 			{
-				cerr << "Unable to compile the regex \"" << tmp->ascii() << "\"!\nFailure at offset " << eoffset << ":" << error << endl;
+				dryerr(1,strcat(strcat(strcat(strcat(strcat("Unable to compile the regex \"",tmp->ascii()),"\"!\nFailure at offset "),eoffset),":"),error),endl));
 			}
 			else
 			{
@@ -271,8 +271,8 @@ void database::dump()
 	temp = mList;
 	for( int c = 0; c < max_pos; c++ )
 	{
-		cerr << temp->str->ascii() << "(" << temp->str << ")" << " - " << temp->daemon->ascii() << endl;
-		cerr << temp->re << " - " << temp->rs << endl;
+		dryerr(1,strcat(strcat(strcat(strcat(strcat(strcat(strcat(temp->str->ascii(),"("),temp->str),")")," - "),temp->daemon->ascii()),endl));
+		dryerr(1,strcat(strcat(strcat(temp->re," - "),temp->rs)endl));
 		temp = temp->next;
 	}
 }

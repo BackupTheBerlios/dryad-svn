@@ -56,7 +56,7 @@ using std::endl;
 	\return Document me
 	Include any other notes here
 */
-int dryerr(int errnum);
+int dryerr(int errnum, char *errstring);
 
 }
 

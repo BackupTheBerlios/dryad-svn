@@ -26,14 +26,14 @@ conf::conf(dstring *cf)
 	dfilestream *fs;
 	if( cf == NULL )
 	{
-		cerr << "NULL config file passed to conf object!\nAborting!\n";
+		dryerr(1,"NULL config file passed to conf object!\nAborting!\n");
 		exit(1);
 	}
 	fs = new dfilestream;
 
 	if( ! fs->open(cf, "r") )
 	{
-		cerr << "Failed open to config file!\nAborting!\n";
+		dryerr(1,"Failed open to config file!\nAborting!\n");
 		exit(1);
 	}
 	
@@ -132,7 +132,7 @@ void conf::readconfig(dfilestream *fs)
 	}
 	if( d != NULL )
 	{
-		cerr << "Malformed config file! Never saw an END for " << d->name->ascii() << "!\nAborting!\n";
+		dryerr(1,strcat(strcat("Malformed config file! Never saw an END for ",d->name->ascii()),"!\nAborting!\n"));
 		exit(1);
 	}
 	pthread_mutex_unlock(reload);

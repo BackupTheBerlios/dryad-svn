@@ -61,7 +61,7 @@ void rfc3164::listen()
 			continue;
 		}
 		#ifdef DEBUG
-		cerr << "Recieved message: " << buf << endl;
+		dryerr(1,strcat(strcat("Recieved message: ",buf),endl));
 		#endif
 		m = parse_message(buf);
 		free(buf);
@@ -82,7 +82,7 @@ void rfc3164::create_socket(int port)
 	sock = socket( AF_INET, SOCK_DGRAM, 0 );
 	if( -1 == sock )
 	{
-		cerr << "Unable to create a socket in rfc3164!\nAborting!\n";
+		dryerr(1,"Unable to create a socket in rfc3164!\nAborting!\n");
 		exit(1);
 	}
 	mine = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
@@ -92,7 +92,7 @@ void rfc3164::create_socket(int port)
 	memset(mine->sin_zero, '\0', 8);
 	if( -1 == bind(sock, (struct sockaddr*)mine, sizeof(struct sockaddr)) )
 	{
-		cerr << "Unable to bind port " << port << " in rfc3164!\nAborting!\n";
+		dryerr(1,strcat(strcat("Unable to bind port ",port)," in rfc3164!\nAborting!\n"));
 		exit(1);
 	}
 	free(mine);
@@ -203,7 +203,7 @@ struct syslog_message *rfc3164::parse_message(char *message)
 		return NULL;
 	}
 	#ifdef DEBUG
-	cerr << "Returning a parsed message:\nfacility: " << m->facility << "\nseverity: " << m->severity << "\ndate: " << m->date->ascii() << "\nhost: " << m->host->ascii() << "\nmessage: " << m->message->ascii() << endl;
+	strcat(1,strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat("Returning a parsed message:\nfacility: ",m->facility),"\nseverity: "),m->severity),"\ndate: "),m->date->ascii()),"\nhost: "),m->host->ascii()),"\nmessage: "),m->message->ascii()),endl));
 	#endif
 	return m;
 }

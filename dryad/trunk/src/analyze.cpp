@@ -30,7 +30,7 @@ analyze::analyze(conf *c)
 	reporter_config cnf;
 	if( c == NULL )
 	{
-		cerr << "Invalid conf passed to analyze!\nAborting!\n";
+		dryerr(1,"Invalid conf passed to analyze!\nAborting!\n");
 		exit(1);
 	}
 	
@@ -83,7 +83,7 @@ analyze::analyze(conf *c)
 		rpt->dlptr = lt_dlopen( t->ascii() );
 		if(!rpt->dlptr)
 		{
-			cerr << "Failed to open " << c->daemon_get(c->daemon_name(q)->ascii(), "lib_handler") << "!\n";
+			dryerr(1,(strcat("Failed to open ",strcat(c->daemon_get(c->daemon_name(q)->ascii(), "lib_handler"))),"!\n");
 			free(rpt);
 			continue;
 		}
@@ -91,21 +91,21 @@ analyze::analyze(conf *c)
 		rpt->once = (reporter_once)lt_dlsym(rpt->dlptr, "dryad_once");
 		if( (error = lt_dlerror()) )
 		{
-			cerr << "Failed to export symbol dryad_once!\n" << error << endl;
+			dryerr(strcat("Failed to export symbol dryad_once!\n",strcat(error,endl)));
 			free(rpt);
 			continue;
 		}
 		rpt->many = (reporter_many)lt_dlsym(rpt->dlptr, "dryad_many");
 		if( (error = lt_dlerror()) )
 		{
-			cerr << "Failed to export symbol dryad_many!\n" << error << endl;
+			dryerr(strcat("Failed to export symbol dryad_many!\n",strcat(error,endl)));
 			free(rpt);
 			continue;
 		}
 		cnf = (reporter_config)lt_dlsym(rpt->dlptr, "dryad_config");
 		if( (error = lt_dlerror()) )
 		{
-			cerr << "Failed to export symbol dryad_config!\n" << error << endl;
+			dryerr(strcat("Failed to export symbol dryad_config!\n",strcat(error,endl)));
 			free(rpt);
 			continue;
 		}
@@ -119,26 +119,26 @@ analyze::analyze(conf *c)
 	t = c->get("lib_handler");
 	if( t == NULL )
 	{
-		cerr << "A default lib_handler has not been specified!\nAborting!\n";
+		dryerr(1,"A default lib_handler has not been specified!\nAborting!\n");
 		exit(1);
 	}
 	def_rep->dlptr = lt_dlopen( t->ascii() );
 	if( def_rep->dlptr == NULL )
 	{
-		cerr << "Failed to lt_dlopen() the default lib_handler (" << t->ascii() << "):\n" << lt_dlerror() << "\nAborting!\n";
+		dryerr(1,strcat(strcat(strcat("Failed to lt_dlopen() the default lib_handler (",t->ascii()),"):\n",lt_dlerror(),)"\nAborting!\n"));
 		exit(1);
 	}
 	lt_dlerror();
 	def_rep->once = (reporter_once)lt_dlsym(def_rep->dlptr, "dryad_once");
 	if( (error = lt_dlerror()) )
 	{
-		cerr << "Failed to resolve symbol dryad_once in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
+		dryerr(1,strcat(strcat(strcat(strcat("Failed to resolve symbol dryad_once in default lib_handler (",t->ascii()),"):\n"),error),"\nAborting!\n"));
 		exit(1);
 	}
 	def_rep->many = (reporter_many)lt_dlsym(def_rep->dlptr, "dryad_many");
 	if( (error = lt_dlerror()) )
 	{
-		cerr << "Failed to resolve symbol dryad_many in default lib_handler (" << t->ascii() << "):\n" << error << "\nAborting!\n";
+		dryerr(1,strcat(strcat(strcat(strcat("Failed to resolve symbol dryad_many in default lib_handler (",t->ascii()),"):\n"), error),"\nAborting!\n"));
 		exit(1);
 	}
 	
@@ -339,7 +339,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		tmp = c->get(build->ascii());
 		if( tmp == NULL )
 		{
-			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			dryerr(1,strcat(strcat("Failed to get ",build->ascii()),"!\nAborting!\n"));
 			exit(1);
 		}
 		delete build;
@@ -359,7 +359,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		tmp = c->get(build->ascii());
 		if( tmp == NULL )
 		{
-			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			dryerr(1,strcat(strcat("Failed to get ",build->ascii()),"!\nAborting!\n"));
 			exit(1);
 		}
 		ret->all = atoi(tmp->ascii());
@@ -370,7 +370,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		tmp = c->get(build->ascii());
 		if( tmp == NULL )
 		{
-			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			dryerr(1,strcat(strcat("Failed to get ",build->ascii()),"!\nAborting!\n"));
 			exit(1);
 		}
 		delete build;
@@ -388,7 +388,7 @@ struct severity *analyze::build_severity_struct(const char *daemon, char *level)
 		tmp = c->get(build->ascii());
 		if( tmp == NULL )
 		{
-			cerr << "Failed to get " << build->ascii() << "!\nAborting!\n";
+			dryerr(1,strcat(strcat("Failed to get ",build->ascii()),"!\nAborting!\n"));
 			exit(1);
 		}
 		ret->max = atoi(tmp->ascii());

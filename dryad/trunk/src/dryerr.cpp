@@ -18,23 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+/*   Currently, we need to classify errors into types so that actions can
+	be taken on errors in a general sense.  I.e. you might want to take the
+	same action on all errors resolving symbols, but you wouldn't want to
+	necessarily output the same error message.  Thus we've changed to adding
+	a string literal.  We just haven't organized error processes yet, and I
+	don't think it's high on the list of priorities until we determine what
+	to DO with the errors, let alone how they should be divided up.  This
+	plan is not set in stone, and may change soon.
+*/
+
 #include "dryerr.h"
 
 namespace DError
 {
 
-int dryerr(int errnum)
+int dryerr(int errnum, char *errstring)
 {
 
 	int diderr = 0;  // Used to determine if an error is processed
 	
 	switch (errnum){
 	case 1:
-		cout << "Error: 1\n";
+		cerr << "ERROR: " << *errstring;
 		diderr = 1;
 		break;
 	case 2:
-		cout << "Error: 2\n";
+		cerr << "ERROR: " << *errstring;
 		diderr = 1;
 		break;
 	case 3:

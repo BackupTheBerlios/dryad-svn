@@ -30,6 +30,7 @@
 #include "rfc3164.h"
 #include "cache.h"
 #include "lrsp-server.h"
+#include "dryerr.h"
 
 #include <pthread.h>
 #include <iostream>
@@ -38,6 +39,7 @@ using namespace std;
 using DConf::conf;
 using DCache::cache;
 using DString::dstring;
+using DError::dryerr;
 
 struct cmdlineargs
 {
@@ -100,7 +102,7 @@ int main(int argc, char *argv[])
 	}
 	if( args->tcp == -1 && args->udp == -1 )
 	{
-		cerr << "You really should specify tcp and/or udp mode, if you actually want me to do anything.\n";
+		dryerr(1,"You really should specify tcp and/or udp mode, if you actually want me to do anything.\n");
 		exit(1);
 	}
 	core = (pthread_t*)malloc(sizeof(pthread_t));
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
 	if( args->sekret == 1 )
 	{
 		// I am well aware that there is a race condition here, if there are invalid config options or whatnot. But whatevar. Enough of the error will more than likely get outputted to bork the tests, and if it doesn't, it'll get caught in the next stage when we don't use the sekret flag
-		cerr << "tcp: " << args->tcp << "--udp: " << args->udp << endl;
+		dryerr(1,"tcp: " << args->tcp << "--udp: " << args->udp << endl);
 		exit(0);
 	}
 	if( udp_t != NULL )

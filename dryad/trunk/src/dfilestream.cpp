@@ -98,11 +98,11 @@ int dfilestream::open( const char *path, char *mode )
 		tmpname = new dstring("/tmp/dryad-cache-XXXXXX");
 		if( -1 == (f = mkstemp((char*)tmpname->ascii())) )
 		{
-			cerr << "Failed to create temporary file!\nAborting!\n";
+			dryerr(1,"Failed to create temporary file!\nAborting!\n");
 			exit(1);
 		}
 		#ifdef DEBUG
-		cerr << "Temporary file created: " << tmpname->ascii() << endl;
+		dryerr(1,strcat(strcat("Temporary file created: ",tmpname->ascii()),endl));
 		#endif
 		fh = fdopen(f, "a");
 		filename = new dstring(tmpname);
@@ -183,12 +183,12 @@ void dfilestream::writeline(dstring *line)
 	
 	if( EOF == fputs(line->ascii(), fh) )
 	{
-		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	if( EOF == fputc('\n', fh) )
 	{
-		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 }
@@ -202,12 +202,12 @@ void dfilestream::writeline(int line)
 	a = itoa(line);
 	if( EOF == fputs(a, fh) )
 	{
-		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	if( EOF == fputc('\n', fh) )
 	{
-		cerr << "ERROR! Unable to write to file!\nAborting!\n";
+		dryerr(1,"ERROR! Unable to write to file!\nAborting!\n");
 		exit(1);
 	}
 	free(a);
