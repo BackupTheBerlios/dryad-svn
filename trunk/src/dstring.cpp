@@ -285,6 +285,24 @@ dstring *dstring::following(char t)
 	return NULL;
 }
 
+void dstring::cat(char *c)
+{
+	char *n;
+	int q;
+	n = (char*)malloc(sizeof(char) * (len + strlen(c)) + sizeof(char));
+	for( q = 0; q < len; q++ )
+	{
+		n[q] = str[q];
+	}
+	q++;
+	for( int a = q; q < (len + strlen(c)); q++ )
+	{
+		n[q] = c[q-len];
+	}
+	len += strlen(c);
+	n[len] = '\0';
+}
+
 const dstring & dstring::operator = ( const dstring & s )
 {
 	pthread_mutex_lock(l);

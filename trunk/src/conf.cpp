@@ -39,6 +39,7 @@ conf::conf(dstring *cf)
 	
 	dbs = new drarray<dstring*>;
 	vars = new drarray<variable*>;
+	daemons = new drarray<daemon_section*>;
 	
 	this->readconfig(fs);
 }
@@ -53,6 +54,9 @@ void conf::readconfig(dfilestream *fs)
 {
 	dstring *tmp;
 	variable *v;
+	struct daemon_section *d;
+	
+	d = NULL;
 	
 	pthread_mutex_lock(reload);
 	
@@ -62,13 +66,40 @@ void conf::readconfig(dfilestream *fs)
 		{
 			continue;
 		}
-		if( !strncmp( tmp->ascii(), "dbfile ", 7 ) && tmp->length() > 7 )
+		else if( !strncmp( tmp->ascii(), "dbfile ", 7 ) && tmp->length() > 7 )
 		{
 			dbs->pushback(tmp->remove("dbfile "));
 		}
+		else if( !strncmp(tmp->ascii(), "BEGIN ", 6 ) && tmp->length() > 6 )
+		{
+			d = (struct daemon_section*)malloc(sizeof(struct daemon_section));
+			d->name = tmp->remove("BEGIN ");
+		}
+		else if( !strncmp(tmp->ascii(), "END", 3 ) )
+		{
+			if( d != NULL )
+			{
+				daemons->pushback(d);
+				daemons->at(daemons->length() - 1)->contents = new drarray<variable*>;
+				d = NULL;
+			}
+		}
+		else if( d != NULL )
+		{
+			v = (struct variable*)malloc(sizeof(struct variable));
+			v->name = tmp->prior(' ');
+			v->value = tmp->following(' ');
+			if( v->name == NULL || v->value == NULL )
+			{
+				free(v);
+				continue;
+			}
+			d->contents->pushback(v);
+			v = NULL;
+		}
 		else
 		{
-			v = (variable*)malloc(sizeof(variable));
+			v = (struct variable*)malloc(sizeof(struct variable));
 			v->name = tmp->prior(' ');
 			v->value = tmp->following(' ');
 			if( v->name == NULL || v->value == NULL )
@@ -93,7 +124,7 @@ dstring *conf::db(int k) const
 	return dbs->at(k);
 }
 
-dstring *conf::get(char *name)
+dstring *conf::get(const char *name)
 {
 	for( int c = 0; c < vars->length(); c++ )
 	{
@@ -101,4 +132,22 @@ dstring *conf::get(char *name)
 			return vars->at(c)->value;
 	}
 	return NULL;
+}
+
+dstring *conf::daemon_get(const char *daemon, const char *name)
+{
+	for( int c = 0; c < daemons->length(); c++ )
+	{
+		if( !strcmp(daemons->at(c)->name->ascii(), daemon) )
+		{
+			for( int d = 0; d < daemons->at(c)->contents->length(); d++ )
+			{
+				if( !strcmp(daemons->at(c)->contents->at(d)->name->ascii(), name) )
+				{
+					return daemons->at(c)->contents->at(d)->value;
+				}
+			}
+			return NULL;
+		}
+	}
 }

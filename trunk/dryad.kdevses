@@ -1,17 +1,12 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="2" >
+ <DocsAndViews NumberOfDocuments="1" >
   <Doc0 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/dryad.cpp" >
-   <View0 line="84" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="748" Left="2" MinMaxMode="0" />
+   <View0 line="34" Type="???" >
+    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="756" Left="2" MinMaxMode="0" />
    </View0>
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:/home/peter/src/dryad/trunk/src/rfc3164.cpp" >
-   <View0 line="10" Type="???" >
-    <AdditionalSettings Top="2" Width="1088" Attach="1" Height="732" Left="2" MinMaxMode="0" />
-   </View0>
-  </Doc1>
  </DocsAndViews>
  <pluginList>
   <kdevbookmarks>

@@ -31,6 +31,7 @@
 #include <iostream.h>
 #include <pcre.h>
 
+//! This struct gets used by analyze to track it's default settings.
 struct severity {
 	//! The level of warnings of this severity
 	int level;
@@ -44,6 +45,7 @@ struct severity {
 	int all;
 };
 
+//! This struct is used to pass arguments for the purpose of thread starting.
 struct analyze_args {
 	conf *c;
 	cache *cash;
@@ -52,17 +54,34 @@ struct analyze_args {
 class analyze
 {
 public:
+	//! The basic constructor
+	/*!
+		\param c The configuration object to draw information from. This object MUST be initialised before being passed here.
+	*/
 	analyze(conf *c);
 	~analyze();
 	
+	//! Load a database
+	/*!
+		\param db The database to load. What gets stored is the pointer to the database. The actual contents REMAIN THE SAME! Do NOT free() or delete the database object after it has been loaded!
+		\return If db is NULL, this method will return false, otherwise it will return true.
+	*/
 	int load( database *db );
 	
+	//! Process a syslog message
+	/*!
+		\param m A pointer to the syslog message to process.
+		\return If m is NULL, -1 is returned. Otherwise, if m->message has a matching rule, true is returned. Finally, if there is no match, false is returned.
+	*/
 	int process( struct syslog_message *m );
 
 private:
+	// These are internal functions, and there for are not documented.
 	void reg( struct syslog_message *m );
 	void report_once( struct syslog_message *m );
 	void report( struct syslog_message *m, int all );
+	//! use daemon = null to get top levels
+	struct severity *build_severity_struct(char *daemon, char *level);
 	struct severity *emergency;
 	struct severity *alert;
 	struct severity *critical;
@@ -73,10 +92,16 @@ private:
 	struct severity *debug;
 	darray<struct syslog_message*> *seen;
 	drarray<database*> *db_vec;
+	conf *c;
 };
 
+//! Launches the analyze thread
+/*!
+	\param args A struct analyze_args that contains the material to work with, namely a pointer to the config object and a pointer to the cache object. This call does not return.
+*/
 void *analyze_launch_thread(void *args);
 
+//! Builds a struct analyze_args.
 struct analyze_args *analyze_build_args(conf *c, cache *cash);
 
 #endif

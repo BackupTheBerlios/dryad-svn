@@ -29,9 +29,16 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+//! A simple struct for semi assoicatative arrays.
 struct variable {
 	dstring *name;
 	dstring *value;
+};
+
+//! For storage of info pertaining to a specific daemon
+struct daemon_section {
+	dstring *name;
+	drarray<variable*> *contents;
 };
 
 class conf
@@ -43,7 +50,8 @@ public:
 	int num_dbs() const;
 	dstring *db(int k) const;
 	
-	dstring *get(char *name);
+	dstring *get(const char *name);
+	dstring *daemon_get(const char *daemon, const char *name);
 
 private:
 	void readconfig( dfilestream *fs );
@@ -51,6 +59,7 @@ private:
 	pthread_mutex_t *reload;
 	drarray<variable*> *vars;
 	drarray<dstring*> *dbs;
+	drarray<daemon_section*> *daemons;
 };
 
 #endif

@@ -46,6 +46,14 @@ struct cmdlineargs
 
 struct cmdlineargs *parse_commandline(int argc, char *argv[]);
 
+
+//! Welcome to the dryad documentation!
+/*!
+	I suppose the most important thing to document here are the possible command line parameters:\n
+	-u [port] -- specifies that dryad should run an RFC3164 compliant udp syslog server, if port is not specified, it will bind the default, 514
+	-t [port] -- specifies that dryad should run an RFC3195 compliant tcp syslog server.
+	-c /path/to/config/file -- specifies that dryad should get it's config information from that file, rather than /etc/dryad/dryad.conf
+*/
 int main(int argc, char *argv[])
 {
 	conf *cnf;

@@ -27,261 +27,17 @@ analyze::analyze(conf *c)
 		cerr << "Invalid conf passed to analyze!\nAborting!\n";
 		exit(1);
 	}
-
-	emergency = (struct severity*)malloc(sizeof(struct severity));
-	alert = (struct severity*)malloc(sizeof(struct severity));
-	critical = (struct severity*)malloc(sizeof(struct severity));
-	error = (struct severity*)malloc(sizeof(struct severity));
-	warning = (struct severity*)malloc(sizeof(struct severity));
-	notice = (struct severity*)malloc(sizeof(struct severity));
-	informational = (struct severity*)malloc(sizeof(struct severity));
-	debug = (struct severity*)malloc(sizeof(struct severity));
 	
-	emergency->level = 0;
-	alert->level = 0;
-	critical->level = 0;
-	error->level = 0;
-	warning->level = 0;
-	notice->level = 0;
-	informational->level = 0;
-	debug->level = 0;
+	this->c = c;
 	
-	tmp = c->get("emergency_report");
-	if( tmp == NULL )
-	{
-		cerr << "emergency_report not set!\nAborting!\n";
-		exit(1);
-	}
-	emergency->report = atoi(tmp->ascii());
-	tmp = c->get("alert_report");
-	if( tmp == NULL )
-	{
-		cerr << "alert_report not set!\nAborting!\n";
-		exit(1);
-	}
-	alert->report = atoi(tmp->ascii());
-	tmp = c->get("critical_report");
-	if( tmp == NULL )
-	{
-		cerr << "critical_report not set!\nAborting!\n";
-		exit(1);
-	}
-	critical->report = atoi(tmp->ascii());
-	tmp = c->get("error_report");
-	if( tmp == NULL )
-	{
-		cerr << "error_report not set!\nAborting!\n";
-		exit(1);
-	}
-	error->report = atoi(tmp->ascii());
-	tmp = c->get("warning_report");
-	if( tmp == NULL )
-	{
-		cerr << "warning_report not set!\nAborting!\n";
-		exit(1);
-	}
-	warning->report = atoi(tmp->ascii());
-	tmp = c->get("notice_report");
-	if( tmp == NULL )
-	{
-		cerr << "notice_report not set!\nAborting!\n";
-		exit(1);
-	}
-	notice->report = atoi(tmp->ascii());
-	tmp = c->get("informational_report");
-	if( tmp == NULL )
-	{
-		cerr << "informational_report not set!\nAborting!\n";
-		exit(1);
-	}
-	informational->report = atoi(tmp->ascii());
-	tmp = c->get("debug_report");
-	if( tmp == NULL )
-	{
-		cerr << "debug_report not set!\nAborting!\n";
-		exit(1);
-	}
-	debug->report = atoi(tmp->ascii());
-	
-	tmp = c->get("emergency_track");
-	if( tmp == NULL )
-	{
-		cerr << "emergency_track not set!\nAborting!\n";
-		exit(1);
-	}
-	emergency->track = atoi(tmp->ascii());
-	tmp = c->get("alert_track");
-	if( tmp == NULL )
-	{
-		cerr << "alert_track not set!\nAborting!\n";
-		exit(1);
-	}
-	alert->track = atoi(tmp->ascii());
-	tmp = c->get("critical_track");
-	if( tmp == NULL )
-	{
-		cerr << "critical_track not set!\nAborting!\n";
-		exit(1);
-	}
-	critical->track = atoi(tmp->ascii());
-	tmp = c->get("error_track");
-	if( tmp == NULL )
-	{
-		cerr << "error_track not set!\nAborting!\n";
-		exit(1);
-	}
-	error->track = atoi(tmp->ascii());
-	tmp = c->get("warning_track");
-	if( tmp == NULL )
-	{
-		cerr << "warning_track not set!\nAborting!\n";
-		exit(1);
-	}
-	warning->track = atoi(tmp->ascii());
-	tmp = c->get("notice_track");
-	if( tmp == NULL )
-	{
-		cerr << "notice_track not set!\nAborting!\n";
-		exit(1);
-	}
-	notice->track = atoi(tmp->ascii());
-	tmp = c->get("informational_track");
-	if( tmp == NULL )
-	{
-		cerr << "informational_track not set!\nAborting!\n";
-		exit(1);
-	}
-	informational->track = atoi(tmp->ascii());
-	tmp = c->get("debug_track");
-	if( tmp == NULL )
-	{
-		cerr << "debug_track not set!\nAborting!\n";
-		exit(1);
-	}
-	debug->track = atoi(tmp->ascii());
-	
-	tmp = c->get("emergency_max");
-	if( tmp == NULL )
-	{
-		cerr << "emergency_max not set!\nAborting!\n";
-		exit(1);
-	}
-	emergency->max = atoi(tmp->ascii());
-	tmp = c->get("alert_max");
-	if( tmp == NULL )
-	{
-		cerr << "alert_max not set!\nAborting!\n";
-		exit(1);
-	}
-	alert->max = atoi(tmp->ascii());
-	tmp = c->get("critical_max");
-	if( tmp == NULL )
-	{
-		cerr << "critical_max not set!\nAborting!\n";
-		exit(1);
-	}
-	critical->max = atoi(tmp->ascii());
-	tmp = c->get("error_max");
-	if( tmp == NULL )
-	{
-		cerr << "error_max not set!\nAborting!\n";
-		exit(1);
-	}
-	error->max = atoi(tmp->ascii());
-	tmp = c->get("warning_max");
-	if( tmp == NULL )
-	{
-		cerr << "warning_max not set!\nAborting!\n";
-		exit(1);
-	}
-	warning->max = atoi(tmp->ascii());
-	tmp = c->get("notice_max");
-	if( tmp == NULL )
-	{
-		cerr << "notice_max not set!\nAborting!\n";
-		exit(1);
-	}
-	notice->max = atoi(tmp->ascii());
-	tmp = c->get("informational_max");
-	if( tmp == NULL )
-	{
-		cerr << "informational_max not set!\nAborting!\n";
-		exit(1);
-	}
-	informational->max = atoi(tmp->ascii());
-	tmp = c->get("debug_max");
-	if( tmp == NULL )
-	{
-		cerr << "debug_max not set!\nAborting!\n";
-		exit(1);
-	}
-	debug->max = atoi(tmp->ascii());
-	
-	tmp = c->get("emergency_all");
-	if( tmp == NULL )
-	{
-		cerr << "emergency_all not set!\nAborting!\n";
-		exit(1);
-	}
-	emergency->all = atoi(tmp->ascii());
-	tmp = c->get("alert_all");
-	if( tmp == NULL )
-	{
-		cerr << "alert_all not set!\nAborting!\n";
-		exit(1);
-	}
-	alert->all = atoi(tmp->ascii());
-	tmp = c->get("critical_all");
-	if( tmp == NULL )
-	{
-		cerr << "critical_all not set!\nAborting!\n";
-		exit(1);
-	}
-	critical->all = atoi(tmp->ascii());
-	tmp = c->get("error_all");
-	if( tmp == NULL )
-	{
-		cerr << "error_all not set!\nAborting!\n";
-		exit(1);
-	}
-	error->all = atoi(tmp->ascii());
-	tmp = c->get("warning_all");
-	if( tmp == NULL )
-	{
-		cerr << "warning_all not set!\nAborting!\n";
-		exit(1);
-	}
-	warning->all = atoi(tmp->ascii());
-	tmp = c->get("notice_all");
-	if( tmp == NULL )
-	{
-		cerr << "notice_all not set!\nAborting!\n";
-		exit(1);
-	}
-	notice->all = atoi(tmp->ascii());
-	tmp = c->get("informational_all");
-	if( tmp == NULL )
-	{
-		cerr << "informational_all not set!\nAborting!\n";
-		exit(1);
-	}
-	informational->all = atoi(tmp->ascii());
-	tmp = c->get("debug_all");
-	if( tmp == NULL )
-	{
-		cerr << "debug_all not set!\nAborting!\n";
-		exit(1);
-	}
-	debug->all = atoi(tmp->ascii());
-	
-	emergency->all = atoi(c->get("emergency_all")->ascii());
-	alert->all = atoi(c->get("alert_all")->ascii());
-	critical->all = atoi(c->get("critical_all")->ascii());
-	error->all = atoi(c->get("error_all")->ascii());
-	warning->all = atoi(c->get("warning_all")->ascii());
-	notice->all = atoi(c->get("notice_all")->ascii());
-	informational->all = atoi(c->get("informational_all")->ascii());
-	debug->all = atoi(c->get("debug_all")->ascii());
+	emergency = this->build_severity_struct(NULL, "emergency");
+	alert = this->build_severity_struct(NULL, "alert");
+	critical = this->build_severity_struct(NULL, "critical");
+	error = this->build_severity_struct(NULL, "error");
+	warning = this->build_severity_struct(NULL, "warning");
+	notice = this->build_severity_struct(NULL, "notice");
+	informational = this->build_severity_struct(NULL, "informational");
+	debug = this->build_severity_struct(NULL, "debug");
 	
 	seen = new darray<struct syslog_message*>;
 	db_vec = new drarray<database*>;
@@ -396,6 +152,61 @@ void analyze::report( struct syslog_message *m, int all )
 	}
 }
 
+struct severity *analyze::build_severity_struct(char *daemon, char *level)
+{
+	struct severity *ret;
+	dstring *tmp, *build;
+	
+	ret = (struct severity*)malloc(sizeof(struct severity));
+	
+	if( daemon == NULL )
+	{
+		build = new dstring(level);
+		build->cat("_track");
+		tmp = c->get(build->ascii());
+		delete build;
+		if( ! atoi(tmp->ascii()) )
+		{
+			ret->track = 0;
+			ret->all = 0;
+			ret->level = 0;
+			ret->max = 0;
+			ret->report = 0;
+			return ret;
+		}
+		delete tmp;
+		ret->track = 1;
+		
+		build = new dstring(level);
+		build->cat("_all");
+		tmp = c->get(build->ascii());
+		ret->all = atoi(tmp->ascii());
+		delete tmp;
+		delete build;
+		
+		build = new dstring(level);
+		build->cat("_report");
+		tmp = c->get(build->ascii());
+		delete build;
+		if( atoi(tmp->ascii()) )
+		{
+			ret->report = 1;
+			ret->level = 0;
+			ret->max = 0;
+			return ret;
+		}
+		delete tmp;
+		ret->report = 0;
+		
+		build = new dstring(level);
+		build->cat("_max");
+		tmp = c->get(build->ascii());
+		ret->max = atoi(tmp->ascii());
+		ret->level = 0;
+		return ret;
+	}
+}
+
 void *analyze_launch_thread(void *args)
 {
 	struct analyze_args *a;
@@ -433,3 +244,5 @@ struct analyze_args *analyze_build_args(conf *c, cache *cash)
 	n->cash = cash;
 	return n;
 }
+
+

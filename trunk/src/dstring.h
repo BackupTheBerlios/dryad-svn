@@ -113,6 +113,8 @@ public:
 	dstring *prior(char t);
 	dstring *following(char t);
 	
+	void cat(char *c);
+	
 	const dstring & operator = ( const dstring & s );
 	const dstring & operator = ( const dstring * s );
 	const dstring & operator = ( const char * s );
