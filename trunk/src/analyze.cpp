@@ -117,31 +117,43 @@ int analyze::process( struct syslog_message *m )
 void analyze::reg( struct syslog_message *m )
 {
 	struct severity *useme;
+	struct sev_group *use;
+	use = NULL;
+	for( int q = 0; q < daemons->length(); q++ )
+	{
+		if( !strcmp(daemons->at(q)->name->ascii(), m->daemon->ascii()) )
+		{
+			use = daemons->at(q);
+			break;
+		}
+	}
+	if( use == NULL )
+		use = def;
 	switch(m->severity)
 	{
 		case(0):
-			useme = def->emergency;
+			useme = use->emergency;
 			break;
 		case(1):
-			useme = def->alert;
+			useme = use->alert;
 			break;
 		case(2):
-			useme = def->critical;
+			useme = use->critical;
 			break;
 		case(3):
-			useme = def->error;
+			useme = use->error;
 			break;
 		case(4):
-			useme = def->warning;
+			useme = use->warning;
 			break;
 		case(5):
-			useme = def->notice;
+			useme = use->notice;
 			break;
 		case(6):
-			useme = def->informational;
+			useme = use->informational;
 			break;
 		case(7):
-			useme = def->debug;
+			useme = use->debug;
 			break;
 	}
 	if( ! useme->track )
