@@ -58,9 +58,9 @@ void lrsp::error_callback(int err)
 
 void lrsp::message_callback(char *msg)
 {
-	cerr << "msg: " << msg << endl;
 	c->add(this->parse_message(msg));
 }
+
 
 struct syslog_message *lrsp::parse_message(char *message)
 {
@@ -123,7 +123,7 @@ struct syslog_message *lrsp::parse_message(char *message)
 	m->date = new dstring(tmp);
 	free(tmp);
 	
-	for( int c = d; c < (RFC3164_PACKET_LENGTH - d); c++ )
+	for( int c = d; c <= RFC3164_PACKET_LENGTH; c++ )
 	{
 		if( message[c] == ' ' )
 		{
@@ -145,7 +145,7 @@ struct syslog_message *lrsp::parse_message(char *message)
 		return NULL;
 	}
 	
-	for( int c = d; c < (RFC3164_PACKET_LENGTH - d); c++ )
+	for( int c = d; c <= RFC3164_PACKET_LENGTH; c++ )
 	{
 		if( message[c] == '\0' )
 		{

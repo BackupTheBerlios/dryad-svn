@@ -182,10 +182,9 @@ int analyze::process( struct syslog_message *m )
 		do
 		{
 			rr = pcre_exec( db_vec->at(c)->re(), db_vec->at(c)->rs(), m->message->ascii(), m->message->length(), 0, 0, ovector, 3 );
-			cerr << rr << endl;
 			if( rr != PCRE_ERROR_NOMATCH )
 			{
-				m->daemon = db_vec->at(c)->daemon();
+				m->daemon = new dstring(db_vec->at(c)->daemon());
 				this->reg(m);
 				return true;
 			}

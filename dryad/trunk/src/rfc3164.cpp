@@ -66,9 +66,8 @@ void rfc3164::listen()
 		free(buf);
 		free(host);
 		/* see above note about MSG_TRUNC for an explanation of this code deletage */
-		
+
 		c->add(m);
-		free(m);
 		
 		buf = (char*)malloc(RFC3164_PACKET_LENGTH);
 		host = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
@@ -159,7 +158,7 @@ struct syslog_message *rfc3164::parse_message(char *message)
 	m->date = new dstring(tmp);
 	free(tmp);
 	
-	for( int c = d; c < (RFC3164_PACKET_LENGTH - d); c++ )
+	for( int c = d; c <= RFC3164_PACKET_LENGTH; c++ )
 	{
 		if( message[c] == ' ' )
 		{
@@ -181,7 +180,7 @@ struct syslog_message *rfc3164::parse_message(char *message)
 		return NULL;
 	}
 	
-	for( int c = d; c < (RFC3164_PACKET_LENGTH - d); c++ )
+	for( int c = d; c <= RFC3164_PACKET_LENGTH; c++ )
 	{
 		if( message[c] == '\0' )
 		{

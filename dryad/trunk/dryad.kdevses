@@ -9,11 +9,11 @@
   </Doc0>
   <Doc1 NumberOfViews="1" URL="file:/home/peter/src/dryad/dryad/trunk/src/lrsp-server.cpp" >
    <View0 line="59" Type="???" >
-    <AdditionalSettings Top="2" Width="1076" Attach="1" Height="671" Left="2" MinMaxMode="0" />
+    <AdditionalSettings Top="2" Width="1078" Attach="1" Height="671" Left="2" MinMaxMode="0" />
    </View0>
   </Doc1>
   <Doc2 NumberOfViews="1" URL="file:/home/peter/src/dryad/dryad/trunk/src/rfc3164.cpp" >
-   <View0 line="220" Type="???" >
+   <View0 line="69" Type="???" >
     <AdditionalSettings Top="2" Width="1078" Attach="1" Height="671" Left="2" MinMaxMode="0" />
    </View0>
   </Doc2>
@@ -33,8 +33,8 @@
    </View0>
   </Doc5>
   <Doc6 NumberOfViews="1" URL="file:/home/peter/src/dryad/dryad/trunk/src/plugins/null.cpp" >
-   <View0 line="32" Type="???" >
-    <AdditionalSettings Top="2" Width="1078" Attach="1" Height="671" Left="2" MinMaxMode="0" />
+   <View0 line="33" Type="???" >
+    <AdditionalSettings Top="2" Width="1076" Attach="1" Height="671" Left="2" MinMaxMode="0" />
    </View0>
   </Doc6>
   <Doc7 NumberOfViews="1" URL="file:/home/peter/src/dryad/dryad/trunk/src/plugins/plugin.h" >
@@ -43,7 +43,7 @@
    </View0>
   </Doc7>
   <Doc8 NumberOfViews="1" URL="file:/home/peter/src/dryad/dryad/trunk/src/analyze.cpp" >
-   <View0 line="33" Type="???" >
+   <View0 line="186" Type="???" >
     <AdditionalSettings Top="2" Width="1076" Attach="1" Height="671" Left="2" MinMaxMode="0" />
    </View0>
   </Doc8>
