@@ -1,0 +1,7 @@
+Okies, to build for win32 you're going to need cygwin. In particular you need these packages (in addition to the normal set of development tools):
+devel/pcre
+devel/pcre-devel
+devel/g++ (I know, it's part of the normal set, but I forgot it the first time >.>)
+devel/libtool
+
+Also, you will need libesmtp, which, at the time of this writing, is not a cygwin pacakge. However, you can get it from here: http://www.stafford.uklinux.net/libesmtp/. To build it on cygwin, make sure you specify --enable-emulate-getaddrinfo and --prefix=/usr when you run ./configure. Then just do the normal make; make install dance.
