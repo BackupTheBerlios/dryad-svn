@@ -170,3 +170,50 @@ int conf::checkconfig()
 		}
 	}
 }
+
+struct daemon *conf::get_daemon(char *name)
+{
+	struct daemon *d; //only used if they want default settings.
+	if( name == NULL )
+	{
+		d = (struct daemon*)malloc(sizeof(struct daemon));
+		d->name = NULL;
+		d->warn_level = warn_level;
+		d->clear_on_warn = clear_on_warn;
+		d->error_level = error_level;
+		d->clear_on_error = clear_on_error;
+		return d;
+	}
+	for( int c = 0; c < num_daemons; c++ )
+	{
+		if( ! strcmp( name, daemons[c]->name->ascii() ) )
+		{
+			return daemons[c];
+		}
+	}
+	return NULL;
+}
+
+struct daemon *conf::get_daemon(dstring *name)
+{
+	struct daemon *d; //only used if they want default settings.
+	if( name == NULL )
+	{
+		d = (struct daemon*)malloc(sizeof(struct daemon));
+		d->name = NULL;
+		d->warn_level = warn_level;
+		d->clear_on_warn = clear_on_warn;
+		d->error_level = error_level;
+		d->clear_on_error = clear_on_error;
+		return d;
+	}
+	for( int c = 0; c < num_daemons; c++ )
+	{
+		if( ! strcmp( name->ascii(), daemons[c]->name->ascii() ) )
+		{
+			return daemons[c];
+		}
+	}
+	return NULL;
+}
+
