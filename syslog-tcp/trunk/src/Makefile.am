@@ -4,7 +4,7 @@ INCLUDES= $(all_includes)
 
 # the library search path.
 lib_LTLIBRARIES =  liblrsp.la
-liblrsp_la_SOURCES =  lrsp.c
+liblrsp_la_SOURCES = lrsp.c lrsp-server.c
 
 include_HEADERS =  lrsp.h
 bin_PROGRAMS =  lrsp-logger

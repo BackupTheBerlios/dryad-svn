@@ -38,18 +38,18 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 		exit(1);
 	}
-	if( 0 > (err = lrsp_init(argv[1], atoi(argv[2]), LRSP_SINGLE)) )
+	if( 0 > (err = lrsp_client_init(argv[1], atoi(argv[2]), LRSP_SINGLE)) )
 	{
-		fprintf(stderr, "Got an error when trying to init the connection:\n%s", lrsp_error_message(err) );
+		fprintf(stderr, "Got an error when trying to init the connection:\n%s", lrsp_client_error_message(err) );
 		exit(1);
 	}
-	lrsp_register_callback(call);
-	if( 0 > (err = lrsp_send_message(argv[3])) )
+	lrsp_client_register_callback(call);
+	if( 0 > (err = lrsp_client_send_message(argv[3])) )
 	{
-		fprintf(stderr, "Got an error when trying to send the message:\n%s", lrsp_error_message(err) );
+		fprintf(stderr, "Got an error when trying to send the message:\n%s", lrsp_client_error_message(err) );
 		exit(1);
 	}
-	lrsp_free();
+	lrsp_client_free();
 	return EXIT_SUCCESS;
 }
 
@@ -60,5 +60,5 @@ void usage(char *p)
 
 void call( int err, char *msg )
 {
-	fprintf( stderr, "Got an error when trying to send message: %s\n%s", msg, lrsp_error_message(err) );
+	fprintf( stderr, "Got an error when trying to send message: %s\n%s", msg, lrsp_client_error_message(err) );
 }

@@ -20,6 +20,7 @@
 <title>Transmitting data</title>
 	<para>After the conversation has been initiated, the device may send the actually syslog message. As per RFC3164, the message may not exceed the length of 1024 bytes.</para>
 	<para>If the connection is running in persistant mode, the message must be suceeded by a \0 character to indicate the completion of the message.</para>
+	<para>While it is not required to send a \0 following the message in single mode, it shall be considered good form to do so.</para>
 </sect1>
 
 <sect1>

@@ -34,37 +34,37 @@
 #ifdef HAVE_PTHREADS
 #include <pthread.h>
 
-pthread_t *lrsp_send_thread;
+pthread_t *lrsp_client_send_thread;
 #endif
 
-int lrsp_start_convo(char m);
-int lrsp_go(char *msg);
+int lrsp_client_start_convo(char m);
+int lrsp_client_go(char *msg);
 
-char *lrsp_s;
-int lrsp_p;
-char lrsp_m;
-int lrsp_inited;
-int lrsp_sock;
-lrsp_callback lrsp_cb;
+char *lrsp_client_s;
+int lrsp_client_p;
+char lrsp_client_m;
+int lrsp_client_inited;
+int lrsp_client_sock;
+lrsp_client_callback lrsp_client_cb;
 
-int lrsp_init(char *server, int port, char mode)
+int lrsp_client_init(char *server, int port, char mode)
 {
 	struct sockaddr_in me;
 
 	#ifdef HAVE_PTHREADS
-	lrsp_send_thread = malloc(sizeof(pthread_t));
+	lrsp_client_send_thread = malloc(sizeof(pthread_t));
 	#endif
-	lrsp_s = malloc(sizeof(char)*strlen(server));
-	strcpy(lrsp_s, server);
+	lrsp_client_s = malloc(sizeof(char)*strlen(server));
+	strcpy(lrsp_client_s, server);
 	if( port == 0 )
-		lrsp_p = LRSP_PORT;
+		lrsp_client_p = LRSP_PORT;
 	else
-		lrsp_p = port;
+		lrsp_client_p = port;
 	if( mode == LRSP_PERSISTANT || mode == LRSP_SINGLE )
-		lrsp_m = mode;
+		lrsp_client_m = mode;
 	else
-		lrsp_m = LRSP_SINGLE;
-	if( -1 == (lrsp_sock = socket(AF_INET, SOCK_STREAM, 0)) )
+		lrsp_client_m = LRSP_SINGLE;
+	if( -1 == (lrsp_client_sock = socket(AF_INET, SOCK_STREAM, 0)) )
 	{
 		return -1;
 	}
@@ -72,43 +72,43 @@ int lrsp_init(char *server, int port, char mode)
 	me.sin_port = htons(0);
 	me.sin_addr.s_addr = htonl(INADDR_ANY);
 	memset(&(me.sin_zero), '\0', 8);
-	if( -1 == bind(lrsp_sock, (struct sockaddr*)&me, sizeof(struct sockaddr)) )
+	if( -1 == bind(lrsp_client_sock, (struct sockaddr*)&me, sizeof(struct sockaddr)) )
 	{
 		return -2;
 	}
-	if( lrsp_m == LRSP_PERSISTANT )
+	if( lrsp_client_m == LRSP_PERSISTANT )
 	{
-		if( ! lrsp_start_convo(LRSP_PERSISTANT) )
+		if( ! lrsp_client_start_convo(LRSP_PERSISTANT) )
 		{
 			return -3;
 		}
 	}
-	lrsp_inited = 1;
+	lrsp_client_inited = 1;
 	return 1;
 }
 
-int lrsp_free()
+int lrsp_client_free()
 {
-	if( 0 == lrsp_inited )
+	if( 0 == lrsp_client_inited )
 		return 0;
-	close(lrsp_sock);
+	close(lrsp_client_sock);
 	#ifdef HAVE_PTHREADS
-	free(lrsp_send_thread);
+	free(lrsp_client_send_thread);
 	#endif
-	free(lrsp_s);
-	lrsp_inited = 0;
+	free(lrsp_client_s);
+	lrsp_client_inited = 0;
 	return 1;
 }
 
-int lrsp_send_message(char *msg)
+int lrsp_client_send_message(char *msg)
 {
 	#ifdef HAVE_PTHREADS
-	return pthread_create(lrsp_send_thread, NULL, (void*)lrsp_go, msg);
+	return pthread_create(lrsp_client_send_thread, NULL, (void*)lrsp_client_go, msg);
 	#endif
-	return lrsp_go(msg);
+	return lrsp_client_go(msg);
 }
 
-int lrsp_go(char *msg)
+int lrsp_client_go(char *msg)
 {
 	int sent, c, err;
 	char *try;
@@ -116,13 +116,13 @@ int lrsp_go(char *msg)
 	sent = 0;
 	try = msg;
 
-	if( lrsp_m == LRSP_SINGLE )
+	if( lrsp_client_m == LRSP_SINGLE )
 	{
-		if(  0 > (err = lrsp_start_convo(LRSP_SINGLE)) )
+		if(  0 > (err = lrsp_client_start_convo(LRSP_SINGLE)) )
 		{
 			#ifdef HAVE_PTHREADS
-			if( lrsp_cb != NULL )
-				(*lrsp_cb)(err, msg);
+			if( lrsp_client_cb != NULL )
+				(*lrsp_client_cb)(err, msg);
 			return 0;
 			#else
 			return err;
@@ -132,11 +132,11 @@ int lrsp_go(char *msg)
 		
 	while( sent < (strlen(try) + sizeof(char)) )
 	{
-		if( -1 == (sent = send(lrsp_sock, try, strlen(try) + sizeof(char), 0)) )
+		if( -1 == (sent = send(lrsp_client_sock, try, strlen(try) + sizeof(char), 0)) )
 		{
 			#ifdef HAVE_PTHREADS
-			if( lrsp_cb != NULL )
-				(*lrsp_cb)(err, msg);
+			if( lrsp_client_cb != NULL )
+				(*lrsp_client_cb)(err, msg);
 			return 0;
 			#else
 			return -5;
@@ -148,30 +148,30 @@ int lrsp_go(char *msg)
 	return 1;
 }
 
-int lrsp_start_convo(char m)
+int lrsp_client_start_convo(char m)
 {
 	char *msg;
 	int t;
 	struct sockaddr_in him;
 
 	him.sin_family = AF_INET;
-	him.sin_port = lrsp_p;
-	him.sin_addr.s_addr = inet_addr(lrsp_s);
+	him.sin_port = lrsp_client_p;
+	him.sin_addr.s_addr = inet_addr(lrsp_client_s);
 	memset(&(him.sin_zero), '\0', 8);
-	if( -1 == connect(lrsp_sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
+	if( -1 == connect(lrsp_client_sock, (struct sockaddr*)&him, sizeof(struct sockaddr)) )
 	{
 		return -6;
 	}
 	
 	msg = malloc(sizeof(char)*1);
-	msg[0] = lrsp_m;
-	if( -1 == send(lrsp_sock, msg, 1*sizeof(char), 0) )
+	msg[0] = lrsp_client_m;
+	if( -1 == send(lrsp_client_sock, msg, 1*sizeof(char), 0) )
 	{
 		return -7;
 	}
 	free(msg);
 	msg = malloc(sizeof(char)*3);
-	t = recv(lrsp_sock, msg, 2, 0);
+	t = recv(lrsp_client_sock, msg, 2, 0);
 	if( t == 0 || t == -1 )
 	{
 		free(msg);
@@ -186,7 +186,7 @@ int lrsp_start_convo(char m)
 	return 1;
 }
 
-char *lrsp_error_message(int err)
+char *lrsp_client_error_message(int err)
 {
 	switch(err)
 	{
@@ -220,7 +220,7 @@ char *lrsp_error_message(int err)
 	}
 }
 
-void lrsp_register_callback(lrsp_callback c)
+void lrsp_client_register_callback(lrsp_client_callback c)
 {
-	lrsp_cb = c;
+	lrsp_client_cb = c;
 }
