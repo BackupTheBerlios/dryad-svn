@@ -15,6 +15,7 @@ int main(int argc, char **argv)
 	void *dl;
 	export_func once, many;
 	char *e;
+	drarray<syslog_message*> *many_test;
 
 	if( argc != 2 )
 	{
@@ -26,7 +27,7 @@ int main(int argc, char **argv)
 	test->severity = 0;
 	test->date = new dstring("Oct 11 22:14:15");
 	test->host = new dstring("mybox");
-	test->message = new dstring("su: 'su root' failed for peter on /dev/pts/2\0");
+	test->message = new dstring("su: 'su root' failed for peter on /dev/pts/2");
 	test->daemon = new dstring("login failures");
 	
 	if( ! (dl = dlopen(argv[1], RTLD_NOW)) )
@@ -51,10 +52,33 @@ int main(int argc, char **argv)
 	dlerror();
 
 	fprintf( stderr, "Testing dryad_once function call.\n" );
-	(*once)(test);
+	(*once)(test); //test get's free'd here.
+	
+	many_test = new drarray<struct syslog_message*>;
+	
+	test = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+	test->facility = 10;
+	test->severity = 0;
+	test->date = new dstring("Oct 11 22:14:15");
+	test->host = new dstring("mybox");
+	test->message = new dstring("su: 'su root' failed for peter on /dev/pts/2");
+	test->daemon = new dstring("login failures");
 
+	many_test->pushback(test);
+
+	test = (struct syslog_message*)malloc(sizeof(struct syslog_message));
+	test->facility = 10;
+	test->severity = 5;
+	test->date = new dstring("Oct 12 22:31:42");
+	test->host = new dstring("anotherhost");
+	test->message = new dstring("su: 'su yourmom' failed for joe on /dev/tty2");
+	test->daemon = new dstring("login failures");
+
+	many_test->pushback(test);
+	
+	
 	fprintf( stderr, "Testing dryad_many function call.\n" );
-	//(*many)(NULL);
+	(*many)(many_test);
 	
 }
 

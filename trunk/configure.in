@@ -10,5 +10,6 @@ AM_PROG_LIBTOOL
 AC_CHECK_LIB([pcre], [pcre_exec])
 AC_CHECK_LIB([pthread], [pthread_mutex_lock])
 AC_CHECK_LIB([dl], [dlopen])
+AC_CHECK_LIB([esmtp], [smtp_errno])
 
 AC_OUTPUT(Makefile src/Makefile src/plugins/Makefile)

@@ -24,6 +24,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <libesmtp.h>
 
 /*
 	This is a very simple example reporter plugin. When it gets called, if sends a dump of the contents of the syslog messages to a compile time defined email address.
@@ -33,14 +34,18 @@ namespace email_plugin
 using namespace plugin;
 extern "C" {
 
-	int send_mail(dstring *msg, dstring *to, dstring *from, dstring *mailhost);
-	int get_return_status( int sock, int status );
+	int send_message(dstring *message, dstring *to, dstring *from, dstring *mailhost);
 	
 	// The function used to report a single incident must be called dryad_once. Before it returns, it should also free() the passed syslog_message
 	int dryad_once(struct syslog_message *m)
 	{
-		dstring *msg;
+		dstring *msg, *to, *from, *mailhost;
 		char *tmp;
+		int ret;
+		
+		to = new dstring("peter@krondor.snoblin.net");
+		from = new dstring("dryad@localhost");
+		mailhost = new dstring("localhost:25");
 		msg = new dstring;
 		msg->cat("Single log event report from your RTLAD Dryad installation:\nTriggering Group: ");
 		msg->cat(m->daemon->ascii());
@@ -59,194 +64,96 @@ extern "C" {
 		msg->cat(tmp);
 		free(tmp);
 		msg->cat("\n");
-		//send_msg(msg->ascii(), "root@localhost");
+		ret = true;
+		if( ! send_message(msg, to, from, mailhost ) )
+		{
+			cerr << "Failed to send notification email in libemail::dryad_once!\n";
+			ret = false;
+		}
 		delete msg;
+		delete to;
+		delete from;
+		delete mailhost;
 		free(m);
+		return ret;
 	}
 	
 	//! Before it returns, we need to free() all messages in m, and delete m itself.
 	int dryad_many(drarray<struct syslog_message*> *m)
 	{
+		dstring *msg, *from, *to, *mailhost;
+		char *tmp;
+		int ret;
+		
+		to = new dstring("peter@krondor.snoblin.net");
+		from = new dstring("dryad@localhost");
+		mailhost = new dstring("localhost:25");
+		msg = new dstring;
+		msg->cat("Multiple log events report from your RTLAD Dryad installation:\n\n");
 		for( int c = 0; c < m->length(); c++ )
 		{
+			msg->cat("Triggering Group: ");
+			msg->cat(m->at(c)->daemon->ascii());
+			msg->cat("\nLog Message: ");
+			msg->cat(m->at(c)->message->ascii());
+			msg->cat("\nHost: ");
+			msg->cat(m->at(c)->host->ascii());
+			msg->cat("\nDate: ");
+			msg->cat(m->at(c)->date->ascii());
+			msg->cat("\nSeverity: ");
+			tmp = itoa(m->at(c)->severity);
+			msg->cat(tmp);
+			free(tmp);
+			msg->cat("\nFacility: ");
+			tmp = itoa(m->at(c)->facility);
+			msg->cat(tmp);
+			free(tmp);
+			msg->cat("\n\n");
 			free(m->at(c));
 		}
 		delete m;
+		ret = true;
+		if( ! send_message(msg, to, from, mailhost ) )
+		{
+			cerr << "Failed to send notification email in libemail::dryad_many!\n";
+			ret = false;
+		}
+		return ret;
 	}
 	
-	int send_mail(dstring *msg, dstring *to, dstring *from, dstring *mailhost)
+	int send_message(dstring *message, dstring *to, dstring *from, dstring *mailhost)
 	{
-		int sock, ret;
-		struct sockaddr_in *conn_addr;
-		struct servent *smtp;
-		struct hostent *dest;
-		char *myname, *incoming;
-		dstring *tmp;
+		/* For the record, I HATE libESMTP. The documentation is total crap, both in that it is incomplete, as well as that what is there is poorly written to the point of being INCOMPREHENSIBLE!!!! </rant>*/
+		smtp_session_t s;
+		smtp_message_t m;
 		
-		sock = socket(AF_INET, SOCK_STREAM, 0);
-		if( -1 == sock )
+		s = smtp_create_session();
+		m = smtp_add_message(s);
+		if( ! smtp_set_server(s, mailhost->cstring()) )
 		{
-			cerr << "Unable to create a socket in libemail! Not sending message.\n";
+			smtp_destroy_session(s);
 			return false;
 		}
-		
-		smtp = getservbyname("smtp", "tcp");
-		dest = gethostbyname(mailhost->ascii());
-		conn_addr = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
-		conn_addr->sin_family = AF_INET;
-		if( smtp == NULL )
-			conn_addr->sin_port = htons(25);
-		else
-			conn_addr->sin_port = htons(smtp->s_port);
-		conn_addr->sin_addr.s_addr = inet_addr(dest->h_name);
-		memset(&(conn_addr->sin_zero), '\0', 8);
-		if( -1 == connect( sock, (struct sockaddr*)conn_addr, sizeof(struct sockaddr)) )
+		if( ! smtp_set_reverse_path(m, from->cstring()) )
 		{
-			cerr << "Unable to connect to remote host in libemail! Not sending message.\n";
-			free(conn_addr);
+			smtp_destroy_session(s);
 			return false;
 		}
-		// these may segfault, need to check!
-		free(smtp);
-		free(dest);
-		
-		myname = (char*)malloc(sizeof(char)*256);
-		gethostname(myname, 256);
-		tmp = new dstring("HELO ");
-		tmp->cat(myname);
-		tmp->cat("\n");
-		free(myname);
-		if( -1 == send( sock, (void*)tmp->ascii(), tmp->length(), 0 ) )
+		if( ! smtp_add_recipient(m, to->cstring()) )
 		{
-			cerr << "Unable to send HELO to the remote host in libemail! Not sending message.\n";
-			close(sock);
-			delete tmp;
+			smtp_destroy_session(s);
 			return false;
 		}
-		delete tmp;
-		if( ! get_return_status(sock, 250) )
+		//smtp_set_header(m, "To", to->cstring());
+		//smtp_set_header(m, "From", from->cstring());
+		//smtp_set_header(m, "Subject", "RTLAD Dryad Report");
+		smtp_set_message_str(m, message->cstring());
+		if( ! smtp_start_session(s) )
 		{
-			close(sock);
+			smtp_destroy_session(s);
 			return false;
 		}
-		
-		tmp = new dstring("MAIL FROM: ");
-		tmp->cat(from->ascii());
-		tmp->cat("\n");
-		if( -1 == send( sock, (void*)tmp->ascii(), tmp->length(), 0) )
-		{
-			cerr << "Unable to set MAIL FROM in libemail! Not sending message.\n";
-			close(sock);
-			delete tmp;
-			return false;
-		}
-		delete tmp;
-		if( ! get_return_status(sock, 250) )
-		{
-			close(sock);
-			return false;
-		}
-		
-		tmp = new dstring("RCPT TO: ");
-		tmp->cat(to->ascii());
-		tmp->cat("\n");
-		if( -1 == send( sock, (void*)tmp->ascii(), tmp->length(), 0) )
-		{
-			cerr << "Unable to set RCPT TO in libemail! Not sending message.\n";
-			close(sock);
-			delete tmp;
-			return false;
-		}
-		delete tmp;
-		if( ! get_return_status(sock, 250) )
-		{
-			close(sock);
-			return false;
-		}
-		
-		tmp = new dstring("DATA\n");
-		if( -1 == send(sock, (void*)tmp->ascii(), tmp->length(), 0) )
-		{
-			cerr << "Unable to send DATA in libemail! Not sending message.\n";
-			close(sock);
-			delete tmp;
-			return false;
-		}
-		if( ! get_return_status(sock, 354) )
-		{
-			close(sock);
-			return false;
-		}
-		
-		if( -1 == send(sock, (void*)msg->ascii(), msg->length(), 0) )
-		{
-			cerr << "Unable to send message data in libemail! Not sending message.\n";
-			close(sock);
-			return false;
-		}
-		
-		tmp = new dstring("\r\n.\r\n");
-		if( -1 == send(sock, (void*)tmp->ascii(), tmp->length(), 0) )
-		{
-			cerr << "Unable to send message termination in libemail! Not sending message.\n";
-			close(sock);
-			return false;
-		}
-		if( ! get_return_status(sock, 250) )
-		{
-			close(sock);
-			delete tmp;
-			return false;
-		}
-		delete tmp;
-		
-		tmp = new dstring("QUIT\n");
-		if( -1 == send(sock, (void*)tmp->ascii(), tmp->length(), 0) )
-		{
-			cerr << "Unable to send QUIT in libemail! Message prolly got sent though...\n";
-			close(sock);
-			delete tmp;
-			return false;
-		}
-		delete tmp;
-		if( ! get_return_status(sock, 221) )
-		{
-			close(sock);
-			return false;
-		}
-		close(sock);
-		return true;
-		
-	}
-	
-	int get_return_status( int sock, int status )
-	{
-		char *incoming, *s;
-		int ret;
-		
-		incoming = (char*)malloc(sizeof(char)*3);
-		ret = recv(sock, incoming, 3, MSG_PEEK);
-		if( !(1 >= ret ) )
-		{
-			cerr << "Error in sending to remote host in libemail! Not sending message.\n";
-			free(incoming);
-			return false;
-		}
-		s = itoa(status);
-		if( strcmp(incoming, s ) )
-		{
-			cerr << "Got an error from the remote server in libemail! Not sending message.\n";
-			free(incoming);
-			return false;
-		}
-		free(s);
-		free(incoming);
-		if( ret > 3 )
-		{
-			incoming = (char*)malloc(sizeof(char)*(ret - 3));
-			recv(sock, incoming, (ret-3), 0);
-			free(incoming);
-		}
+		smtp_destroy_session(s);
 		return true;
 	}
 

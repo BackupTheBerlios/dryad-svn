@@ -452,12 +452,16 @@ m4trace:configure.in:12: -1- AC_CHECK_LIB([dl], [dlopen])
 m4trace:configure.in:12: -1- AH_OUTPUT([HAVE_LIBDL], [/* Define to 1 if you have the `dl\' library (-ldl). */
 #undef HAVE_LIBDL])
 m4trace:configure.in:12: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBDL])
-m4trace:configure.in:14: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile])
-m4trace:configure.in:14: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:13: -1- AC_CHECK_LIB([esmtp], [smtp_errno])
+m4trace:configure.in:13: -1- AH_OUTPUT([HAVE_LIBESMTP], [/* Define to 1 if you have the `esmtp\' library (-lesmtp). */
+#undef HAVE_LIBESMTP])
+m4trace:configure.in:13: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBESMTP])
+m4trace:configure.in:15: -1- AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile])
+m4trace:configure.in:15: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:14: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:14: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:14: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:15: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:15: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:15: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
-m4trace:configure.in:14: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
+m4trace:configure.in:15: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally.], [])
