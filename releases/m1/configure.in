@@ -1,0 +1,15 @@
+AC_INIT([dryad], [0.0.1], [dryad-bugs@rtlad.org])
+
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+
+AC_LANG_CPLUSPLUS
+AC_PROG_CXX
+AM_PROG_LIBTOOL
+
+AC_CHECK_LIB([pcre], [pcre_exec])
+AC_CHECK_LIB([pthread], [pthread_mutex_lock])
+AC_CHECK_LIB([dl], [dlopen])
+AC_CHECK_LIB([esmtp], [smtp_errno])
+
+AC_OUTPUT(Makefile src/Makefile src/plugins/Makefile databases/Makefile docs/Makefile)
