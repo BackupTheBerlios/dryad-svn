@@ -272,16 +272,25 @@ void analyze::report( struct syslog_message *m, int all )
 {
 	pthread_t launch;
 	drarray<struct syslog_message*> *args;
+	
 	args = new drarray<struct syslog_message*>;
+	
+	args->pushback(m);
 	if( all )
 	{
 		//get all messages of this daemon, at any severity
-		args->pushback(m);
 		for( int q = 0; q < seen->length(); q++ )
 		{
 			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) )
 			{
 				args->pushback(seen->get_at(q));
+			}
+		}
+		// and now we delete the ones we used
+		for( int q = seen->length() - 1; q > -1; q-- )
+		{
+			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) )
+			{
 				seen->del(q);
 			}
 		}
@@ -294,6 +303,13 @@ void analyze::report( struct syslog_message *m, int all )
 			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) && (m->severity == seen->get_at(q)->severity) )
 			{
 				args->pushback(seen->get_at(q));
+			}
+		}
+		//and now we delete the ones we used
+		for( int q = seen->length() - 1; q > -1; q-- )
+		{
+			if( !strcmp(m->daemon->ascii(), seen->get_at(q)->daemon->ascii()) && (m->severity == seen->get_at(q)->severity) )
+			{
 				seen->del(q);
 			}
 		}

@@ -41,16 +41,17 @@ extern "C" {
 	
 	int dryad_many(drarray<struct syslog_message*> *m)
 	{
+		cerr << "many\n";
 		for( int c = 0; c < m->length(); c++ )
 		{
-			cout << m->at(c)->daemon->ascii() << endl << m->at(c)->date->ascii() << endl << m->at(c)->facility << endl << m->at(c)->host->ascii() << endl << m->at(c)->message->ascii() << endl << m->at(c)->severity << endl;
+			cout << m->at(c)->daemon->ascii() << "--" << m->at(c)->date->ascii() << "--" << m->at(c)->facility << "--" << m->at(c)->host->ascii() << "--" << m->at(c)->message->ascii() << "--" << m->at(c)->severity << endl;
 			delete m->at(c)->daemon;
 			delete m->at(c)->date;
 			delete m->at(c)->host;
 			delete m->at(c)->message;
 			free(m->at(c));
-			return true;
 		}
+		return true;
 	}
 
 }

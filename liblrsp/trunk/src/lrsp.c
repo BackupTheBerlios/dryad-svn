@@ -177,7 +177,8 @@ int lrsp_client_go(char *msg)
 		return -10;
 		#endif
 	}
-	close(lrsp_client_sock);
+	if( lrsp_client_m == LRSP_SINGLE )
+		close(lrsp_client_sock);
 	return 1;
 }
 

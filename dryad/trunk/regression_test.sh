@@ -179,6 +179,36 @@ function persistant_test()
 	sleep 2s
 }
 
+function delayed_report_test()
+{
+	echo -n "testing delayed reporting with $1 switches: "
+	$CWD/src/dryad -c $CWD/reg_test.cnf $1 > reg_test.out 2>&1 &
+	PID=`ps ax | grep dryad | grep -v grep | awk '{print $1}'`
+	if [ -z "$PID" ]; then
+		echo "failed to find pid!"
+		die
+	fi
+	sleep 1s
+	for i in `seq 4`; do
+		./tester 127.0.0.1 $2 "<2>May 11 20:29:47 localhost [su(pam_unix)] session opened for user root by (uid=0)" > /dev/null 2>&1 || die
+	done
+	if [ "`cat reg_test.out | head -n 1`" != "many" ]; then
+		kill $PID > /dev/null 2>&1 || die
+		die
+	fi
+	for i in `seq 4`; do
+		p=$(($i+1))
+		if [ "`cat reg_test.out | head -n $p | tail -n 1`" != "NULL--May 11 20:29:47--0--localhost--[su(pam_unix)] session opened for user root by (uid=0)--2" ]; then
+			kill $PID > /dev/null 2>&1 || die
+			die
+		fi
+	done
+	kill $PID > /dev/null 2>&1 || die
+	rm reg_test.out
+	echo "done."
+	sleep 2s
+}
+
 CWD=`pwd`
 
 echo -n "Running autotools: "
@@ -263,6 +293,11 @@ sleep 60s
 echo "done."
 cd $CWD/../../tester/lrsp/
 persistant_test "-t 1234" "1234"
+cd $CWD/src
+
+# test the queueing of matching messages
+cd $CWD/../../tester/udp/
+delayed_report_test "-u 1234" "1234"
 cd $CWD/src
 
 unset LD_LIBRARY_PATH

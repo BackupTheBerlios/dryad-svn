@@ -109,12 +109,10 @@ T darray<T>::get_at(int k)
 		return NULL;
 	
 	//again, this code will need to be smartened once we deal in more than just head/tail pointers
+	curr = head;
 	for( int c = 0; c != k; c++ )
 	{
-		if( c == 0 )
-			curr = head;
-		else
-			curr = curr->next;
+		curr = curr->next;
 	}
 	return curr->item;
 }
@@ -164,18 +162,31 @@ int darray<T>::del(int k)
 		return false;
 	
 	//again, this code will need to be smartened once we deal in more than just head/tail pointers
+	curr = head;
 	for( int c = 0; c != k; c++ )
 	{
-		if( c == 0 )
-			curr = head;
+		curr = curr->next;
+	}
+	if( curr == head )
+	{
+		if( curr->next != NULL )
+			head = curr->next;
 		else
-			curr = curr->next;
+			head = NULL;
+	}
+	if( curr == tail )
+	{
+		if( curr->prev != NULL )
+			tail = curr->prev;
+		else
+			tail = NULL;
 	}
 	if( curr->prev != NULL )
 		curr->prev->next = curr->next;
 	if( curr->next != NULL )
 		curr->next->prev = curr->prev;
 	free(curr);
+	len--;
 	return true;
 }
 

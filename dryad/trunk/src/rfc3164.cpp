@@ -49,6 +49,7 @@ void rfc3164::listen()
 	while(1)
 	{
 		/* I *think* it's safe to no longer use MSG_TRUNC here. The Linux documentation only says "sometimes the remander of the message will be truncated if you don't grab it all. The Microsoft Winsock2 documentation (I know, but whatever, they actually know how to properly document their stuff) states that for UDP sockets, if you do not get it all, the rest shall be discarded. I'm hazarding a guess that this is a consistent behavior. */
+		memset(buf, '\0', RFC3164_PACKET_LENGTH);
 		ret = recvfrom(sock, buf, RFC3164_PACKET_LENGTH, 0, (struct sockaddr*)host, (socklen_t*)&len);
 		if( -1 == ret )
 		{
@@ -102,6 +103,7 @@ struct syslog_message *rfc3164::parse_message(char *message)
 	int pri, d;
 	char *tmp;
 	struct syslog_message *m;
+	
 	
 	m = (struct syslog_message*)malloc(sizeof(struct syslog_message));
 	

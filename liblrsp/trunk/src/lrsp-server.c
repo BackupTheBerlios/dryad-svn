@@ -237,6 +237,11 @@ void lrsp_server_read_messages(int *a)
 	while(1)
 	{
 		ret = lrsp_server_get_message(asock, LRSP_PERSISTANT);
+		if( ret == NULL )
+		{
+			close(asock);
+			break;
+		}
 		if( ret[0] == '\0' )
 		{
 			free(ret);
@@ -259,6 +264,7 @@ char *lrsp_server_get_message(int asock, char m)
 	int len, c;
 	
 	buf = malloc(sizeof(char)*1025); /*so we have room for the \0 if they send it*/
+	memset(buf, '\0', 1025);
 	if( -1 == (len = recv(asock, buf, sizeof(char)*1025, 0)) )
 	{
 		free(buf);
@@ -266,11 +272,17 @@ char *lrsp_server_get_message(int asock, char m)
 	}
 	if( len == 0 )
 	{
-		free(buf);
 		return NULL;
 	}
-	if( buf[len-sizeof(char)] != '\0' )
+	if( len == 1025 )
+	{
+		buf[(len/sizeof(char))-1] = '\0';
+	}
+	else if( buf[(len/sizeof(char))-1] != '\0' )
+	{
 		len = len + sizeof(char);
+		buf[(len/sizeof(char))-1] = '\0';
+	}
 	b = malloc(sizeof(char) * len);
 	for( c = 0; c < (len-1); c++ ) /* len - 1 is because if you use just len, we may end up copying an unkown, possibly invalid, memory cell to the last spot in b */
 	{

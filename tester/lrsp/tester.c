@@ -44,7 +44,11 @@ int main( int argc, char *argv[] )
 	msg = argv[3];
 	
 	for( c = 0; c < times; c++ )
+	{
+		fprintf( stderr, "sending #%d (%s): ", c, msg );
 		lrsp_client_send_message(msg);
+		fprintf( stderr, "done.\n" );
+	}
 
 	lrsp_client_free();
 
